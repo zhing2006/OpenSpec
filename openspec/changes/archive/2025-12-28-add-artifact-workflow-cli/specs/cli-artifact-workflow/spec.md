@@ -9,33 +9,33 @@ CLI commands for artifact workflow operations, exposing the artifact graph and i
 The system SHALL display artifact completion status for a change.
 
 #### Scenario: Show status with all states
-- **WHEN** user runs `openspec status --change <id>`
+- **WHEN** user runs `OGD status --change <id>`
 - **THEN** the system displays each artifact with status indicator:
   - `[x]` for completed artifacts
   - `[ ]` for ready artifacts
   - `[-]` for blocked artifacts (with missing dependencies listed)
 
 #### Scenario: Status shows completion summary
-- **WHEN** user runs `openspec status --change <id>`
+- **WHEN** user runs `OGD status --change <id>`
 - **THEN** output includes completion percentage and count (e.g., "2/4 artifacts complete")
 
 #### Scenario: Status JSON output
-- **WHEN** user runs `openspec status --change <id> --json`
+- **WHEN** user runs `OGD status --change <id> --json`
 - **THEN** the system outputs JSON with changeName, schemaName, isComplete, and artifacts array
 
 #### Scenario: Missing change parameter
-- **WHEN** user runs `openspec status` without `--change`
+- **WHEN** user runs `OGD status` without `--change`
 - **THEN** the system displays an error with list of available changes
 
 #### Scenario: Unknown change
-- **WHEN** user runs `openspec status --change unknown-id`
+- **WHEN** user runs `OGD status --change unknown-id`
 - **THEN** the system displays an error indicating the change does not exist
 
 ### Requirement: Next Command
 The system SHALL show which artifacts are ready to be created.
 
 #### Scenario: Show ready artifacts
-- **WHEN** user runs `openspec next --change <id>`
+- **WHEN** user runs `OGD next --change <id>`
 - **THEN** the system lists artifacts whose dependencies are all satisfied
 
 #### Scenario: No artifacts ready
@@ -47,14 +47,14 @@ The system SHALL show which artifacts are ready to be created.
 - **THEN** the system indicates the change is complete
 
 #### Scenario: Next JSON output
-- **WHEN** user runs `openspec next --change <id> --json`
+- **WHEN** user runs `OGD next --change <id> --json`
 - **THEN** the system outputs JSON array of ready artifact IDs
 
 ### Requirement: Instructions Command
 The system SHALL output enriched instructions for creating an artifact.
 
 #### Scenario: Show enriched instructions
-- **WHEN** user runs `openspec instructions <artifact> --change <id>`
+- **WHEN** user runs `OGD instructions <artifact> --change <id>`
 - **THEN** the system outputs:
   - Artifact metadata (ID, output path, description)
   - Template content
@@ -62,11 +62,11 @@ The system SHALL output enriched instructions for creating an artifact.
   - Unlocked artifacts (what becomes available after completion)
 
 #### Scenario: Instructions JSON output
-- **WHEN** user runs `openspec instructions <artifact> --change <id> --json`
+- **WHEN** user runs `OGD instructions <artifact> --change <id> --json`
 - **THEN** the system outputs JSON matching ArtifactInstructions interface
 
 #### Scenario: Unknown artifact
-- **WHEN** user runs `openspec instructions unknown-artifact --change <id>`
+- **WHEN** user runs `OGD instructions unknown-artifact --change <id>`
 - **THEN** the system displays an error listing valid artifact IDs for the schema
 
 #### Scenario: Artifact with unmet dependencies
@@ -77,15 +77,15 @@ The system SHALL output enriched instructions for creating an artifact.
 The system SHALL show resolved template paths for all artifacts in a schema.
 
 #### Scenario: List template paths with default schema
-- **WHEN** user runs `openspec templates`
+- **WHEN** user runs `OGD templates`
 - **THEN** the system displays each artifact with its resolved template path using the default schema
 
 #### Scenario: List template paths with custom schema
-- **WHEN** user runs `openspec templates --schema tdd`
+- **WHEN** user runs `OGD templates --schema tdd`
 - **THEN** the system displays template paths for the specified schema
 
 #### Scenario: Templates JSON output
-- **WHEN** user runs `openspec templates --json`
+- **WHEN** user runs `OGD templates --json`
 - **THEN** the system outputs JSON mapping artifact IDs to template paths
 
 #### Scenario: Template resolution source
@@ -96,19 +96,19 @@ The system SHALL show resolved template paths for all artifacts in a schema.
 The system SHALL create new change directories with validation.
 
 #### Scenario: Create valid change
-- **WHEN** user runs `openspec new change add-feature`
-- **THEN** the system creates `openspec/changes/add-feature/` directory
+- **WHEN** user runs `OGD new change add-feature`
+- **THEN** the system creates `ogd/changes/add-feature/` directory
 
 #### Scenario: Invalid change name
-- **WHEN** user runs `openspec new change "Add Feature"` with invalid name
+- **WHEN** user runs `OGD new change "Add Feature"` with invalid name
 - **THEN** the system displays validation error with guidance
 
 #### Scenario: Duplicate change name
-- **WHEN** user runs `openspec new change existing-change` for an existing change
+- **WHEN** user runs `OGD new change existing-change` for an existing change
 - **THEN** the system displays an error indicating the change already exists
 
 #### Scenario: Create with description
-- **WHEN** user runs `openspec new change add-feature --description "Add new feature"`
+- **WHEN** user runs `OGD new change add-feature --description "Add new feature"`
 - **THEN** the system creates the change directory with description in README.md
 
 ### Requirement: Schema Selection
@@ -119,7 +119,7 @@ The system SHALL support custom schema selection for workflow commands.
 - **THEN** the system uses the "spec-driven" schema
 
 #### Scenario: Custom schema
-- **WHEN** user runs `openspec status --change <id> --schema tdd`
+- **WHEN** user runs `OGD status --change <id> --schema tdd`
 - **THEN** the system uses the specified schema for artifact graph
 
 #### Scenario: Unknown schema

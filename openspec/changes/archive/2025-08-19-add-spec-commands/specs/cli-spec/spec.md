@@ -6,27 +6,27 @@ The system SHALL provide a `spec` command with subcommands for displaying, listi
 
 #### Scenario: Show spec as JSON
 
-- **WHEN** executing `openspec spec show init --json`
+- **WHEN** executing `OGD spec show init --json`
 - **THEN** parse the markdown spec file
 - **AND** extract headings and content hierarchically
 - **AND** output valid JSON to stdout
 
 #### Scenario: List all specs
 
-- **WHEN** executing `openspec spec list`
-- **THEN** scan the openspec/specs directory
+- **WHEN** executing `OGD spec list`
+- **THEN** scan the ogd/specs directory
 - **AND** return list of all available capabilities
 - **AND** support JSON output with `--json` flag
 
 #### Scenario: Filter spec content
 
-- **WHEN** executing `openspec spec show init --requirements`
+- **WHEN** executing `OGD spec show init --requirements`
 - **THEN** display only requirement names and SHALL statements
 - **AND** exclude scenario content
 
 #### Scenario: Validate spec structure
 
-- **WHEN** executing `openspec spec validate init`
+- **WHEN** executing `OGD spec validate init`
 - **THEN** parse the spec file
 - **AND** validate against Zod schema
 - **AND** report any structural issues

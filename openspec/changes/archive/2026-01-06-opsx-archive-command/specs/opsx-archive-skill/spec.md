@@ -9,7 +9,7 @@ The system SHALL provide an `/opsx:archive` skill that archives completed change
 - **WHEN** agent executes `/opsx:archive` with a change name
 - **AND** all artifacts in the schema are complete
 - **AND** all tasks are complete
-- **THEN** the agent moves the change to `openspec/changes/archive/YYYY-MM-DD-<name>/`
+- **THEN** the agent moves the change to `ogd/changes/archive/YYYY-MM-DD-<name>/`
 - **AND** displays success message with archived location
 
 #### Scenario: Change selection prompt
@@ -87,7 +87,7 @@ The skill SHALL move the change to the archive folder with date prefix.
 - **THEN** create `archive/` directory if it doesn't exist
 - **AND** generate target name as `YYYY-MM-DD-<change-name>` using current date
 - **AND** move entire change directory to archive location
-- **AND** preserve `.openspec.yaml` file in archived change
+- **AND** preserve `.OGD.yaml` file in archived change
 
 #### Scenario: Archive already exists
 

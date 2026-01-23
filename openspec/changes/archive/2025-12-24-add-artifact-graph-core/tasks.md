@@ -30,7 +30,7 @@
 ## 6. Schema Resolution
 - [x] 6.1 Create `src/core/artifact-graph/resolver.ts` with schema resolution logic
 - [x] 6.2 Add `getGlobalDataDir()` to `src/core/global-config.ts` (XDG_DATA_HOME with platform fallbacks)
-- [x] 6.3 Implement `resolveSchema(name)` - global (`${XDG_DATA_HOME}/openspec/schemas/`) → built-in fallback
+- [x] 6.3 Implement `resolveSchema(name)` - global (`${XDG_DATA_HOME}/ogd/schemas/`) → built-in fallback
 
 ## 7. Built-in Schemas
 - [x] 7.1 Create `src/core/artifact-graph/schemas/spec-driven.yaml` (default: proposal → specs → design → tasks)

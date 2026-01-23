@@ -1,5 +1,5 @@
 ## Why
-Recent cross-shell regressions for `openspec` commands revealed that our existing unit/integration tests do not exercise the packaged CLI or shell-specific behavior. The prior attempt at Vitest spawn tests stalled because it coupled e2e coverage with `pnpm pack` installs, which fail in network-restricted environments. With those findings incorporated, we now need an approved plan to realign the work.
+Recent cross-shell regressions for `OGD` commands revealed that our existing unit/integration tests do not exercise the packaged CLI or shell-specific behavior. The prior attempt at Vitest spawn tests stalled because it coupled e2e coverage with `pnpm pack` installs, which fail in network-restricted environments. With those findings incorporated, we now need an approved plan to realign the work.
 
 ## What Changes
 - Adopt a phased strategy that first stabilizes direct spawn testing of the built CLI (`node dist/cli/index.js`) using lightweight fixtures and a shared `runCLI` helper.

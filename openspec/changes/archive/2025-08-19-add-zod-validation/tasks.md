@@ -53,7 +53,7 @@
 - [x] 8.8 Test validation report JSON output
 
 ## 9. Documentation
-- [x] 9.1 Document schema structure and validation rules (openspec/VALIDATION.md)
+- [x] 9.1 Document schema structure and validation rules (ogd/VALIDATION.md)
 - [x] 9.2 Update CLI help for archive (document --no-validate flag and its warnings)
 - [x] 9.3 Update CLI help for diff (document validation warnings behavior)
-- [x] 9.4 Create migration guide for future command integration (openspec/MIGRATION.md)
+- [x] 9.4 Create migration guide for future command integration (ogd/MIGRATION.md)

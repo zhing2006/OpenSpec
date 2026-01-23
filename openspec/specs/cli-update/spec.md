@@ -2,25 +2,25 @@
 
 ## Purpose
 
-As a developer using OpenSpec, I want to update the OpenSpec instructions in my project when new versions are released, so that I can benefit from improvements to AI agent instructions.
+As a developer using OGD, I want to update the OGD instructions in my project when new versions are released, so that I can benefit from improvements to AI agent instructions.
 ## Requirements
 ### Requirement: Update Behavior
-The update command SHALL update OpenSpec instruction files to the latest templates in a team-friendly manner.
+The update command SHALL update OGD instruction files to the latest templates in a team-friendly manner.
 
 #### Scenario: Running update command
-- **WHEN** a user runs `openspec update`
-- **THEN** replace `openspec/AGENTS.md` with the latest template
-- **AND** if a root-level stub (`AGENTS.md`/`CLAUDE.md`) exists, refresh it so it points to `@/openspec/AGENTS.md`
+- **WHEN** a user runs `ogd update`
+- **THEN** replace `ogd/AGENTS.md` with the latest template
+- **AND** if a root-level stub (`AGENTS.md`/`CLAUDE.md`) exists, refresh it so it points to `@/ogd/AGENTS.md`
 
 ### Requirement: Prerequisites
 
-The command SHALL require an existing OpenSpec structure before allowing updates.
+The command SHALL require an existing OGD structure before allowing updates.
 
 #### Scenario: Checking prerequisites
 
-- **GIVEN** the command requires an existing `openspec` directory (created by `openspec init`)
-- **WHEN** the `openspec` directory does not exist
-- **THEN** display error: "No OpenSpec directory found. Run 'openspec init' first."
+- **GIVEN** the command requires an existing `OGD` directory (created by `ogd init`)
+- **WHEN** the `OGD` directory does not exist
+- **THEN** display error: "No OGD directory found. Run 'ogd init' first."
 - **AND** exit with code 1
 
 ### Requirement: File Handling
@@ -28,118 +28,118 @@ The update command SHALL handle file updates in a predictable and safe manner.
 
 #### Scenario: Updating files
 - **WHEN** updating files
-- **THEN** completely replace `openspec/AGENTS.md` with the latest template
-- **AND** if a root-level stub exists, update the managed block content so it keeps directing teammates to `@/openspec/AGENTS.md`
+- **THEN** completely replace `ogd/AGENTS.md` with the latest template
+- **AND** if a root-level stub exists, update the managed block content so it keeps directing teammates to `@/ogd/AGENTS.md`
 
 ### Requirement: Tool-Agnostic Updates
-The update command SHALL refresh OpenSpec-managed files in a predictable manner while respecting each team's chosen tooling.
+The update command SHALL refresh OGD-managed files in a predictable manner while respecting each team's chosen tooling.
 
 #### Scenario: Updating files
 - **WHEN** updating files
-- **THEN** completely replace `openspec/AGENTS.md` with the latest template
+- **THEN** completely replace `ogd/AGENTS.md` with the latest template
 - **AND** create or refresh the root-level `AGENTS.md` stub using the managed marker block, even if the file was previously absent
-- **AND** update only the OpenSpec-managed sections inside existing AI tool files, leaving user-authored content untouched
+- **AND** update only the OGD-managed sections inside existing AI tool files, leaving user-authored content untouched
 - **AND** avoid creating new native-tool configuration files (slash commands, CLAUDE.md, etc.) unless they already exist
 
 ### Requirement: Core Files Always Updated
-The update command SHALL always update the core OpenSpec files and display an ASCII-safe success message.
+The update command SHALL always update the core OGD files and display an ASCII-safe success message.
 
 #### Scenario: Successful update
 - **WHEN** the update completes successfully
-- **THEN** replace `openspec/AGENTS.md` with the latest template
-- **AND** if a root-level stub exists, refresh it so it still directs contributors to `@/openspec/AGENTS.md`
+- **THEN** replace `ogd/AGENTS.md` with the latest template
+- **AND** if a root-level stub exists, refresh it so it still directs contributors to `@/ogd/AGENTS.md`
 
 ### Requirement: Slash Command Updates
 
 The update command SHALL refresh existing slash command files for configured tools without creating new ones, and ensure the OpenCode archive command accepts change ID arguments.
 
 #### Scenario: Updating slash commands for Antigravity
-- **WHEN** `.agent/workflows/` contains `openspec-proposal.md`, `openspec-apply.md`, and `openspec-archive.md`
-- **THEN** refresh the OpenSpec-managed portion of each file so the workflow copy matches other tools while preserving the existing single-field `description` frontmatter
+- **WHEN** `.agent/workflows/` contains `ogd-proposal.md`, `ogd-apply.md`, and `ogd-archive.md`
+- **THEN** refresh the OGD-managed portion of each file so the workflow copy matches other tools while preserving the existing single-field `description` frontmatter
 - **AND** skip creating any missing workflow files during update, mirroring the behavior for Windsurf and other IDEs
 
 #### Scenario: Updating slash commands for Claude Code
-- **WHEN** `.claude/commands/openspec/` contains `proposal.md`, `apply.md`, and `archive.md`
+- **WHEN** `.claude/commands/ogd/` contains `proposal.md`, `apply.md`, and `archive.md`
 - **THEN** refresh each file using shared templates
 - **AND** ensure templates include instructions for the relevant workflow stage
 
 #### Scenario: Updating slash commands for CodeBuddy Code
-- **WHEN** `.codebuddy/commands/openspec/` contains `proposal.md`, `apply.md`, and `archive.md`
+- **WHEN** `.codebuddy/commands/ogd/` contains `proposal.md`, `apply.md`, and `archive.md`
 - **THEN** refresh each file using the shared CodeBuddy templates that include YAML frontmatter for the `description` and `argument-hint` fields
 - **AND** use square bracket format for `argument-hint` parameters (e.g., `[change-id]`)
-- **AND** preserve any user customizations outside the OpenSpec managed markers
+- **AND** preserve any user customizations outside the OGD managed markers
 
 #### Scenario: Updating slash commands for Cline
-- **WHEN** `.clinerules/workflows/` contains `openspec-proposal.md`, `openspec-apply.md`, and `openspec-archive.md`
+- **WHEN** `.clinerules/workflows/` contains `ogd-proposal.md`, `ogd-apply.md`, and `ogd-archive.md`
 - **THEN** refresh each file using shared templates
 - **AND** include Cline-specific Markdown heading frontmatter
 - **AND** ensure templates include instructions for the relevant workflow stage
 
 #### Scenario: Updating slash commands for Continue
-- **WHEN** `.continue/prompts/` contains `openspec-proposal.prompt`, `openspec-apply.prompt`, and `openspec-archive.prompt`
+- **WHEN** `.continue/prompts/` contains `ogd-proposal.prompt`, `ogd-apply.prompt`, and `ogd-archive.prompt`
 - **THEN** refresh each file using shared templates
 - **AND** ensure templates include instructions for the relevant workflow stage
 
 #### Scenario: Updating slash commands for Crush
-- **WHEN** `.crush/commands/` contains `openspec/proposal.md`, `openspec/apply.md`, and `openspec/archive.md`
+- **WHEN** `.crush/commands/` contains `ogd/proposal.md`, `ogd/apply.md`, and `ogd/archive.md`
 - **THEN** refresh each file using shared templates
-- **AND** include Crush-specific frontmatter with OpenSpec category and tags
+- **AND** include Crush-specific frontmatter with OGD category and tags
 - **AND** ensure templates include instructions for the relevant workflow stage
 
 #### Scenario: Updating slash commands for Cursor
-- **WHEN** `.cursor/commands/` contains `openspec-proposal.md`, `openspec-apply.md`, and `openspec-archive.md`
+- **WHEN** `.cursor/commands/` contains `ogd-proposal.md`, `ogd-apply.md`, and `ogd-archive.md`
 - **THEN** refresh each file using shared templates
 - **AND** ensure templates include instructions for the relevant workflow stage
 
 #### Scenario: Updating slash commands for Factory Droid
-- **WHEN** `.factory/commands/` contains `openspec-proposal.md`, `openspec-apply.md`, and `openspec-archive.md`
+- **WHEN** `.factory/commands/` contains `ogd-proposal.md`, `ogd-apply.md`, and `ogd-archive.md`
 - **THEN** refresh each file using the shared Factory templates that include YAML frontmatter for the `description` and `argument-hint` fields
 - **AND** ensure the template body retains the `$ARGUMENTS` placeholder so user input keeps flowing into droid
-- **AND** update only the content inside the OpenSpec managed markers, leaving any unmanaged notes untouched
+- **AND** update only the content inside the OGD managed markers, leaving any unmanaged notes untouched
 - **AND** skip creating missing files during update
 
 #### Scenario: Updating slash commands for OpenCode
-- **WHEN** `.opencode/command/` contains `openspec-proposal.md`, `openspec-apply.md`, and `openspec-archive.md`
+- **WHEN** `.opencode/command/` contains `ogd-proposal.md`, `ogd-apply.md`, and `ogd-archive.md`
 - **THEN** refresh each file using shared templates
 - **AND** ensure templates include instructions for the relevant workflow stage
 - **AND** ensure the archive command includes `$ARGUMENTS` placeholder in frontmatter for accepting change ID arguments
 
 #### Scenario: Updating slash commands for Windsurf
-- **WHEN** `.windsurf/workflows/` contains `openspec-proposal.md`, `openspec-apply.md`, and `openspec-archive.md`
-- **THEN** refresh each file using shared templates wrapped in OpenSpec markers
+- **WHEN** `.windsurf/workflows/` contains `ogd-proposal.md`, `ogd-apply.md`, and `ogd-archive.md`
+- **THEN** refresh each file using shared templates wrapped in OGD markers
 - **AND** ensure templates include instructions for the relevant workflow stage
 - **AND** skip creating missing files (the update command only refreshes what already exists)
 
 #### Scenario: Updating slash commands for Kilo Code
-- **WHEN** `.kilocode/workflows/` contains `openspec-proposal.md`, `openspec-apply.md`, and `openspec-archive.md`
-- **THEN** refresh each file using shared templates wrapped in OpenSpec markers
+- **WHEN** `.kilocode/workflows/` contains `ogd-proposal.md`, `ogd-apply.md`, and `ogd-archive.md`
+- **THEN** refresh each file using shared templates wrapped in OGD markers
 - **AND** ensure templates include instructions for the relevant workflow stage
 - **AND** skip creating missing files (the update command only refreshes what already exists)
 
 #### Scenario: Updating slash commands for Codex
-- **GIVEN** the global Codex prompt directory contains `openspec-proposal.md`, `openspec-apply.md`, and `openspec-archive.md`
-- **WHEN** a user runs `openspec update`
+- **GIVEN** the global Codex prompt directory contains `ogd-proposal.md`, `ogd-apply.md`, and `ogd-archive.md`
+- **WHEN** a user runs `ogd update`
 - **THEN** refresh each file using the shared slash-command templates (including placeholder guidance)
-- **AND** preserve any unmanaged content outside the OpenSpec marker block
+- **AND** preserve any unmanaged content outside the OGD marker block
 - **AND** skip creation when a Codex prompt file is missing
 
 #### Scenario: Updating slash commands for GitHub Copilot
-- **WHEN** `.github/prompts/` contains `openspec-proposal.prompt.md`, `openspec-apply.prompt.md`, and `openspec-archive.prompt.md`
+- **WHEN** `.github/prompts/` contains `ogd-proposal.prompt.md`, `ogd-apply.prompt.md`, and `ogd-archive.prompt.md`
 - **THEN** refresh each file using shared templates while preserving the YAML frontmatter
-- **AND** update only the OpenSpec-managed block between markers
+- **AND** update only the OGD-managed block between markers
 - **AND** ensure templates include instructions for the relevant workflow stage
 
 #### Scenario: Updating slash commands for Gemini CLI
-- **WHEN** `.gemini/commands/openspec/` contains `proposal.toml`, `apply.toml`, and `archive.toml`
+- **WHEN** `.gemini/commands/ogd/` contains `proposal.toml`, `apply.toml`, and `archive.toml`
 - **THEN** refresh the body of each file using the shared proposal/apply/archive templates
-- **AND** replace only the content between `<!-- OPENSPEC:START -->` and `<!-- OPENSPEC:END -->` markers inside the `prompt = """` block so the TOML framing (`description`, `prompt`) stays intact
+- **AND** replace only the content between `<!-- OGD:START -->` and `<!-- OGD:END -->` markers inside the `prompt = """` block so the TOML framing (`description`, `prompt`) stays intact
 - **AND** skip creating any missing `.toml` files during update; only pre-existing Gemini commands are refreshed
 
 #### Scenario: Updating slash commands for iFlow CLI
-- **WHEN** `.iflow/commands/` contains `openspec-proposal.md`, `openspec-apply.md`, and `openspec-archive.md`
+- **WHEN** `.iflow/commands/` contains `ogd-proposal.md`, `ogd-apply.md`, and `ogd-archive.md`
 - **THEN** refresh each file using shared templates
 - **AND** preserve the YAML frontmatter with `name`, `id`, `category`, and `description` fields
-- **AND** update only the OpenSpec-managed block between markers
+- **AND** update only the OGD-managed block between markers
 - **AND** ensure templates include instructions for the relevant workflow stage
 
 #### Scenario: Missing slash command file
@@ -150,14 +150,14 @@ The update command SHALL refresh existing slash command files for configured too
 The archive slash command template SHALL support optional change ID arguments for tools that support `$ARGUMENTS` placeholder.
 
 #### Scenario: Archive command with change ID argument
-- **WHEN** a user invokes `/openspec:archive <change-id>` with a change ID
-- **THEN** the template SHALL instruct the AI to validate the provided change ID against `openspec list`
+- **WHEN** a user invokes `/OGD:archive <change-id>` with a change ID
+- **THEN** the template SHALL instruct the AI to validate the provided change ID against `ogd list`
 - **AND** use the provided change ID for archiving if valid
 - **AND** fail fast if the provided change ID doesn't match an archivable change
 
 #### Scenario: Archive command without argument (backward compatibility)
-- **WHEN** a user invokes `/openspec:archive` without providing a change ID
-- **THEN** the template SHALL instruct the AI to identify the change ID from context or by running `openspec list`
+- **WHEN** a user invokes `/OGD:archive` without providing a change ID
+- **THEN** the template SHALL instruct the AI to identify the change ID from context or by running `ogd list`
 - **AND** proceed with the existing behavior (maintaining backward compatibility)
 
 #### Scenario: OpenCode archive template generation
@@ -187,12 +187,12 @@ The command SHALL handle edge cases gracefully.
 
 - **WHEN** considering custom directory names
 - **THEN** not supported in this change
-- **AND** the default directory name `openspec` SHALL be used
+- **AND** the default directory name `OGD` SHALL be used
 
 ## Success Criteria
 
 Users SHALL be able to:
-- Update OpenSpec instructions with a single command
+- Update OGD instructions with a single command
 - Get the latest AI agent instructions
 - See clear confirmation of the update
 

@@ -1,7 +1,7 @@
 # Implementation Tasks
 
 ## 1. Test Isolation
-- [x] 1.1 Create temp fixture roots per suite (openspec/changes, openspec/specs)
+- [x] 1.1 Create temp fixture roots per suite (ogd/changes, ogd/specs)
 - [x] 1.2 Use process.chdir to temp root within tests
 - [x] 1.3 Restore original cwd and clean temp dirs after each
 

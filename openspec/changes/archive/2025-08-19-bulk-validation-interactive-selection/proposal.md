@@ -2,7 +2,7 @@
 
 Currently, users must validate changes and specs individually by specifying each ID. This creates friction when:
 - Teams want to validate all changes/specs before a release
-- Developers need to ensure consistency across multiple related changes  
+- Developers need to ensure consistency across multiple related changes
 - Users run validation commands without arguments and receive errors instead of helpful guidance
 - The subcommand structure requires users to know in advance whether they're validating a change or spec
 
@@ -11,7 +11,7 @@ Currently, users must validate changes and specs individually by specifying each
 - Add new top-level `validate` command with intuitive flags (--all, --changes, --specs)
 - Enhance existing `change validate` and `spec validate` to support interactive selection (backwards compatibility)
 - Interactive selection by default when no arguments provided
-- Support direct item validation: `openspec validate <item>` with automatic type detection
+- Support direct item validation: `ogd validate <item>` with automatic type detection
 
 ## Impact
 

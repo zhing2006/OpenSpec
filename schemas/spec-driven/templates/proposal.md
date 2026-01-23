@@ -1,23 +1,33 @@
-## Why
+# 设计变更提案：[变更名称]
 
-<!-- Explain the motivation for this change. What problem does this solve? Why now? -->
+## 为什么 (Why)
 
-## What Changes
+[1-2 句话描述问题或机会。这个变更解决什么问题？为什么现在做？]
 
-<!-- Describe what will change. Be specific about new capabilities, modifications, or removals. -->
+## 变更内容 (What Changes)
 
-## Capabilities
+- [变更 1：具体描述]
+- [变更 2：具体描述]
+- **BREAKING**：[如有破坏性变更，在此标注]
 
-### New Capabilities
-<!-- Capabilities being introduced. Replace <name> with kebab-case identifier (e.g., user-auth, data-export, api-rate-limiting). Each creates specs/<name>/spec.md -->
-- `<name>`: <brief description of what this capability covers>
+## 能力 (Capabilities)
 
-### Modified Capabilities
-<!-- Existing capabilities whose REQUIREMENTS are changing (not just implementation).
-     Only list here if spec-level behavior changes. Each needs a delta spec file.
-     Use existing spec names from openspec/specs/. Leave empty if no requirement changes. -->
-- `<existing-name>`: <what requirement is changing>
+### 新增能力 (New Capabilities)
 
-## Impact
+[列出要引入的新能力。每个能力对应 `specs/<name>/spec.md`。]
 
-<!-- Affected code, APIs, dependencies, systems -->
+- `[capability-name]`：[简要描述]
+
+### 修改能力 (Modified Capabilities)
+
+[列出需求发生变化的现有能力。]
+
+- `[existing-capability]`：[变更描述]
+
+## 影响 (Impact)
+
+[受影响的系统、依赖或其他设计。]
+
+- **受影响的系统**：[列出]
+- **依赖关系**：[列出]
+- **风险**：[列出潜在风险]

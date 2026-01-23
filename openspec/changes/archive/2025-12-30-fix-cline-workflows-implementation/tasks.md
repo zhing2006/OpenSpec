@@ -1,5 +1,5 @@
 ## 1. Update ClineSlashCommandConfigurator
-- [x] Change FILE_PATHS in `src/core/configurators/slash/cline.ts` from `.clinerules/openspec-*.md` to `.clinerules/workflows/openspec-*.md`
+- [x] Change FILE_PATHS in `src/core/configurators/slash/cline.ts` from `.clinerules/OGD-*.md` to `.clinerules/workflows/OGD-*.md`
 
 ## 2. Update Tests
 - [x] Update "should refresh existing Cline rule files" test in `test/core/update.test.ts` to use workflow paths
@@ -10,4 +10,4 @@
 
 ## 4. Validate Changes
 - [x] Ensure all tests pass with the new paths
-- [x] Verify the change follows OpenSpec conventions
+- [x] Verify the change follows OGD conventions

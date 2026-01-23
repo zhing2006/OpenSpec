@@ -15,16 +15,16 @@ export interface SkillTemplate {
 }
 
 /**
- * Template for openspec-explore skill
+ * Template for ogd-explore skill
  * Explore mode - adaptive thinking partner for exploring ideas and problems
  */
 export function getExploreSkillTemplate(): SkillTemplate {
   return {
-    name: 'openspec-explore',
+    name: 'ogd-explore',
     description: 'Enter explore mode - a thinking partner for exploring ideas, investigating problems, and clarifying requirements. Use when the user wants to think through something before or during a change.',
     instructions: `Enter explore mode. Think deeply. Visualize freely. Follow the conversation wherever it goes.
 
-**IMPORTANT: Explore mode is for thinking, not implementing.** You may read files, search code, and investigate the codebase, but you must NEVER write code or implement features. If the user asks you to implement something, remind them to exit explore mode first (e.g., start a change with \`/opsx:new\` or \`/opsx:ff\`). You MAY create OpenSpec artifacts (proposals, designs, specs) if the user asks—that's capturing thinking, not implementing.
+**IMPORTANT: Explore mode is for thinking, not implementing.** You may read files, search code, and investigate the codebase, but you must NEVER write code or implement features. If the user asks you to implement something, remind them to exit explore mode first (e.g., start a change with \`/opsx:new\` or \`/opsx:ff\`). You MAY create OGD artifacts (proposals, designs, specs) if the user asks—that's capturing thinking, not implementing.
 
 **This is a stance, not a workflow.** There are no fixed steps, no required sequence, no mandatory outputs. You're a thinking partner helping the user explore.
 
@@ -88,15 +88,15 @@ Depending on what the user brings, you might:
 
 ---
 
-## OpenSpec Awareness
+## OGD Awareness
 
-You have full context of the OpenSpec system. Use it naturally, don't force it.
+You have full context of the OGD system. Use it naturally, don't force it.
 
 ### Check for context
 
 At the start, quickly check what exists:
 \`\`\`bash
-openspec list --json
+ogd list --json
 \`\`\`
 
 This tells you:
@@ -117,9 +117,9 @@ Think freely. When insights crystallize, you might offer:
 If the user mentions a change or you detect one is relevant:
 
 1. **Read existing artifacts for context**
-   - \`openspec/changes/<name>/proposal.md\`
-   - \`openspec/changes/<name>/design.md\`
-   - \`openspec/changes/<name>/tasks.md\`
+   - \`ogd/changes/<name>/proposal.md\`
+   - \`ogd/changes/<name>/design.md\`
+   - \`ogd/changes/<name>/tasks.md\`
    - etc.
 
 2. **Reference them naturally in conversation**
@@ -293,7 +293,7 @@ But this summary is optional. Sometimes the thinking IS the value.
 
 ## Guardrails
 
-- **Don't implement** - Never write code or implement features. Creating OpenSpec artifacts is fine, writing application code is not.
+- **Don't implement** - Never write code or implement features. Creating OGD artifacts is fine, writing application code is not.
 - **Don't fake understanding** - If something is unclear, dig deeper
 - **Don't rush** - Discovery is thinking time, not task time
 - **Don't force structure** - Let patterns emerge naturally
@@ -305,13 +305,13 @@ But this summary is optional. Sometimes the thinking IS the value.
 }
 
 /**
- * Template for openspec-new-change skill
+ * Template for ogd-new-change skill
  * Based on /opsx:new command
  */
 export function getNewChangeSkillTemplate(): SkillTemplate {
   return {
-    name: 'openspec-new-change',
-    description: 'Start a new OpenSpec change using the experimental artifact workflow. Use when the user wants to create a new feature, fix, or modification with a structured step-by-step approach.',
+    name: 'ogd-new-change',
+    description: 'Start a new ogd change using the experimental artifact workflow. Use when the user wants to create a new feature, fix, or modification with a structured step-by-step approach.',
     instructions: `Start a new change using the experimental artifact-driven approach.
 
 **Input**: The user's request should include a change name (kebab-case) OR a description of what they want to build.
@@ -334,20 +334,20 @@ export function getNewChangeSkillTemplate(): SkillTemplate {
    **Use a different schema only if the user mentions:**
    - "tdd" or "test-driven" → use \`--schema tdd\`
    - A specific schema name → use \`--schema <name>\`
-   - "show workflows" or "what workflows" → run \`openspec schemas --json\` and let them choose
+   - "show workflows" or "what workflows" → run \`ogd schemas --json\` and let them choose
 
    **Otherwise**: Omit \`--schema\` to use the default.
 
 3. **Create the change directory**
    \`\`\`bash
-   openspec new change "<name>"
+   ogd new change "<name>"
    \`\`\`
    Add \`--schema <name>\` only if the user requested a specific workflow.
-   This creates a scaffolded change at \`openspec/changes/<name>/\` with the selected schema.
+   This creates a scaffolded change at \`ogd/changes/<name>/\` with the selected schema.
 
 4. **Show the artifact status**
    \`\`\`bash
-   openspec status --change "<name>"
+   ogd status --change "<name>"
    \`\`\`
    This shows which artifacts need to be created and which are ready (dependencies satisfied).
 
@@ -355,7 +355,7 @@ export function getNewChangeSkillTemplate(): SkillTemplate {
    The first artifact depends on the schema (e.g., \`proposal\` for spec-driven, \`spec\` for tdd).
    Check the status output to find the first artifact with status "ready".
    \`\`\`bash
-   openspec instructions <first-artifact-id> --change "<name>"
+   ogd instructions <first-artifact-id> --change "<name>"
    \`\`\`
    This outputs the template and context for creating the first artifact.
 
@@ -380,13 +380,13 @@ After completing the steps, summarize:
 }
 
 /**
- * Template for openspec-continue-change skill
+ * Template for ogd-continue-change skill
  * Based on /opsx:continue command
  */
 export function getContinueChangeSkillTemplate(): SkillTemplate {
   return {
-    name: 'openspec-continue-change',
-    description: 'Continue working on an OpenSpec change by creating the next artifact. Use when the user wants to progress their change, create the next artifact, or continue their workflow.',
+    name: 'ogd-continue-change',
+    description: 'Continue working on an ogd change by creating the next artifact. Use when the user wants to progress their change, create the next artifact, or continue their workflow.',
     instructions: `Continue working on a change by creating the next artifact.
 
 **Input**: Optionally specify a change name. If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
@@ -395,7 +395,7 @@ export function getContinueChangeSkillTemplate(): SkillTemplate {
 
 1. **If no change name provided, prompt for selection**
 
-   Run \`openspec list --json\` to get available changes sorted by most recently modified. Then use the **AskUserQuestion tool** to let the user select which change to work on.
+   Run \`ogd list --json\` to get available changes sorted by most recently modified. Then use the **AskUserQuestion tool** to let the user select which change to work on.
 
    Present the top 3-4 most recently modified changes as options, showing:
    - Change name
@@ -409,7 +409,7 @@ export function getContinueChangeSkillTemplate(): SkillTemplate {
 
 2. **Check current status**
    \`\`\`bash
-   openspec status --change "<name>" --json
+   ogd status --change "<name>" --json
    \`\`\`
    Parse the JSON to understand current state. The response includes:
    - \`schemaName\`: The workflow schema being used (e.g., "spec-driven", "tdd")
@@ -432,7 +432,7 @@ export function getContinueChangeSkillTemplate(): SkillTemplate {
    - Pick the FIRST artifact with \`status: "ready"\` from the status output
    - Get its instructions:
      \`\`\`bash
-     openspec instructions <artifact-id> --change "<name>" --json
+     ogd instructions <artifact-id> --change "<name>" --json
      \`\`\`
    - Parse the JSON. The key fields are:
      - \`context\`: Project background (constraints for you - do NOT include in output)
@@ -457,7 +457,7 @@ export function getContinueChangeSkillTemplate(): SkillTemplate {
 
 4. **After creating an artifact, show progress**
    \`\`\`bash
-   openspec status --change "<name>"
+   ogd status --change "<name>"
    \`\`\`
 
 **Output**
@@ -504,14 +504,14 @@ For other schemas, follow the \`instruction\` field from the CLI output.
 }
 
 /**
- * Template for openspec-apply-change skill
+ * Template for ogd-apply-change skill
  * For implementing tasks from a completed (or in-progress) change
  */
 export function getApplyChangeSkillTemplate(): SkillTemplate {
   return {
-    name: 'openspec-apply-change',
-    description: 'Implement tasks from an OpenSpec change. Use when the user wants to start implementing, continue implementation, or work through tasks.',
-    instructions: `Implement tasks from an OpenSpec change.
+    name: 'ogd-apply-change',
+    description: 'Implement tasks from an ogd change. Use when the user wants to start implementing, continue implementation, or work through tasks.',
+    instructions: `Implement tasks from an ogd change.
 
 **Input**: Optionally specify a change name. If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
 
@@ -522,13 +522,13 @@ export function getApplyChangeSkillTemplate(): SkillTemplate {
    If a name is provided, use it. Otherwise:
    - Infer from conversation context if the user mentioned a change
    - Auto-select if only one active change exists
-   - If ambiguous, run \`openspec list --json\` to get available changes and use the **AskUserQuestion tool** to let the user select
+   - If ambiguous, run \`ogd list --json\` to get available changes and use the **AskUserQuestion tool** to let the user select
 
    Always announce: "Using change: <name>" and how to override (e.g., \`/opsx:apply <other>\`).
 
 2. **Check status to understand the schema**
    \`\`\`bash
-   openspec status --change "<name>" --json
+   ogd status --change "<name>" --json
    \`\`\`
    Parse the JSON to understand:
    - \`schemaName\`: The workflow being used (e.g., "spec-driven", "tdd")
@@ -537,7 +537,7 @@ export function getApplyChangeSkillTemplate(): SkillTemplate {
 3. **Get apply instructions**
 
    \`\`\`bash
-   openspec instructions apply --change "<name>" --json
+   ogd instructions apply --change "<name>" --json
    \`\`\`
 
    This returns:
@@ -547,7 +547,7 @@ export function getApplyChangeSkillTemplate(): SkillTemplate {
    - Dynamic instruction based on current state
 
    **Handle states:**
-   - If \`state: "blocked"\` (missing artifacts): show message, suggest using openspec-continue-change
+   - If \`state: "blocked"\` (missing artifacts): show message, suggest using ogd-continue-change
    - If \`state: "all_done"\`: congratulate, suggest archive
    - Otherwise: proceed to implementation
 
@@ -661,13 +661,13 @@ This skill supports the "actions on a change" model:
 }
 
 /**
- * Template for openspec-ff-change skill
+ * Template for ogd-ff-change skill
  * Fast-forward through artifact creation
  */
 export function getFfChangeSkillTemplate(): SkillTemplate {
   return {
-    name: 'openspec-ff-change',
-    description: 'Fast-forward through OpenSpec artifact creation. Use when the user wants to quickly create all artifacts needed for implementation without stepping through each one individually.',
+    name: 'ogd-ff-change',
+    description: 'Fast-forward through OGD artifact creation. Use when the user wants to quickly create all artifacts needed for implementation without stepping through each one individually.',
     instructions: `Fast-forward through artifact creation - generate everything needed to start implementation in one go.
 
 **Input**: The user's request should include a change name (kebab-case) OR a description of what they want to build.
@@ -685,13 +685,13 @@ export function getFfChangeSkillTemplate(): SkillTemplate {
 
 2. **Create the change directory**
    \`\`\`bash
-   openspec new change "<name>"
+   ogd new change "<name>"
    \`\`\`
-   This creates a scaffolded change at \`openspec/changes/<name>/\`.
+   This creates a scaffolded change at \`ogd/changes/<name>/\`.
 
 3. **Get the artifact build order**
    \`\`\`bash
-   openspec status --change "<name>" --json
+   ogd status --change "<name>" --json
    \`\`\`
    Parse the JSON to get:
    - \`applyRequires\`: array of artifact IDs needed before implementation (e.g., \`["tasks"]\`)
@@ -706,7 +706,7 @@ export function getFfChangeSkillTemplate(): SkillTemplate {
    a. **For each artifact that is \`ready\` (dependencies satisfied)**:
       - Get instructions:
         \`\`\`bash
-        openspec instructions <artifact-id> --change "<name>" --json
+        ogd instructions <artifact-id> --change "<name>" --json
         \`\`\`
       - The instructions JSON includes:
         - \`context\`: Project background (constraints for you - do NOT include in output)
@@ -721,7 +721,7 @@ export function getFfChangeSkillTemplate(): SkillTemplate {
       - Show brief progress: "✓ Created <artifact-id>"
 
    b. **Continue until all \`applyRequires\` artifacts are complete**
-      - After creating each artifact, re-run \`openspec status --change "<name>" --json\`
+      - After creating each artifact, re-run \`ogd status --change "<name>" --json\`
       - Check if every artifact ID in \`applyRequires\` has \`status: "done"\` in the artifacts array
       - Stop when all \`applyRequires\` artifacts are done
 
@@ -731,7 +731,7 @@ export function getFfChangeSkillTemplate(): SkillTemplate {
 
 5. **Show final status**
    \`\`\`bash
-   openspec status --change "<name>"
+   ogd status --change "<name>"
    \`\`\`
 
 **Output**
@@ -744,7 +744,7 @@ After completing all artifacts, summarize:
 
 **Artifact Creation Guidelines**
 
-- Follow the \`instruction\` field from \`openspec instructions\` for each artifact type
+- Follow the \`instruction\` field from \`ogd instructions\` for each artifact type
 - The schema defines what each artifact should contain - follow it
 - Read dependency artifacts for context before creating new ones
 - Use \`template\` as the structure for your output file - fill in its sections
@@ -762,12 +762,12 @@ After completing all artifacts, summarize:
 }
 
 /**
- * Template for openspec-sync-specs skill
+ * Template for ogd-sync-specs skill
  * For syncing delta specs from a change to main specs (agent-driven)
  */
 export function getSyncSpecsSkillTemplate(): SkillTemplate {
   return {
-    name: 'openspec-sync-specs',
+    name: 'ogd-sync-specs',
     description: 'Sync delta specs from a change to main specs. Use when the user wants to update main specs with changes from a delta spec, without archiving the change.',
     instructions: `Sync delta specs from a change to main specs.
 
@@ -779,7 +779,7 @@ This is an **agent-driven** operation - you will read delta specs and directly e
 
 1. **If no change name provided, prompt for selection**
 
-   Run \`openspec list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
+   Run \`ogd list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
 
    Show changes that have delta specs (under \`specs/\` directory).
 
@@ -787,7 +787,7 @@ This is an **agent-driven** operation - you will read delta specs and directly e
 
 2. **Find delta specs**
 
-   Look for delta spec files in \`openspec/changes/<name>/specs/*/spec.md\`.
+   Look for delta spec files in \`ogd/changes/<name>/specs/*/spec.md\`.
 
    Each delta spec file contains sections like:
    - \`## ADDED Requirements\` - New requirements to add
@@ -799,11 +799,11 @@ This is an **agent-driven** operation - you will read delta specs and directly e
 
 3. **For each delta spec, apply changes to main specs**
 
-   For each capability with a delta spec at \`openspec/changes/<name>/specs/<capability>/spec.md\`:
+   For each capability with a delta spec at \`ogd/changes/<name>/specs/<capability>/spec.md\`:
 
    a. **Read the delta spec** to understand the intended changes
 
-   b. **Read the main spec** at \`openspec/specs/<capability>/spec.md\` (may not exist yet)
+   b. **Read the main spec** at \`ogd/specs/<capability>/spec.md\` (may not exist yet)
 
    c. **Apply changes intelligently**:
 
@@ -826,7 +826,7 @@ This is an **agent-driven** operation - you will read delta specs and directly e
       - Find the FROM requirement, rename to TO
 
    d. **Create new main spec** if capability doesn't exist yet:
-      - Create \`openspec/specs/<capability>/spec.md\`
+      - Create \`ogd/specs/<capability>/spec.md\`
       - Add Purpose section (can be brief, mark as TBD)
       - Add Requirements section with the ADDED requirements
 
@@ -923,7 +923,7 @@ export function getOpsxExploreCommandTemplate(): CommandTemplate {
     tags: ['workflow', 'explore', 'experimental', 'thinking'],
     content: `Enter explore mode. Think deeply. Visualize freely. Follow the conversation wherever it goes.
 
-**IMPORTANT: Explore mode is for thinking, not implementing.** You may read files, search code, and investigate the codebase, but you must NEVER write code or implement features. If the user asks you to implement something, remind them to exit explore mode first (e.g., start a change with \`/opsx:new\` or \`/opsx:ff\`). You MAY create OpenSpec artifacts (proposals, designs, specs) if the user asks—that's capturing thinking, not implementing.
+**IMPORTANT: Explore mode is for thinking, not implementing.** You may read files, search code, and investigate the codebase, but you must NEVER write code or implement features. If the user asks you to implement something, remind them to exit explore mode first (e.g., start a change with \`/opsx:new\` or \`/opsx:ff\`). You MAY create OGD artifacts (proposals, designs, specs) if the user asks—that's capturing thinking, not implementing.
 
 **This is a stance, not a workflow.** There are no fixed steps, no required sequence, no mandatory outputs. You're a thinking partner helping the user explore.
 
@@ -994,15 +994,15 @@ Depending on what the user brings, you might:
 
 ---
 
-## OpenSpec Awareness
+## OGD Awareness
 
-You have full context of the OpenSpec system. Use it naturally, don't force it.
+You have full context of the OGD system. Use it naturally, don't force it.
 
 ### Check for context
 
 At the start, quickly check what exists:
 \`\`\`bash
-openspec list --json
+ogd list --json
 \`\`\`
 
 This tells you:
@@ -1025,9 +1025,9 @@ Think freely. When insights crystallize, you might offer:
 If the user mentions a change or you detect one is relevant:
 
 1. **Read existing artifacts for context**
-   - \`openspec/changes/<name>/proposal.md\`
-   - \`openspec/changes/<name>/design.md\`
-   - \`openspec/changes/<name>/tasks.md\`
+   - \`ogd/changes/<name>/proposal.md\`
+   - \`ogd/changes/<name>/design.md\`
+   - \`ogd/changes/<name>/tasks.md\`
    - etc.
 
 2. **Reference them naturally in conversation**
@@ -1080,7 +1080,7 @@ When things crystallize, you might offer a summary - but it's optional. Sometime
 
 ## Guardrails
 
-- **Don't implement** - Never write code or implement features. Creating OpenSpec artifacts is fine, writing application code is not.
+- **Don't implement** - Never write code or implement features. Creating OGD artifacts is fine, writing application code is not.
 - **Don't fake understanding** - If something is unclear, dig deeper
 - **Don't rush** - Discovery is thinking time, not task time
 - **Don't force structure** - Let patterns emerge naturally
@@ -1122,27 +1122,27 @@ export function getOpsxNewCommandTemplate(): CommandTemplate {
    **Use a different schema only if the user mentions:**
    - "tdd" or "test-driven" → use \`--schema tdd\`
    - A specific schema name → use \`--schema <name>\`
-   - "show workflows" or "what workflows" → run \`openspec schemas --json\` and let them choose
+   - "show workflows" or "what workflows" → run \`ogd schemas --json\` and let them choose
 
    **Otherwise**: Omit \`--schema\` to use the default.
 
 3. **Create the change directory**
    \`\`\`bash
-   openspec new change "<name>"
+   ogd new change "<name>"
    \`\`\`
    Add \`--schema <name>\` only if the user requested a specific workflow.
-   This creates a scaffolded change at \`openspec/changes/<name>/\` with the selected schema.
+   This creates a scaffolded change at \`ogd/changes/<name>/\` with the selected schema.
 
 4. **Show the artifact status**
    \`\`\`bash
-   openspec status --change "<name>"
+   ogd status --change "<name>"
    \`\`\`
    This shows which artifacts need to be created and which are ready (dependencies satisfied).
 
 5. **Get instructions for the first artifact**
    The first artifact depends on the schema. Check the status output to find the first artifact with status "ready".
    \`\`\`bash
-   openspec instructions <first-artifact-id> --change "<name>"
+   ogd instructions <first-artifact-id> --change "<name>"
    \`\`\`
    This outputs the template and context for creating the first artifact.
 
@@ -1183,7 +1183,7 @@ export function getOpsxContinueCommandTemplate(): CommandTemplate {
 
 1. **If no change name provided, prompt for selection**
 
-   Run \`openspec list --json\` to get available changes sorted by most recently modified. Then use the **AskUserQuestion tool** to let the user select which change to work on.
+   Run \`ogd list --json\` to get available changes sorted by most recently modified. Then use the **AskUserQuestion tool** to let the user select which change to work on.
 
    Present the top 3-4 most recently modified changes as options, showing:
    - Change name
@@ -1197,7 +1197,7 @@ export function getOpsxContinueCommandTemplate(): CommandTemplate {
 
 2. **Check current status**
    \`\`\`bash
-   openspec status --change "<name>" --json
+   ogd status --change "<name>" --json
    \`\`\`
    Parse the JSON to understand current state. The response includes:
    - \`schemaName\`: The workflow schema being used (e.g., "spec-driven", "tdd")
@@ -1220,7 +1220,7 @@ export function getOpsxContinueCommandTemplate(): CommandTemplate {
    - Pick the FIRST artifact with \`status: "ready"\` from the status output
    - Get its instructions:
      \`\`\`bash
-     openspec instructions <artifact-id> --change "<name>" --json
+     ogd instructions <artifact-id> --change "<name>" --json
      \`\`\`
    - Parse the JSON. The key fields are:
      - \`context\`: Project background (constraints for you - do NOT include in output)
@@ -1245,7 +1245,7 @@ export function getOpsxContinueCommandTemplate(): CommandTemplate {
 
 4. **After creating an artifact, show progress**
    \`\`\`bash
-   openspec status --change "<name>"
+   ogd status --change "<name>"
    \`\`\`
 
 **Output**
@@ -1297,10 +1297,10 @@ For other schemas, follow the \`instruction\` field from the CLI output.
 export function getOpsxApplyCommandTemplate(): CommandTemplate {
   return {
     name: 'OPSX: Apply',
-    description: 'Implement tasks from an OpenSpec change (Experimental)',
+    description: 'Implement tasks from an ogd change (Experimental)',
     category: 'Workflow',
     tags: ['workflow', 'artifacts', 'experimental'],
-    content: `Implement tasks from an OpenSpec change.
+    content: `Implement tasks from an ogd change.
 
 **Input**: Optionally specify a change name (e.g., \`/opsx:apply add-auth\`). If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
 
@@ -1311,13 +1311,13 @@ export function getOpsxApplyCommandTemplate(): CommandTemplate {
    If a name is provided, use it. Otherwise:
    - Infer from conversation context if the user mentioned a change
    - Auto-select if only one active change exists
-   - If ambiguous, run \`openspec list --json\` to get available changes and use the **AskUserQuestion tool** to let the user select
+   - If ambiguous, run \`ogd list --json\` to get available changes and use the **AskUserQuestion tool** to let the user select
 
    Always announce: "Using change: <name>" and how to override (e.g., \`/opsx:apply <other>\`).
 
 2. **Check status to understand the schema**
    \`\`\`bash
-   openspec status --change "<name>" --json
+   ogd status --change "<name>" --json
    \`\`\`
    Parse the JSON to understand:
    - \`schemaName\`: The workflow being used (e.g., "spec-driven", "tdd")
@@ -1326,7 +1326,7 @@ export function getOpsxApplyCommandTemplate(): CommandTemplate {
 3. **Get apply instructions**
 
    \`\`\`bash
-   openspec instructions apply --change "<name>" --json
+   ogd instructions apply --change "<name>" --json
    \`\`\`
 
    This returns:
@@ -1476,13 +1476,13 @@ export function getOpsxFfCommandTemplate(): CommandTemplate {
 
 2. **Create the change directory**
    \`\`\`bash
-   openspec new change "<name>"
+   ogd new change "<name>"
    \`\`\`
-   This creates a scaffolded change at \`openspec/changes/<name>/\`.
+   This creates a scaffolded change at \`ogd/changes/<name>/\`.
 
 3. **Get the artifact build order**
    \`\`\`bash
-   openspec status --change "<name>" --json
+   ogd status --change "<name>" --json
    \`\`\`
    Parse the JSON to get:
    - \`applyRequires\`: array of artifact IDs needed before implementation (e.g., \`["tasks"]\`)
@@ -1497,7 +1497,7 @@ export function getOpsxFfCommandTemplate(): CommandTemplate {
    a. **For each artifact that is \`ready\` (dependencies satisfied)**:
       - Get instructions:
         \`\`\`bash
-        openspec instructions <artifact-id> --change "<name>" --json
+        ogd instructions <artifact-id> --change "<name>" --json
         \`\`\`
       - The instructions JSON includes:
         - \`context\`: Project background (constraints for you - do NOT include in output)
@@ -1512,7 +1512,7 @@ export function getOpsxFfCommandTemplate(): CommandTemplate {
       - Show brief progress: "✓ Created <artifact-id>"
 
    b. **Continue until all \`applyRequires\` artifacts are complete**
-      - After creating each artifact, re-run \`openspec status --change "<name>" --json\`
+      - After creating each artifact, re-run \`ogd status --change "<name>" --json\`
       - Check if every artifact ID in \`applyRequires\` has \`status: "done"\` in the artifacts array
       - Stop when all \`applyRequires\` artifacts are done
 
@@ -1522,7 +1522,7 @@ export function getOpsxFfCommandTemplate(): CommandTemplate {
 
 5. **Show final status**
    \`\`\`bash
-   openspec status --change "<name>"
+   ogd status --change "<name>"
    \`\`\`
 
 **Output**
@@ -1535,7 +1535,7 @@ After completing all artifacts, summarize:
 
 **Artifact Creation Guidelines**
 
-- Follow the \`instruction\` field from \`openspec instructions\` for each artifact type
+- Follow the \`instruction\` field from \`ogd instructions\` for each artifact type
 - The schema defines what each artifact should contain - follow it
 - Read dependency artifacts for context before creating new ones
 - Use the \`template\` as a starting point, filling in based on context
@@ -1550,12 +1550,12 @@ After completing all artifacts, summarize:
 }
 
 /**
- * Template for openspec-archive-change skill
+ * Template for ogd-archive-change skill
  * For archiving completed changes in the experimental workflow
  */
 export function getArchiveChangeSkillTemplate(): SkillTemplate {
   return {
-    name: 'openspec-archive-change',
+    name: 'ogd-archive-change',
     description: 'Archive a completed change in the experimental workflow. Use when the user wants to finalize and archive a change after implementation is complete.',
     instructions: `Archive a completed change in the experimental workflow.
 
@@ -1565,7 +1565,7 @@ export function getArchiveChangeSkillTemplate(): SkillTemplate {
 
 1. **If no change name provided, prompt for selection**
 
-   Run \`openspec list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
+   Run \`ogd list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
 
    Show only active changes (not already archived).
    Include the schema used for each change if available.
@@ -1574,7 +1574,7 @@ export function getArchiveChangeSkillTemplate(): SkillTemplate {
 
 2. **Check artifact completion status**
 
-   Run \`openspec status --change "<name>" --json\` to check artifact completion.
+   Run \`ogd status --change "<name>" --json\` to check artifact completion.
 
    Parse the JSON to understand:
    - \`schemaName\`: The workflow being used
@@ -1600,10 +1600,10 @@ export function getArchiveChangeSkillTemplate(): SkillTemplate {
 
 4. **Assess delta spec sync state**
 
-   Check for delta specs at \`openspec/changes/<name>/specs/\`. If none exist, proceed without sync prompt.
+   Check for delta specs at \`ogd/changes/<name>/specs/\`. If none exist, proceed without sync prompt.
 
    **If delta specs exist:**
-   - Compare each delta spec with its corresponding main spec at \`openspec/specs/<capability>/spec.md\`
+   - Compare each delta spec with its corresponding main spec at \`ogd/specs/<capability>/spec.md\`
    - Determine what changes would be applied (adds, modifications, removals, renames)
    - Show a combined summary before prompting
 
@@ -1611,13 +1611,13 @@ export function getArchiveChangeSkillTemplate(): SkillTemplate {
    - If changes needed: "Sync now (recommended)", "Archive without syncing"
    - If already synced: "Archive now", "Sync anyway", "Cancel"
 
-   If user chooses sync, execute /opsx:sync logic (use the openspec-sync-specs skill). Proceed to archive regardless of choice.
+   If user chooses sync, execute /opsx:sync logic (use the ogd-sync-specs skill). Proceed to archive regardless of choice.
 
 5. **Perform the archive**
 
    Create the archive directory if it doesn't exist:
    \`\`\`bash
-   mkdir -p openspec/changes/archive
+   mkdir -p ogd/changes/archive
    \`\`\`
 
    Generate target name using current date: \`YYYY-MM-DD-<change-name>\`
@@ -1627,7 +1627,7 @@ export function getArchiveChangeSkillTemplate(): SkillTemplate {
    - If no: Move the change directory to archive
 
    \`\`\`bash
-   mv openspec/changes/<name> openspec/changes/archive/YYYY-MM-DD-<name>
+   mv ogd/changes/<name> ogd/changes/archive/YYYY-MM-DD-<name>
    \`\`\`
 
 6. **Display summary**
@@ -1646,7 +1646,7 @@ export function getArchiveChangeSkillTemplate(): SkillTemplate {
 
 **Change:** <change-name>
 **Schema:** <schema-name>
-**Archived to:** openspec/changes/archive/YYYY-MM-DD-<name>/
+**Archived to:** ogd/changes/archive/YYYY-MM-DD-<name>/
 **Specs:** ✓ Synced to main specs (or "No delta specs" or "Sync skipped")
 
 All artifacts complete. All tasks complete.
@@ -1654,22 +1654,22 @@ All artifacts complete. All tasks complete.
 
 **Guardrails**
 - Always prompt for change selection if not provided
-- Use artifact graph (openspec status --json) for completion checking
+- Use artifact graph (ogd status --json) for completion checking
 - Don't block archive on warnings - just inform and confirm
-- Preserve .openspec.yaml when moving to archive (it moves with the directory)
+- Preserve .ogd.yaml when moving to archive (it moves with the directory)
 - Show clear summary of what happened
-- If sync is requested, use openspec-sync-specs approach (agent-driven)
+- If sync is requested, use ogd-sync-specs approach (agent-driven)
 - If delta specs exist, always run the sync assessment and show the combined summary before prompting`
   };
 }
 
 /**
- * Template for openspec-bulk-archive-change skill
+ * Template for ogd-bulk-archive-change skill
  * For archiving multiple completed changes at once
  */
 export function getBulkArchiveChangeSkillTemplate(): SkillTemplate {
   return {
-    name: 'openspec-bulk-archive-change',
+    name: 'ogd-bulk-archive-change',
     description: 'Archive multiple completed changes at once. Use when archiving several parallel changes.',
     instructions: `Archive multiple completed changes in a single operation.
 
@@ -1681,7 +1681,7 @@ This skill allows you to batch-archive changes, handling spec conflicts intellig
 
 1. **Get active changes**
 
-   Run \`openspec list --json\` to get all active changes.
+   Run \`ogd list --json\` to get all active changes.
 
    If no active changes exist, inform user and stop.
 
@@ -1698,15 +1698,15 @@ This skill allows you to batch-archive changes, handling spec conflicts intellig
 
    For each selected change, collect:
 
-   a. **Artifact status** - Run \`openspec status --change "<name>" --json\`
+   a. **Artifact status** - Run \`ogd status --change "<name>" --json\`
       - Parse \`schemaName\` and \`artifacts\` list
       - Note which artifacts are \`done\` vs other states
 
-   b. **Task completion** - Read \`openspec/changes/<name>/tasks.md\`
+   b. **Task completion** - Read \`ogd/changes/<name>/tasks.md\`
       - Count \`- [ ]\` (incomplete) vs \`- [x]\` (complete)
       - If no tasks file exists, note as "No tasks"
 
-   c. **Delta specs** - Check \`openspec/changes/<name>/specs/\` directory
+   c. **Delta specs** - Check \`ogd/changes/<name>/specs/\` directory
       - List which capability specs exist
       - For each, extract requirement names (lines matching \`### Requirement: <name>\`)
 
@@ -1783,14 +1783,14 @@ This skill allows you to batch-archive changes, handling spec conflicts intellig
    Process changes in the determined order (respecting conflict resolution):
 
    a. **Sync specs** if delta specs exist:
-      - Use the openspec-sync-specs approach (agent-driven intelligent merge)
+      - Use the ogd-sync-specs approach (agent-driven intelligent merge)
       - For conflicts, apply in resolved order
       - Track if sync was done
 
    b. **Perform the archive**:
       \`\`\`bash
-      mkdir -p openspec/changes/archive
-      mv openspec/changes/<name> openspec/changes/archive/YYYY-MM-DD-<name>
+      mkdir -p ogd/changes/archive
+      mv ogd/changes/<name> ogd/changes/archive/YYYY-MM-DD-<name>
       \`\`\`
 
    c. **Track outcome** for each change:
@@ -1903,7 +1903,7 @@ No active changes found. Use \`/opsx:new\` to create a new change.
 - Show clear per-change status before confirming
 - Use single confirmation for entire batch
 - Track and report all outcomes (success/skip/fail)
-- Preserve .openspec.yaml when moving to archive
+- Preserve .ogd.yaml when moving to archive
 - Archive directory target uses current date: YYYY-MM-DD-<name>
 - If archive target exists, fail that change but continue with others`
   };
@@ -1928,7 +1928,7 @@ This is an **agent-driven** operation - you will read delta specs and directly e
 
 1. **If no change name provided, prompt for selection**
 
-   Run \`openspec list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
+   Run \`ogd list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
 
    Show changes that have delta specs (under \`specs/\` directory).
 
@@ -1936,7 +1936,7 @@ This is an **agent-driven** operation - you will read delta specs and directly e
 
 2. **Find delta specs**
 
-   Look for delta spec files in \`openspec/changes/<name>/specs/*/spec.md\`.
+   Look for delta spec files in \`ogd/changes/<name>/specs/*/spec.md\`.
 
    Each delta spec file contains sections like:
    - \`## ADDED Requirements\` - New requirements to add
@@ -1948,11 +1948,11 @@ This is an **agent-driven** operation - you will read delta specs and directly e
 
 3. **For each delta spec, apply changes to main specs**
 
-   For each capability with a delta spec at \`openspec/changes/<name>/specs/<capability>/spec.md\`:
+   For each capability with a delta spec at \`ogd/changes/<name>/specs/<capability>/spec.md\`:
 
    a. **Read the delta spec** to understand the intended changes
 
-   b. **Read the main spec** at \`openspec/specs/<capability>/spec.md\` (may not exist yet)
+   b. **Read the main spec** at \`ogd/specs/<capability>/spec.md\` (may not exist yet)
 
    c. **Apply changes intelligently**:
 
@@ -1975,7 +1975,7 @@ This is an **agent-driven** operation - you will read delta specs and directly e
       - Find the FROM requirement, rename to TO
 
    d. **Create new main spec** if capability doesn't exist yet:
-      - Create \`openspec/specs/<capability>/spec.md\`
+      - Create \`ogd/specs/<capability>/spec.md\`
       - Add Purpose section (can be brief, mark as TBD)
       - Add Requirements section with the ADDED requirements
 
@@ -2049,12 +2049,12 @@ Main specs are now updated. The change remains active - archive when implementat
 }
 
 /**
- * Template for openspec-verify-change skill
+ * Template for ogd-verify-change skill
  * For verifying implementation matches change artifacts before archiving
  */
 export function getVerifyChangeSkillTemplate(): SkillTemplate {
   return {
-    name: 'openspec-verify-change',
+    name: 'ogd-verify-change',
     description: 'Verify implementation matches change artifacts. Use when the user wants to validate that implementation is complete, correct, and coherent before archiving.',
     instructions: `Verify that an implementation matches the change artifacts (specs, tasks, design).
 
@@ -2064,7 +2064,7 @@ export function getVerifyChangeSkillTemplate(): SkillTemplate {
 
 1. **If no change name provided, prompt for selection**
 
-   Run \`openspec list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
+   Run \`ogd list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
 
    Show changes that have implementation tasks (tasks artifact exists).
    Include the schema used for each change if available.
@@ -2074,7 +2074,7 @@ export function getVerifyChangeSkillTemplate(): SkillTemplate {
 
 2. **Check status to understand the schema**
    \`\`\`bash
-   openspec status --change "<name>" --json
+   ogd status --change "<name>" --json
    \`\`\`
    Parse the JSON to understand:
    - \`schemaName\`: The workflow being used (e.g., "spec-driven", "tdd")
@@ -2083,7 +2083,7 @@ export function getVerifyChangeSkillTemplate(): SkillTemplate {
 3. **Get the change directory and load artifacts**
 
    \`\`\`bash
-   openspec instructions apply --change "<name>" --json
+   ogd instructions apply --change "<name>" --json
    \`\`\`
 
    This returns the change directory and context files. Read all available artifacts from \`contextFiles\`.
@@ -2108,7 +2108,7 @@ export function getVerifyChangeSkillTemplate(): SkillTemplate {
      - Recommendation: "Complete task: <description>" or "Mark as done if already implemented"
 
    **Spec Coverage**:
-   - If delta specs exist in \`openspec/changes/<name>/specs/\`:
+   - If delta specs exist in \`ogd/changes/<name>/specs/\`:
      - Extract all requirements (marked with "### Requirement:")
      - For each requirement:
        - Search codebase for keywords related to the requirement
@@ -2233,7 +2233,7 @@ export function getOpsxArchiveCommandTemplate(): CommandTemplate {
 
 1. **If no change name provided, prompt for selection**
 
-   Run \`openspec list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
+   Run \`ogd list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
 
    Show only active changes (not already archived).
    Include the schema used for each change if available.
@@ -2242,7 +2242,7 @@ export function getOpsxArchiveCommandTemplate(): CommandTemplate {
 
 2. **Check artifact completion status**
 
-   Run \`openspec status --change "<name>" --json\` to check artifact completion.
+   Run \`ogd status --change "<name>" --json\` to check artifact completion.
 
    Parse the JSON to understand:
    - \`schemaName\`: The workflow being used
@@ -2268,10 +2268,10 @@ export function getOpsxArchiveCommandTemplate(): CommandTemplate {
 
 4. **Assess delta spec sync state**
 
-   Check for delta specs at \`openspec/changes/<name>/specs/\`. If none exist, proceed without sync prompt.
+   Check for delta specs at \`ogd/changes/<name>/specs/\`. If none exist, proceed without sync prompt.
 
    **If delta specs exist:**
-   - Compare each delta spec with its corresponding main spec at \`openspec/specs/<capability>/spec.md\`
+   - Compare each delta spec with its corresponding main spec at \`ogd/specs/<capability>/spec.md\`
    - Determine what changes would be applied (adds, modifications, removals, renames)
    - Show a combined summary before prompting
 
@@ -2285,7 +2285,7 @@ export function getOpsxArchiveCommandTemplate(): CommandTemplate {
 
    Create the archive directory if it doesn't exist:
    \`\`\`bash
-   mkdir -p openspec/changes/archive
+   mkdir -p ogd/changes/archive
    \`\`\`
 
    Generate target name using current date: \`YYYY-MM-DD-<change-name>\`
@@ -2295,7 +2295,7 @@ export function getOpsxArchiveCommandTemplate(): CommandTemplate {
    - If no: Move the change directory to archive
 
    \`\`\`bash
-   mv openspec/changes/<name> openspec/changes/archive/YYYY-MM-DD-<name>
+   mv ogd/changes/<name> ogd/changes/archive/YYYY-MM-DD-<name>
    \`\`\`
 
 6. **Display summary**
@@ -2314,7 +2314,7 @@ export function getOpsxArchiveCommandTemplate(): CommandTemplate {
 
 **Change:** <change-name>
 **Schema:** <schema-name>
-**Archived to:** openspec/changes/archive/YYYY-MM-DD-<name>/
+**Archived to:** ogd/changes/archive/YYYY-MM-DD-<name>/
 **Specs:** ✓ Synced to main specs
 
 All artifacts complete. All tasks complete.
@@ -2327,7 +2327,7 @@ All artifacts complete. All tasks complete.
 
 **Change:** <change-name>
 **Schema:** <schema-name>
-**Archived to:** openspec/changes/archive/YYYY-MM-DD-<name>/
+**Archived to:** ogd/changes/archive/YYYY-MM-DD-<name>/
 **Specs:** No delta specs
 
 All artifacts complete. All tasks complete.
@@ -2340,7 +2340,7 @@ All artifacts complete. All tasks complete.
 
 **Change:** <change-name>
 **Schema:** <schema-name>
-**Archived to:** openspec/changes/archive/YYYY-MM-DD-<name>/
+**Archived to:** ogd/changes/archive/YYYY-MM-DD-<name>/
 **Specs:** Sync skipped (user chose to skip)
 
 **Warnings:**
@@ -2357,7 +2357,7 @@ Review the archive if this was not intentional.
 ## Archive Failed
 
 **Change:** <change-name>
-**Target:** openspec/changes/archive/YYYY-MM-DD-<name>/
+**Target:** ogd/changes/archive/YYYY-MM-DD-<name>/
 
 Target archive directory already exists.
 
@@ -2369,9 +2369,9 @@ Target archive directory already exists.
 
 **Guardrails**
 - Always prompt for change selection if not provided
-- Use artifact graph (openspec status --json) for completion checking
+- Use artifact graph (ogd status --json) for completion checking
 - Don't block archive on warnings - just inform and confirm
-- Preserve .openspec.yaml when moving to archive (it moves with the directory)
+- Preserve .ogd.yaml when moving to archive (it moves with the directory)
 - Show clear summary of what happened
 - If sync is requested, use /opsx:sync approach (agent-driven)
 - If delta specs exist, always run the sync assessment and show the combined summary before prompting`
@@ -2397,7 +2397,7 @@ This skill allows you to batch-archive changes, handling spec conflicts intellig
 
 1. **Get active changes**
 
-   Run \`openspec list --json\` to get all active changes.
+   Run \`ogd list --json\` to get all active changes.
 
    If no active changes exist, inform user and stop.
 
@@ -2414,15 +2414,15 @@ This skill allows you to batch-archive changes, handling spec conflicts intellig
 
    For each selected change, collect:
 
-   a. **Artifact status** - Run \`openspec status --change "<name>" --json\`
+   a. **Artifact status** - Run \`ogd status --change "<name>" --json\`
       - Parse \`schemaName\` and \`artifacts\` list
       - Note which artifacts are \`done\` vs other states
 
-   b. **Task completion** - Read \`openspec/changes/<name>/tasks.md\`
+   b. **Task completion** - Read \`ogd/changes/<name>/tasks.md\`
       - Count \`- [ ]\` (incomplete) vs \`- [x]\` (complete)
       - If no tasks file exists, note as "No tasks"
 
-   c. **Delta specs** - Check \`openspec/changes/<name>/specs/\` directory
+   c. **Delta specs** - Check \`ogd/changes/<name>/specs/\` directory
       - List which capability specs exist
       - For each, extract requirement names (lines matching \`### Requirement: <name>\`)
 
@@ -2499,14 +2499,14 @@ This skill allows you to batch-archive changes, handling spec conflicts intellig
    Process changes in the determined order (respecting conflict resolution):
 
    a. **Sync specs** if delta specs exist:
-      - Use the openspec-sync-specs approach (agent-driven intelligent merge)
+      - Use the ogd-sync-specs approach (agent-driven intelligent merge)
       - For conflicts, apply in resolved order
       - Track if sync was done
 
    b. **Perform the archive**:
       \`\`\`bash
-      mkdir -p openspec/changes/archive
-      mv openspec/changes/<name> openspec/changes/archive/YYYY-MM-DD-<name>
+      mkdir -p ogd/changes/archive
+      mv ogd/changes/<name> ogd/changes/archive/YYYY-MM-DD-<name>
       \`\`\`
 
    c. **Track outcome** for each change:
@@ -2619,7 +2619,7 @@ No active changes found. Use \`/opsx:new\` to create a new change.
 - Show clear per-change status before confirming
 - Use single confirmation for entire batch
 - Track and report all outcomes (success/skip/fail)
-- Preserve .openspec.yaml when moving to archive
+- Preserve .ogd.yaml when moving to archive
 - Archive directory target uses current date: YYYY-MM-DD-<name>
 - If archive target exists, fail that change but continue with others`
   };
@@ -2642,7 +2642,7 @@ export function getOpsxVerifyCommandTemplate(): CommandTemplate {
 
 1. **If no change name provided, prompt for selection**
 
-   Run \`openspec list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
+   Run \`ogd list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
 
    Show changes that have implementation tasks (tasks artifact exists).
    Include the schema used for each change if available.
@@ -2652,7 +2652,7 @@ export function getOpsxVerifyCommandTemplate(): CommandTemplate {
 
 2. **Check status to understand the schema**
    \`\`\`bash
-   openspec status --change "<name>" --json
+   ogd status --change "<name>" --json
    \`\`\`
    Parse the JSON to understand:
    - \`schemaName\`: The workflow being used (e.g., "spec-driven", "tdd")
@@ -2661,7 +2661,7 @@ export function getOpsxVerifyCommandTemplate(): CommandTemplate {
 3. **Get the change directory and load artifacts**
 
    \`\`\`bash
-   openspec instructions apply --change "<name>" --json
+   ogd instructions apply --change "<name>" --json
    \`\`\`
 
    This returns the change directory and context files. Read all available artifacts from \`contextFiles\`.
@@ -2686,7 +2686,7 @@ export function getOpsxVerifyCommandTemplate(): CommandTemplate {
      - Recommendation: "Complete task: <description>" or "Mark as done if already implemented"
 
    **Spec Coverage**:
-   - If delta specs exist in \`openspec/changes/<name>/specs/\`:
+   - If delta specs exist in \`ogd/changes/<name>/specs/\`:
      - Extract all requirements (marked with "### Requirement:")
      - For each requirement:
        - Search codebase for keywords related to the requirement
@@ -2800,8 +2800,8 @@ Use clear markdown with:
 export function getFeedbackSkillTemplate(): SkillTemplate {
   return {
     name: 'feedback',
-    description: 'Collect and submit user feedback about OpenSpec with context enrichment and anonymization.',
-    instructions: `Help the user submit feedback about OpenSpec.
+    description: 'Collect and submit user feedback about OGD with context enrichment and anonymization.',
+    instructions: `Help the user submit feedback about OGD.
 
 **Goal**: Guide the user through collecting, enriching, and submitting feedback while ensuring privacy through anonymization.
 
@@ -2836,8 +2836,8 @@ export function getFeedbackSkillTemplate(): SkillTemplate {
    - Allow the user to request modifications
 
 5. **Submit on confirmation**
-   - Use the \`openspec feedback\` command to submit
-   - Format: \`openspec feedback "title" --body "body content"\`
+   - Use the \`ogd feedback\` command to submit
+   - Format: \`ogd feedback "title" --body "body content"\`
    - The command will automatically add metadata (version, platform, timestamp)
 
 **Example Draft**

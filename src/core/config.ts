@@ -1,11 +1,11 @@
-export const OPENSPEC_DIR_NAME = 'openspec';
+export const OGD_DIR_NAME = 'ogd';
 
-export const OPENSPEC_MARKERS = {
-  start: '<!-- OPENSPEC:START -->',
-  end: '<!-- OPENSPEC:END -->'
+export const OGD_MARKERS = {
+  start: '<!-- OGD:START -->',
+  end: '<!-- OGD:END -->'
 };
 
-export interface OpenSpecConfig {
+export interface OGDConfig {
   aiTools: string[];
 }
 

@@ -1,7 +1,7 @@
 # Implementation Tasks
 
 ## 1. Update Core Documentation
-- [x] 1.1 Update openspec/README.md section on "Creating a Change Proposal"
+- [x] 1.1 Update ogd/README.md section on "Creating a Change Proposal"
   - [x] Replace `patches/` with `specs/` in directory structure
   - [x] Update step 3 to show storing complete future state
   - [x] Remove diff syntax instructions (+/- prefixes)
@@ -17,12 +17,12 @@
   - [x] Fix directory structure examples (lines 376-382)
   - [x] Update archive examples (lines 778-783)
   - [x] Ensure consistency throughout
-- [x] 3.2 Update docs/openspec-walkthrough.md
+- [x] 3.2 Update docs/OGD-walkthrough.md
   - [x] Replace diff examples with future state examples
   - [x] Ensure the walkthrough reflects new approach
 
 ## 4. Create New Spec
-- [x] 4.1 Finalize openspec-conventions spec in main specs/ directory
+- [x] 4.1 Finalize OGD-conventions spec in main specs/ directory
   - [x] Document the future state storage approach
   - [x] Include examples of good proposals
   - [x] Make it the source of truth for conventions

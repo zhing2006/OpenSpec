@@ -39,7 +39,7 @@ describe('InitCommand', () => {
   let prevCodexHome: string | undefined;
 
   beforeEach(async () => {
-    testDir = path.join(os.tmpdir(), `openspec-init-test-${Date.now()}`);
+    testDir = path.join(os.tmpdir(), `OGD-init-test-${Date.now()}`);
     await fs.mkdir(testDir, { recursive: true });
     selectionQueue = [];
     mockPrompt.mockReset();
@@ -61,46 +61,46 @@ describe('InitCommand', () => {
   });
 
   describe('execute', () => {
-    it('should create OpenSpec directory structure', async () => {
+    it('should create OGD directory structure', async () => {
       queueSelections('claude', DONE);
 
       await initCommand.execute(testDir);
 
-      const openspecPath = path.join(testDir, 'openspec');
-      expect(await directoryExists(openspecPath)).toBe(true);
-      expect(await directoryExists(path.join(openspecPath, 'specs'))).toBe(
+      const OGDPath = path.join(testDir, 'ogd');
+      expect(await directoryExists(OGDPath)).toBe(true);
+      expect(await directoryExists(path.join(OGDPath, 'specs'))).toBe(
         true
       );
-      expect(await directoryExists(path.join(openspecPath, 'changes'))).toBe(
+      expect(await directoryExists(path.join(OGDPath, 'changes'))).toBe(
         true
       );
       expect(
-        await directoryExists(path.join(openspecPath, 'changes', 'archive'))
+        await directoryExists(path.join(OGDPath, 'changes', 'archive'))
       ).toBe(true);
     });
 
-    it('should create AGENTS.md and project.md', async () => {
+    it('should create AGENTS.md and pillars.md', async () => {
       queueSelections('claude', DONE);
 
       await initCommand.execute(testDir);
 
-      const openspecPath = path.join(testDir, 'openspec');
-      expect(await fileExists(path.join(openspecPath, 'AGENTS.md'))).toBe(true);
-      expect(await fileExists(path.join(openspecPath, 'project.md'))).toBe(
+      const OGDPath = path.join(testDir, 'ogd');
+      expect(await fileExists(path.join(OGDPath, 'AGENTS.md'))).toBe(true);
+      expect(await fileExists(path.join(OGDPath, 'pillars.md'))).toBe(
         true
       );
 
       const agentsContent = await fs.readFile(
-        path.join(openspecPath, 'AGENTS.md'),
+        path.join(OGDPath, 'AGENTS.md'),
         'utf-8'
       );
-      expect(agentsContent).toContain('OpenSpec Instructions');
+      expect(agentsContent).toContain('ogd');
 
-      const projectContent = await fs.readFile(
-        path.join(openspecPath, 'project.md'),
+      const pillarsContent = await fs.readFile(
+        path.join(OGDPath, 'pillars.md'),
         'utf-8'
       );
-      expect(projectContent).toContain('Project Context');
+      expect(pillarsContent).toContain('设计支柱');
     });
 
     it('should create CLAUDE.md when Claude Code is selected', async () => {
@@ -112,10 +112,10 @@ describe('InitCommand', () => {
       expect(await fileExists(claudePath)).toBe(true);
 
       const content = await fs.readFile(claudePath, 'utf-8');
-      expect(content).toContain('<!-- OPENSPEC:START -->');
-      expect(content).toContain("@/openspec/AGENTS.md");
-      expect(content).toContain('openspec update');
-      expect(content).toContain('<!-- OPENSPEC:END -->');
+      expect(content).toContain('<!-- OGD:START -->');
+      expect(content).toContain("@/ogd/AGENTS.md");
+      expect(content).toContain('ogd update');
+      expect(content).toContain('<!-- OGD:END -->');
     });
 
     it('should update existing CLAUDE.md with markers', async () => {
@@ -129,10 +129,10 @@ describe('InitCommand', () => {
       await initCommand.execute(testDir);
 
       const updatedContent = await fs.readFile(claudePath, 'utf-8');
-      expect(updatedContent).toContain('<!-- OPENSPEC:START -->');
-      expect(updatedContent).toContain("@/openspec/AGENTS.md");
-      expect(updatedContent).toContain('openspec update');
-      expect(updatedContent).toContain('<!-- OPENSPEC:END -->');
+      expect(updatedContent).toContain('<!-- OGD:START -->');
+      expect(updatedContent).toContain("@/ogd/AGENTS.md");
+      expect(updatedContent).toContain('ogd update');
+      expect(updatedContent).toContain('<!-- OGD:END -->');
       expect(updatedContent).toContain('Custom instructions here');
     });
 
@@ -145,10 +145,10 @@ describe('InitCommand', () => {
       expect(await fileExists(clinePath)).toBe(true);
 
       const content = await fs.readFile(clinePath, 'utf-8');
-      expect(content).toContain('<!-- OPENSPEC:START -->');
-      expect(content).toContain("@/openspec/AGENTS.md");
-      expect(content).toContain('openspec update');
-      expect(content).toContain('<!-- OPENSPEC:END -->');
+      expect(content).toContain('<!-- OGD:START -->');
+      expect(content).toContain("@/ogd/AGENTS.md");
+      expect(content).toContain('ogd update');
+      expect(content).toContain('<!-- OGD:END -->');
     });
 
     it('should update existing CLINE.md with markers', async () => {
@@ -162,10 +162,10 @@ describe('InitCommand', () => {
       await initCommand.execute(testDir);
 
       const updatedContent = await fs.readFile(clinePath, 'utf-8');
-      expect(updatedContent).toContain('<!-- OPENSPEC:START -->');
-      expect(updatedContent).toContain("@/openspec/AGENTS.md");
-      expect(updatedContent).toContain('openspec update');
-      expect(updatedContent).toContain('<!-- OPENSPEC:END -->');
+      expect(updatedContent).toContain('<!-- OGD:START -->');
+      expect(updatedContent).toContain("@/ogd/AGENTS.md");
+      expect(updatedContent).toContain('ogd update');
+      expect(updatedContent).toContain('<!-- OGD:END -->');
       expect(updatedContent).toContain('Custom Cline instructions here');
     });
 
@@ -176,15 +176,15 @@ describe('InitCommand', () => {
 
       const wsProposal = path.join(
         testDir,
-        '.windsurf/workflows/openspec-proposal.md'
+        '.windsurf/workflows/ogd-proposal.md'
       );
       const wsApply = path.join(
         testDir,
-        '.windsurf/workflows/openspec-apply.md'
+        '.windsurf/workflows/ogd-apply.md'
       );
       const wsArchive = path.join(
         testDir,
-        '.windsurf/workflows/openspec-archive.md'
+        '.windsurf/workflows/ogd-archive.md'
       );
 
       expect(await fileExists(wsProposal)).toBe(true);
@@ -193,24 +193,24 @@ describe('InitCommand', () => {
 
       const proposalContent = await fs.readFile(wsProposal, 'utf-8');
       expect(proposalContent).toContain('---');
-      expect(proposalContent).toContain('description: Scaffold a new OpenSpec change and validate strictly.');
+      expect(proposalContent).toContain('description: Scaffold a new ogd change and validate strictly.');
       expect(proposalContent).toContain('auto_execution_mode: 3');
-      expect(proposalContent).toContain('<!-- OPENSPEC:START -->');
+      expect(proposalContent).toContain('<!-- OGD:START -->');
       expect(proposalContent).toContain('**Guardrails**');
 
       const applyContent = await fs.readFile(wsApply, 'utf-8');
       expect(applyContent).toContain('---');
-      expect(applyContent).toContain('description: Implement an approved OpenSpec change and keep tasks in sync.');
+      expect(applyContent).toContain('description: Implement an approved ogd change and keep tasks in sync.');
       expect(applyContent).toContain('auto_execution_mode: 3');
-      expect(applyContent).toContain('<!-- OPENSPEC:START -->');
+      expect(applyContent).toContain('<!-- OGD:START -->');
       expect(applyContent).toContain('Work through tasks sequentially');
 
       const archiveContent = await fs.readFile(wsArchive, 'utf-8');
       expect(archiveContent).toContain('---');
-      expect(archiveContent).toContain('description: Archive a deployed OpenSpec change and update specs.');
+      expect(archiveContent).toContain('description: Archive a deployed ogd change and update specs.');
       expect(archiveContent).toContain('auto_execution_mode: 3');
-      expect(archiveContent).toContain('<!-- OPENSPEC:START -->');
-      expect(archiveContent).toContain('Run `openspec archive <id> --yes`');
+      expect(archiveContent).toContain('<!-- OGD:START -->');
+      expect(archiveContent).toContain('Run `ogd archive <id> --yes`');
     });
 
     it('should create Antigravity workflows when Antigravity is selected', async () => {
@@ -220,15 +220,15 @@ describe('InitCommand', () => {
 
       const agProposal = path.join(
         testDir,
-        '.agent/workflows/openspec-proposal.md'
+        '.agent/workflows/ogd-proposal.md'
       );
       const agApply = path.join(
         testDir,
-        '.agent/workflows/openspec-apply.md'
+        '.agent/workflows/ogd-apply.md'
       );
       const agArchive = path.join(
         testDir,
-        '.agent/workflows/openspec-archive.md'
+        '.agent/workflows/ogd-archive.md'
       );
 
       expect(await fileExists(agProposal)).toBe(true);
@@ -237,23 +237,23 @@ describe('InitCommand', () => {
 
       const proposalContent = await fs.readFile(agProposal, 'utf-8');
       expect(proposalContent).toContain('---');
-      expect(proposalContent).toContain('description: Scaffold a new OpenSpec change and validate strictly.');
-      expect(proposalContent).toContain('<!-- OPENSPEC:START -->');
+      expect(proposalContent).toContain('description: Scaffold a new ogd change and validate strictly.');
+      expect(proposalContent).toContain('<!-- OGD:START -->');
       expect(proposalContent).toContain('**Guardrails**');
       expect(proposalContent).not.toContain('auto_execution_mode');
 
       const applyContent = await fs.readFile(agApply, 'utf-8');
       expect(applyContent).toContain('---');
-      expect(applyContent).toContain('description: Implement an approved OpenSpec change and keep tasks in sync.');
-      expect(applyContent).toContain('<!-- OPENSPEC:START -->');
+      expect(applyContent).toContain('description: Implement an approved ogd change and keep tasks in sync.');
+      expect(applyContent).toContain('<!-- OGD:START -->');
       expect(applyContent).toContain('Work through tasks sequentially');
       expect(applyContent).not.toContain('auto_execution_mode');
 
       const archiveContent = await fs.readFile(agArchive, 'utf-8');
       expect(archiveContent).toContain('---');
-      expect(archiveContent).toContain('description: Archive a deployed OpenSpec change and update specs.');
-      expect(archiveContent).toContain('<!-- OPENSPEC:START -->');
-      expect(archiveContent).toContain('Run `openspec archive <id> --yes`');
+      expect(archiveContent).toContain('description: Archive a deployed ogd change and update specs.');
+      expect(archiveContent).toContain('<!-- OGD:START -->');
+      expect(archiveContent).toContain('Run `ogd archive <id> --yes`');
       expect(archiveContent).not.toContain('auto_execution_mode');
     });
 
@@ -266,10 +266,10 @@ describe('InitCommand', () => {
       expect(await fileExists(rootAgentsPath)).toBe(true);
 
       const content = await fs.readFile(rootAgentsPath, 'utf-8');
-      expect(content).toContain('<!-- OPENSPEC:START -->');
-      expect(content).toContain("@/openspec/AGENTS.md");
-      expect(content).toContain('openspec update');
-      expect(content).toContain('<!-- OPENSPEC:END -->');
+      expect(content).toContain('<!-- OGD:START -->');
+      expect(content).toContain("@/ogd/AGENTS.md");
+      expect(content).toContain('ogd update');
+      expect(content).toContain('<!-- OGD:END -->');
 
       const claudeExists = await fileExists(path.join(testDir, 'CLAUDE.md'));
       expect(claudeExists).toBe(false);
@@ -282,15 +282,15 @@ describe('InitCommand', () => {
 
       const claudeProposal = path.join(
         testDir,
-        '.claude/commands/openspec/proposal.md'
+        '.claude/commands/ogd/proposal.md'
       );
       const claudeApply = path.join(
         testDir,
-        '.claude/commands/openspec/apply.md'
+        '.claude/commands/ogd/apply.md'
       );
       const claudeArchive = path.join(
         testDir,
-        '.claude/commands/openspec/archive.md'
+        '.claude/commands/ogd/archive.md'
       );
 
       expect(await fileExists(claudeProposal)).toBe(true);
@@ -298,17 +298,17 @@ describe('InitCommand', () => {
       expect(await fileExists(claudeArchive)).toBe(true);
 
       const proposalContent = await fs.readFile(claudeProposal, 'utf-8');
-      expect(proposalContent).toContain('name: OpenSpec - Proposal');
-      expect(proposalContent).toContain('<!-- OPENSPEC:START -->');
+      expect(proposalContent).toContain('name: OGD - Proposal');
+      expect(proposalContent).toContain('<!-- OGD:START -->');
       expect(proposalContent).toContain('**Guardrails**');
 
       const applyContent = await fs.readFile(claudeApply, 'utf-8');
-      expect(applyContent).toContain('name: OpenSpec - Apply');
+      expect(applyContent).toContain('name: OGD - Apply');
       expect(applyContent).toContain('Work through tasks sequentially');
 
       const archiveContent = await fs.readFile(claudeArchive, 'utf-8');
-      expect(archiveContent).toContain('name: OpenSpec - Archive');
-      expect(archiveContent).toContain('openspec archive <id>');
+      expect(archiveContent).toContain('name: OGD - Archive');
+      expect(archiveContent).toContain('ogd archive <id>');
       expect(archiveContent).toContain(
         '`--skip-specs` only for tooling-only work'
       );
@@ -321,15 +321,15 @@ describe('InitCommand', () => {
 
       const cursorProposal = path.join(
         testDir,
-        '.cursor/commands/openspec-proposal.md'
+        '.cursor/commands/ogd-proposal.md'
       );
       const cursorApply = path.join(
         testDir,
-        '.cursor/commands/openspec-apply.md'
+        '.cursor/commands/ogd-apply.md'
       );
       const cursorArchive = path.join(
         testDir,
-        '.cursor/commands/openspec-archive.md'
+        '.cursor/commands/ogd-archive.md'
       );
 
       expect(await fileExists(cursorProposal)).toBe(true);
@@ -337,16 +337,16 @@ describe('InitCommand', () => {
       expect(await fileExists(cursorArchive)).toBe(true);
 
       const proposalContent = await fs.readFile(cursorProposal, 'utf-8');
-      expect(proposalContent).toContain('name: /openspec-proposal');
-      expect(proposalContent).toContain('<!-- OPENSPEC:END -->');
+      expect(proposalContent).toContain('name: /ogd-proposal');
+      expect(proposalContent).toContain('<!-- OGD:END -->');
 
       const applyContent = await fs.readFile(cursorApply, 'utf-8');
-      expect(applyContent).toContain('id: openspec-apply');
+      expect(applyContent).toContain('id: ogd-apply');
       expect(applyContent).toContain('Work through tasks sequentially');
 
       const archiveContent = await fs.readFile(cursorArchive, 'utf-8');
-      expect(archiveContent).toContain('name: /openspec-archive');
-      expect(archiveContent).toContain('openspec list --specs');
+      expect(archiveContent).toContain('name: /ogd-archive');
+      expect(archiveContent).toContain('ogd list --specs');
     });
 
     it('should create Gemini CLI TOML files when selected', async () => {
@@ -356,15 +356,15 @@ describe('InitCommand', () => {
 
       const geminiProposal = path.join(
         testDir,
-        '.gemini/commands/openspec/proposal.toml'
+        '.gemini/commands/ogd/proposal.toml'
       );
       const geminiApply = path.join(
         testDir,
-        '.gemini/commands/openspec/apply.toml'
+        '.gemini/commands/ogd/apply.toml'
       );
       const geminiArchive = path.join(
         testDir,
-        '.gemini/commands/openspec/archive.toml'
+        '.gemini/commands/ogd/archive.toml'
       );
 
       expect(await fileExists(geminiProposal)).toBe(true);
@@ -372,19 +372,19 @@ describe('InitCommand', () => {
       expect(await fileExists(geminiArchive)).toBe(true);
 
       const proposalContent = await fs.readFile(geminiProposal, 'utf-8');
-      expect(proposalContent).toContain('description = "Scaffold a new OpenSpec change and validate strictly."');
+      expect(proposalContent).toContain('description = "Scaffold a new ogd change and validate strictly."');
       expect(proposalContent).toContain('prompt = """');
-      expect(proposalContent).toContain('<!-- OPENSPEC:START -->');
+      expect(proposalContent).toContain('<!-- OGD:START -->');
       expect(proposalContent).toContain('**Guardrails**');
-      expect(proposalContent).toContain('<!-- OPENSPEC:END -->');
+      expect(proposalContent).toContain('<!-- OGD:END -->');
 
       const applyContent = await fs.readFile(geminiApply, 'utf-8');
-      expect(applyContent).toContain('description = "Implement an approved OpenSpec change and keep tasks in sync."');
+      expect(applyContent).toContain('description = "Implement an approved ogd change and keep tasks in sync."');
       expect(applyContent).toContain('Work through tasks sequentially');
 
       const archiveContent = await fs.readFile(geminiArchive, 'utf-8');
-      expect(archiveContent).toContain('description = "Archive a deployed OpenSpec change and update specs."');
-      expect(archiveContent).toContain('openspec archive <id>');
+      expect(archiveContent).toContain('description = "Archive a deployed ogd change and update specs."');
+      expect(archiveContent).toContain('ogd archive <id>');
     });
 
     it('should update existing Gemini CLI TOML files with refreshed content', async () => {
@@ -394,14 +394,14 @@ describe('InitCommand', () => {
 
       const geminiProposal = path.join(
         testDir,
-        '.gemini/commands/openspec/proposal.toml'
+        '.gemini/commands/ogd/proposal.toml'
       );
 
       // Modify the file to simulate user customization
       const originalContent = await fs.readFile(geminiProposal, 'utf-8');
       const modifiedContent = originalContent.replace(
-        '<!-- OPENSPEC:START -->',
-        '<!-- OPENSPEC:START -->\nCustom instruction added by user\n'
+        '<!-- OGD:START -->',
+        '<!-- OGD:START -->\nCustom instruction added by user\n'
       );
       await fs.writeFile(geminiProposal, modifiedContent);
 
@@ -410,9 +410,9 @@ describe('InitCommand', () => {
       await initCommand.execute(testDir);
 
       const updatedContent = await fs.readFile(geminiProposal, 'utf-8');
-      expect(updatedContent).toContain('<!-- OPENSPEC:START -->');
+      expect(updatedContent).toContain('<!-- OGD:START -->');
       expect(updatedContent).toContain('**Guardrails**');
-      expect(updatedContent).toContain('<!-- OPENSPEC:END -->');
+      expect(updatedContent).toContain('<!-- OGD:END -->');
       expect(updatedContent).not.toContain('Custom instruction added by user');
     });
 
@@ -422,15 +422,15 @@ describe('InitCommand', () => {
 
       const iflowProposal = path.join(
         testDir,
-        '.iflow/commands/openspec-proposal.md'
+        '.iflow/commands/ogd-proposal.md'
       );
       const iflowApply = path.join(
         testDir,
-        '.iflow/commands/openspec-apply.md'
+        '.iflow/commands/ogd-apply.md'
       );
       const iflowArchive = path.join(
         testDir,
-        '.iflow/commands/openspec-archive.md'
+        '.iflow/commands/ogd-archive.md'
       );
 
       expect(await fileExists(iflowProposal)).toBe(true);
@@ -438,18 +438,18 @@ describe('InitCommand', () => {
       expect(await fileExists(iflowArchive)).toBe(true);
 
       const proposalContent = await fs.readFile(iflowProposal, 'utf-8');
-      expect(proposalContent).toContain('description: Scaffold a new OpenSpec change and validate strictly.');
-      expect(proposalContent).toContain('<!-- OPENSPEC:START -->');
+      expect(proposalContent).toContain('description: Scaffold a new ogd change and validate strictly.');
+      expect(proposalContent).toContain('<!-- OGD:START -->');
       expect(proposalContent).toContain('**Guardrails**');
-      expect(proposalContent).toContain('<!-- OPENSPEC:END -->');
+      expect(proposalContent).toContain('<!-- OGD:END -->');
 
       const applyContent = await fs.readFile(iflowApply, 'utf-8');
-      expect(applyContent).toContain('description: Implement an approved OpenSpec change and keep tasks in sync.');
+      expect(applyContent).toContain('description: Implement an approved ogd change and keep tasks in sync.');
       expect(applyContent).toContain('Work through tasks sequentially');
 
       const archiveContent = await fs.readFile(iflowArchive, 'utf-8');
-      expect(archiveContent).toContain('description: Archive a deployed OpenSpec change and update specs.');
-      expect(archiveContent).toContain('openspec archive <id>');
+      expect(archiveContent).toContain('description: Archive a deployed ogd change and update specs.');
+      expect(archiveContent).toContain('ogd archive <id>');
     });
 
     it('should update existing IFLOW.md with markers', async () => {
@@ -462,10 +462,10 @@ describe('InitCommand', () => {
       await initCommand.execute(testDir);
 
       const updatedContent = await fs.readFile(iflowPath, 'utf-8');
-      expect(updatedContent).toContain('<!-- OPENSPEC:START -->');
-      expect(updatedContent).toContain("@/openspec/AGENTS.md");
-      expect(updatedContent).toContain('openspec update');
-      expect(updatedContent).toContain('<!-- OPENSPEC:END -->');
+      expect(updatedContent).toContain('<!-- OGD:START -->');
+      expect(updatedContent).toContain("@/ogd/AGENTS.md");
+      expect(updatedContent).toContain('ogd update');
+      expect(updatedContent).toContain('<!-- OGD:END -->');
       expect(updatedContent).toContain('Custom instructions here');
     });
 
@@ -476,15 +476,15 @@ describe('InitCommand', () => {
 
       const openCodeProposal = path.join(
         testDir,
-        '.opencode/command/openspec-proposal.md'
+        '.opencode/command/ogd-proposal.md'
       );
       const openCodeApply = path.join(
         testDir,
-        '.opencode/command/openspec-apply.md'
+        '.opencode/command/ogd-apply.md'
       );
       const openCodeArchive = path.join(
         testDir,
-        '.opencode/command/openspec-archive.md'
+        '.opencode/command/ogd-archive.md'
       );
 
       expect(await fileExists(openCodeProposal)).toBe(true);
@@ -494,23 +494,23 @@ describe('InitCommand', () => {
       const proposalContent = await fs.readFile(openCodeProposal, 'utf-8');
       expect(proposalContent).not.toContain('agent:');
       expect(proposalContent).toContain(
-        'description: Scaffold a new OpenSpec change and validate strictly.'
+        'description: Scaffold a new ogd change and validate strictly.'
       );
-      expect(proposalContent).toContain('<!-- OPENSPEC:START -->');
+      expect(proposalContent).toContain('<!-- OGD:START -->');
 
       const applyContent = await fs.readFile(openCodeApply, 'utf-8');
       expect(applyContent).not.toContain('agent:');
       expect(applyContent).toContain(
-        'description: Implement an approved OpenSpec change and keep tasks in sync.'
+        'description: Implement an approved ogd change and keep tasks in sync.'
       );
       expect(applyContent).toContain('Work through tasks sequentially');
 
       const archiveContent = await fs.readFile(openCodeArchive, 'utf-8');
       expect(archiveContent).not.toContain('agent:');
       expect(archiveContent).toContain(
-        'description: Archive a deployed OpenSpec change and update specs.'
+        'description: Archive a deployed ogd change and update specs.'
       );
-      expect(archiveContent).toContain('openspec list --specs');
+      expect(archiveContent).toContain('ogd list --specs');
     });
 
     it('should create Qwen configuration and slash command files with templates', async () => {
@@ -521,15 +521,15 @@ describe('InitCommand', () => {
       const qwenConfigPath = path.join(testDir, 'QWEN.md');
       const proposalPath = path.join(
         testDir,
-        '.qwen/commands/openspec-proposal.toml'
+        '.qwen/commands/ogd-proposal.toml'
       );
       const applyPath = path.join(
         testDir,
-        '.qwen/commands/openspec-apply.toml'
+        '.qwen/commands/ogd-apply.toml'
       );
       const archivePath = path.join(
         testDir,
-        '.qwen/commands/openspec-archive.toml'
+        '.qwen/commands/ogd-archive.toml'
       );
 
       expect(await fileExists(qwenConfigPath)).toBe(true);
@@ -538,22 +538,22 @@ describe('InitCommand', () => {
       expect(await fileExists(archivePath)).toBe(true);
 
       const qwenConfigContent = await fs.readFile(qwenConfigPath, 'utf-8');
-      expect(qwenConfigContent).toContain('<!-- OPENSPEC:START -->');
-      expect(qwenConfigContent).toContain("@/openspec/AGENTS.md");
-      expect(qwenConfigContent).toContain('<!-- OPENSPEC:END -->');
+      expect(qwenConfigContent).toContain('<!-- OGD:START -->');
+      expect(qwenConfigContent).toContain("@/ogd/AGENTS.md");
+      expect(qwenConfigContent).toContain('<!-- OGD:END -->');
 
       const proposalContent = await fs.readFile(proposalPath, 'utf-8');
-      expect(proposalContent).toContain('description = "Scaffold a new OpenSpec change and validate strictly."');
+      expect(proposalContent).toContain('description = "Scaffold a new ogd change and validate strictly."');
       expect(proposalContent).toContain('prompt = """');
-      expect(proposalContent).toContain('<!-- OPENSPEC:START -->');
+      expect(proposalContent).toContain('<!-- OGD:START -->');
 
       const applyContent = await fs.readFile(applyPath, 'utf-8');
-      expect(applyContent).toContain('description = "Implement an approved OpenSpec change and keep tasks in sync."');
+      expect(applyContent).toContain('description = "Implement an approved ogd change and keep tasks in sync."');
       expect(applyContent).toContain('Work through tasks sequentially');
 
       const archiveContent = await fs.readFile(archivePath, 'utf-8');
-      expect(archiveContent).toContain('description = "Archive a deployed OpenSpec change and update specs."');
-      expect(archiveContent).toContain('openspec archive <id>');
+      expect(archiveContent).toContain('description = "Archive a deployed ogd change and update specs."');
+      expect(archiveContent).toContain('ogd archive <id>');
     });
 
     it('should update existing QWEN.md with markers', async () => {
@@ -566,10 +566,10 @@ describe('InitCommand', () => {
       await initCommand.execute(testDir);
 
       const updatedContent = await fs.readFile(qwenPath, 'utf-8');
-      expect(updatedContent).toContain('<!-- OPENSPEC:START -->');
-      expect(updatedContent).toContain("@/openspec/AGENTS.md");
-      expect(updatedContent).toContain('openspec update');
-      expect(updatedContent).toContain('<!-- OPENSPEC:END -->');
+      expect(updatedContent).toContain('<!-- OGD:START -->');
+      expect(updatedContent).toContain("@/ogd/AGENTS.md");
+      expect(updatedContent).toContain('ogd update');
+      expect(updatedContent).toContain('<!-- OGD:END -->');
       expect(updatedContent).toContain('Custom instructions here');
     });
 
@@ -580,15 +580,15 @@ describe('InitCommand', () => {
 
       const clineProposal = path.join(
         testDir,
-        '.clinerules/workflows/openspec-proposal.md'
+        '.clinerules/workflows/ogd-proposal.md'
       );
       const clineApply = path.join(
         testDir,
-        '.clinerules/workflows/openspec-apply.md'
+        '.clinerules/workflows/ogd-apply.md'
       );
       const clineArchive = path.join(
         testDir,
-        '.clinerules/workflows/openspec-archive.md'
+        '.clinerules/workflows/ogd-archive.md'
       );
 
       expect(await fileExists(clineProposal)).toBe(true);
@@ -596,20 +596,20 @@ describe('InitCommand', () => {
       expect(await fileExists(clineArchive)).toBe(true);
 
       const proposalContent = await fs.readFile(clineProposal, 'utf-8');
-      expect(proposalContent).toContain('# OpenSpec: Proposal');
-      expect(proposalContent).toContain('Scaffold a new OpenSpec change and validate strictly.');
-      expect(proposalContent).toContain('<!-- OPENSPEC:START -->');
+      expect(proposalContent).toContain('# OGD: Proposal');
+      expect(proposalContent).toContain('Scaffold a new ogd change and validate strictly.');
+      expect(proposalContent).toContain('<!-- OGD:START -->');
       expect(proposalContent).toContain('**Guardrails**');
 
       const applyContent = await fs.readFile(clineApply, 'utf-8');
-      expect(applyContent).toContain('# OpenSpec: Apply');
-      expect(applyContent).toContain('Implement an approved OpenSpec change and keep tasks in sync.');
+      expect(applyContent).toContain('# OGD: Apply');
+      expect(applyContent).toContain('Implement an approved ogd change and keep tasks in sync.');
       expect(applyContent).toContain('Work through tasks sequentially');
 
       const archiveContent = await fs.readFile(clineArchive, 'utf-8');
-      expect(archiveContent).toContain('# OpenSpec: Archive');
-      expect(archiveContent).toContain('Archive a deployed OpenSpec change and update specs.');
-      expect(archiveContent).toContain('openspec archive <id>');
+      expect(archiveContent).toContain('# OGD: Archive');
+      expect(archiveContent).toContain('Archive a deployed ogd change and update specs.');
+      expect(archiveContent).toContain('ogd archive <id>');
     });
 
     it('should create Factory slash command files with templates', async () => {
@@ -619,15 +619,15 @@ describe('InitCommand', () => {
 
       const factoryProposal = path.join(
         testDir,
-        '.factory/commands/openspec-proposal.md'
+        '.factory/commands/ogd-proposal.md'
       );
       const factoryApply = path.join(
         testDir,
-        '.factory/commands/openspec-apply.md'
+        '.factory/commands/ogd-apply.md'
       );
       const factoryArchive = path.join(
         testDir,
-        '.factory/commands/openspec-archive.md'
+        '.factory/commands/ogd-archive.md'
       );
 
       expect(await fileExists(factoryProposal)).toBe(true);
@@ -635,31 +635,31 @@ describe('InitCommand', () => {
       expect(await fileExists(factoryArchive)).toBe(true);
 
       const proposalContent = await fs.readFile(factoryProposal, 'utf-8');
-      expect(proposalContent).toContain('description: Scaffold a new OpenSpec change and validate strictly.');
+      expect(proposalContent).toContain('description: Scaffold a new ogd change and validate strictly.');
       expect(proposalContent).toContain('argument-hint: request or feature description');
-      expect(proposalContent).toContain('<!-- OPENSPEC:START -->');
+      expect(proposalContent).toContain('<!-- OGD:START -->');
       expect(
-        /<!-- OPENSPEC:START -->([\s\S]*?)<!-- OPENSPEC:END -->/u.exec(
+        /<!-- OGD:START -->([\s\S]*?)<!-- OGD:END -->/u.exec(
           proposalContent
         )?.[1]
       ).toContain('$ARGUMENTS');
 
       const applyContent = await fs.readFile(factoryApply, 'utf-8');
-      expect(applyContent).toContain('description: Implement an approved OpenSpec change and keep tasks in sync.');
+      expect(applyContent).toContain('description: Implement an approved ogd change and keep tasks in sync.');
       expect(applyContent).toContain('argument-hint: change-id');
       expect(applyContent).toContain('Work through tasks sequentially');
       expect(
-        /<!-- OPENSPEC:START -->([\s\S]*?)<!-- OPENSPEC:END -->/u.exec(
+        /<!-- OGD:START -->([\s\S]*?)<!-- OGD:END -->/u.exec(
           applyContent
         )?.[1]
       ).toContain('$ARGUMENTS');
 
       const archiveContent = await fs.readFile(factoryArchive, 'utf-8');
-      expect(archiveContent).toContain('description: Archive a deployed OpenSpec change and update specs.');
+      expect(archiveContent).toContain('description: Archive a deployed ogd change and update specs.');
       expect(archiveContent).toContain('argument-hint: change-id');
-      expect(archiveContent).toContain('openspec archive <id> --yes');
+      expect(archiveContent).toContain('ogd archive <id> --yes');
       expect(
-        /<!-- OPENSPEC:START -->([\s\S]*?)<!-- OPENSPEC:END -->/u.exec(
+        /<!-- OGD:START -->([\s\S]*?)<!-- OGD:END -->/u.exec(
           archiveContent
         )?.[1]
       ).toContain('$ARGUMENTS');
@@ -672,15 +672,15 @@ describe('InitCommand', () => {
 
       const proposalPath = path.join(
         testDir,
-        '.codex/prompts/openspec-proposal.md'
+        '.codex/prompts/ogd-proposal.md'
       );
       const applyPath = path.join(
         testDir,
-        '.codex/prompts/openspec-apply.md'
+        '.codex/prompts/ogd-apply.md'
       );
       const archivePath = path.join(
         testDir,
-        '.codex/prompts/openspec-archive.md'
+        '.codex/prompts/ogd-archive.md'
       );
 
       expect(await fileExists(proposalPath)).toBe(true);
@@ -688,23 +688,23 @@ describe('InitCommand', () => {
       expect(await fileExists(archivePath)).toBe(true);
 
       const proposalContent = await fs.readFile(proposalPath, 'utf-8');
-      expect(proposalContent).toContain('description: Scaffold a new OpenSpec change and validate strictly.');
+      expect(proposalContent).toContain('description: Scaffold a new ogd change and validate strictly.');
       expect(proposalContent).toContain('argument-hint: request or feature description');
       expect(proposalContent).toContain('$ARGUMENTS');
-      expect(proposalContent).toContain('<!-- OPENSPEC:START -->');
+      expect(proposalContent).toContain('<!-- OGD:START -->');
       expect(proposalContent).toContain('**Guardrails**');
 
       const applyContent = await fs.readFile(applyPath, 'utf-8');
-      expect(applyContent).toContain('description: Implement an approved OpenSpec change and keep tasks in sync.');
+      expect(applyContent).toContain('description: Implement an approved ogd change and keep tasks in sync.');
       expect(applyContent).toContain('argument-hint: change-id');
       expect(applyContent).toContain('$ARGUMENTS');
       expect(applyContent).toContain('Work through tasks sequentially');
 
       const archiveContent = await fs.readFile(archivePath, 'utf-8');
-      expect(archiveContent).toContain('description: Archive a deployed OpenSpec change and update specs.');
+      expect(archiveContent).toContain('description: Archive a deployed ogd change and update specs.');
       expect(archiveContent).toContain('argument-hint: change-id');
       expect(archiveContent).toContain('$ARGUMENTS');
-      expect(archiveContent).toContain('openspec archive <id> --yes');
+      expect(archiveContent).toContain('ogd archive <id> --yes');
     });
 
     it('should create Kilo Code workflows with templates', async () => {
@@ -714,15 +714,15 @@ describe('InitCommand', () => {
 
       const proposalPath = path.join(
         testDir,
-        '.kilocode/workflows/openspec-proposal.md'
+        '.kilocode/workflows/ogd-proposal.md'
       );
       const applyPath = path.join(
         testDir,
-        '.kilocode/workflows/openspec-apply.md'
+        '.kilocode/workflows/ogd-apply.md'
       );
       const archivePath = path.join(
         testDir,
-        '.kilocode/workflows/openspec-archive.md'
+        '.kilocode/workflows/ogd-archive.md'
       );
 
       expect(await fileExists(proposalPath)).toBe(true);
@@ -730,7 +730,7 @@ describe('InitCommand', () => {
       expect(await fileExists(archivePath)).toBe(true);
 
       const proposalContent = await fs.readFile(proposalPath, 'utf-8');
-      expect(proposalContent).toContain('<!-- OPENSPEC:START -->');
+      expect(proposalContent).toContain('<!-- OGD:START -->');
       expect(proposalContent).toContain('**Guardrails**');
       expect(proposalContent).not.toContain('---\n');
 
@@ -739,7 +739,7 @@ describe('InitCommand', () => {
       expect(applyContent).not.toContain('---\n');
 
       const archiveContent = await fs.readFile(archivePath, 'utf-8');
-      expect(archiveContent).toContain('openspec list --specs');
+      expect(archiveContent).toContain('ogd list --specs');
       expect(archiveContent).not.toContain('---\n');
     });
 
@@ -750,15 +750,15 @@ describe('InitCommand', () => {
 
       const proposalPath = path.join(
         testDir,
-        '.github/prompts/openspec-proposal.prompt.md'
+        '.github/prompts/ogd-proposal.prompt.md'
       );
       const applyPath = path.join(
         testDir,
-        '.github/prompts/openspec-apply.prompt.md'
+        '.github/prompts/ogd-apply.prompt.md'
       );
       const archivePath = path.join(
         testDir,
-        '.github/prompts/openspec-archive.prompt.md'
+        '.github/prompts/ogd-archive.prompt.md'
       );
 
       expect(await fileExists(proposalPath)).toBe(true);
@@ -767,32 +767,32 @@ describe('InitCommand', () => {
 
       const proposalContent = await fs.readFile(proposalPath, 'utf-8');
       expect(proposalContent).toContain('---');
-      expect(proposalContent).toContain('description: Scaffold a new OpenSpec change and validate strictly.');
+      expect(proposalContent).toContain('description: Scaffold a new ogd change and validate strictly.');
       expect(proposalContent).toContain('$ARGUMENTS');
-      expect(proposalContent).toContain('<!-- OPENSPEC:START -->');
+      expect(proposalContent).toContain('<!-- OGD:START -->');
       expect(proposalContent).toContain('**Guardrails**');
 
       const applyContent = await fs.readFile(applyPath, 'utf-8');
       expect(applyContent).toContain('---');
-      expect(applyContent).toContain('description: Implement an approved OpenSpec change and keep tasks in sync.');
+      expect(applyContent).toContain('description: Implement an approved ogd change and keep tasks in sync.');
       expect(applyContent).toContain('$ARGUMENTS');
       expect(applyContent).toContain('Work through tasks sequentially');
 
       const archiveContent = await fs.readFile(archivePath, 'utf-8');
       expect(archiveContent).toContain('---');
-      expect(archiveContent).toContain('description: Archive a deployed OpenSpec change and update specs.');
+      expect(archiveContent).toContain('description: Archive a deployed ogd change and update specs.');
       expect(archiveContent).toContain('$ARGUMENTS');
-      expect(archiveContent).toContain('openspec archive <id> --yes');
+      expect(archiveContent).toContain('ogd archive <id> --yes');
     });
 
-    it('should add new tool when OpenSpec already exists', async () => {
+    it('should add new tool when OGD already exists', async () => {
       queueSelections('claude', DONE, 'cursor', DONE);
       await initCommand.execute(testDir);
       await initCommand.execute(testDir);
 
       const cursorProposal = path.join(
         testDir,
-        '.cursor/commands/openspec-proposal.md'
+        '.cursor/commands/ogd-proposal.md'
       );
       expect(await fileExists(cursorProposal)).toBe(true);
     });
@@ -803,21 +803,21 @@ describe('InitCommand', () => {
       await expect(initCommand.execute(testDir)).resolves.toBeUndefined();
     });
 
-    it('should recreate deleted openspec/AGENTS.md in extend mode', async () => {
+    it('should recreate deleted ogd/AGENTS.md in extend mode', async () => {
       await testFileRecreationInExtendMode(
         testDir,
         initCommand,
-        'openspec/AGENTS.md',
-        'OpenSpec Instructions'
+        'ogd/AGENTS.md',
+        'OGD (OpenGameDesign) Instructions'
       );
     });
 
-    it('should recreate deleted openspec/project.md in extend mode', async () => {
+    it('should recreate deleted ogd/pillars.md in extend mode', async () => {
       await testFileRecreationInExtendMode(
         testDir,
         initCommand,
-        'openspec/project.md',
-        'Project Context'
+        'ogd/pillars.md',
+        '设计支柱'
       );
     });
 
@@ -827,7 +827,7 @@ describe('InitCommand', () => {
       // First init
       await initCommand.execute(testDir);
 
-      const agentsPath = path.join(testDir, 'openspec', 'AGENTS.md');
+      const agentsPath = path.join(testDir, 'ogd', 'AGENTS.md');
       const customContent = '# My Custom AGENTS Content\nDo not overwrite this!';
 
       // Modify the file with custom content
@@ -838,7 +838,7 @@ describe('InitCommand', () => {
 
       const content = await fs.readFile(agentsPath, 'utf-8');
       expect(content).toBe(customContent);
-      expect(content).not.toContain('OpenSpec Instructions');
+      expect(content).not.toContain('OGD (OpenGameDesign) Instructions');
     });
 
     it('should handle non-existent target directory', async () => {
@@ -847,8 +847,8 @@ describe('InitCommand', () => {
       const newDir = path.join(testDir, 'new-project');
       await initCommand.execute(newDir);
 
-      const openspecPath = path.join(newDir, 'openspec');
-      expect(await directoryExists(openspecPath)).toBe(true);
+      const OGDPath = path.join(newDir, 'ogd');
+      expect(await directoryExists(OGDPath)).toBe(true);
     });
 
     it('should display success message with selected tool name', async () => {
@@ -1001,15 +1001,15 @@ describe('InitCommand', () => {
 
       const proposalPath = path.join(
         testDir,
-        '.amazonq/prompts/openspec-proposal.md'
+        '.amazonq/prompts/ogd-proposal.md'
       );
       const applyPath = path.join(
         testDir,
-        '.amazonq/prompts/openspec-apply.md'
+        '.amazonq/prompts/ogd-apply.md'
       );
       const archivePath = path.join(
         testDir,
-        '.amazonq/prompts/openspec-archive.md'
+        '.amazonq/prompts/ogd-archive.md'
       );
 
       expect(await fileExists(proposalPath)).toBe(true);
@@ -1018,16 +1018,16 @@ describe('InitCommand', () => {
 
       const proposalContent = await fs.readFile(proposalPath, 'utf-8');
       expect(proposalContent).toContain('---');
-      expect(proposalContent).toContain('description: Scaffold a new OpenSpec change and validate strictly.');
+      expect(proposalContent).toContain('description: Scaffold a new ogd change and validate strictly.');
       expect(proposalContent).toContain('$ARGUMENTS');
-      expect(proposalContent).toContain('<!-- OPENSPEC:START -->');
+      expect(proposalContent).toContain('<!-- OGD:START -->');
       expect(proposalContent).toContain('**Guardrails**');
 
       const applyContent = await fs.readFile(applyPath, 'utf-8');
       expect(applyContent).toContain('---');
-      expect(applyContent).toContain('description: Implement an approved OpenSpec change and keep tasks in sync.');
+      expect(applyContent).toContain('description: Implement an approved ogd change and keep tasks in sync.');
       expect(applyContent).toContain('$ARGUMENTS');
-      expect(applyContent).toContain('<!-- OPENSPEC:START -->');
+      expect(applyContent).toContain('<!-- OGD:START -->');
     });
 
     it('should mark Amazon Q Developer as already configured during extend mode', async () => {
@@ -1049,15 +1049,15 @@ describe('InitCommand', () => {
 
       const auggieProposal = path.join(
         testDir,
-        '.augment/commands/openspec-proposal.md'
+        '.augment/commands/ogd-proposal.md'
       );
       const auggieApply = path.join(
         testDir,
-        '.augment/commands/openspec-apply.md'
+        '.augment/commands/ogd-apply.md'
       );
       const auggieArchive = path.join(
         testDir,
-        '.augment/commands/openspec-archive.md'
+        '.augment/commands/ogd-archive.md'
       );
 
       expect(await fileExists(auggieProposal)).toBe(true);
@@ -1066,22 +1066,22 @@ describe('InitCommand', () => {
 
       const proposalContent = await fs.readFile(auggieProposal, 'utf-8');
       expect(proposalContent).toContain('---');
-      expect(proposalContent).toContain('description: Scaffold a new OpenSpec change and validate strictly.');
+      expect(proposalContent).toContain('description: Scaffold a new ogd change and validate strictly.');
       expect(proposalContent).toContain('argument-hint: feature description or request');
-      expect(proposalContent).toContain('<!-- OPENSPEC:START -->');
+      expect(proposalContent).toContain('<!-- OGD:START -->');
       expect(proposalContent).toContain('**Guardrails**');
 
       const applyContent = await fs.readFile(auggieApply, 'utf-8');
       expect(applyContent).toContain('---');
-      expect(applyContent).toContain('description: Implement an approved OpenSpec change and keep tasks in sync.');
+      expect(applyContent).toContain('description: Implement an approved ogd change and keep tasks in sync.');
       expect(applyContent).toContain('argument-hint: change-id');
       expect(applyContent).toContain('Work through tasks sequentially');
 
       const archiveContent = await fs.readFile(auggieArchive, 'utf-8');
       expect(archiveContent).toContain('---');
-      expect(archiveContent).toContain('description: Archive a deployed OpenSpec change and update specs.');
+      expect(archiveContent).toContain('description: Archive a deployed ogd change and update specs.');
       expect(archiveContent).toContain('argument-hint: change-id');
-      expect(archiveContent).toContain('openspec archive <id> --yes');
+      expect(archiveContent).toContain('ogd archive <id> --yes');
     });
 
     it('should mark Auggie as already configured during extend mode', async () => {
@@ -1103,15 +1103,15 @@ describe('InitCommand', () => {
 
       const codeBuddyProposal = path.join(
         testDir,
-        '.codebuddy/commands/openspec/proposal.md'
+        '.codebuddy/commands/ogd/proposal.md'
       );
       const codeBuddyApply = path.join(
         testDir,
-        '.codebuddy/commands/openspec/apply.md'
+        '.codebuddy/commands/ogd/apply.md'
       );
       const codeBuddyArchive = path.join(
         testDir,
-        '.codebuddy/commands/openspec/archive.md'
+        '.codebuddy/commands/ogd/archive.md'
       );
 
       expect(await fileExists(codeBuddyProposal)).toBe(true);
@@ -1120,23 +1120,23 @@ describe('InitCommand', () => {
 
       const proposalContent = await fs.readFile(codeBuddyProposal, 'utf-8');
       expect(proposalContent).toContain('---');
-      expect(proposalContent).toContain('name: OpenSpec: Proposal');
-      expect(proposalContent).toContain('description: "Scaffold a new OpenSpec change and validate strictly."');
+      expect(proposalContent).toContain('name: OGD: Proposal');
+      expect(proposalContent).toContain('description: "Scaffold a new ogd change and validate strictly."');
       expect(proposalContent).toContain('argument-hint: "[feature description or request]"');
-      expect(proposalContent).toContain('<!-- OPENSPEC:START -->');
+      expect(proposalContent).toContain('<!-- OGD:START -->');
       expect(proposalContent).toContain('**Guardrails**');
 
       const applyContent = await fs.readFile(codeBuddyApply, 'utf-8');
       expect(applyContent).toContain('---');
-      expect(applyContent).toContain('name: OpenSpec: Apply');
-      expect(applyContent).toContain('description: "Implement an approved OpenSpec change and keep tasks in sync."');
+      expect(applyContent).toContain('name: OGD: Apply');
+      expect(applyContent).toContain('description: "Implement an approved ogd change and keep tasks in sync."');
       expect(applyContent).toContain('Work through tasks sequentially');
 
       const archiveContent = await fs.readFile(codeBuddyArchive, 'utf-8');
       expect(archiveContent).toContain('---');
-      expect(archiveContent).toContain('name: OpenSpec: Archive');
-      expect(archiveContent).toContain('description: "Archive a deployed OpenSpec change and update specs."');
-      expect(archiveContent).toContain('openspec archive <id> --yes');
+      expect(archiveContent).toContain('name: OGD: Archive');
+      expect(archiveContent).toContain('description: "Archive a deployed ogd change and update specs."');
+      expect(archiveContent).toContain('ogd archive <id> --yes');
     });
 
     it('should mark CodeBuddy as already configured during extend mode', async () => {
@@ -1158,15 +1158,15 @@ describe('InitCommand', () => {
 
       const continueProposal = path.join(
         testDir,
-        '.continue/prompts/openspec-proposal.prompt'
+        '.continue/prompts/ogd-proposal.prompt'
       );
       const continueApply = path.join(
         testDir,
-        '.continue/prompts/openspec-apply.prompt'
+        '.continue/prompts/ogd-apply.prompt'
       );
       const continueArchive = path.join(
         testDir,
-        '.continue/prompts/openspec-archive.prompt'
+        '.continue/prompts/ogd-archive.prompt'
       );
 
       expect(await fileExists(continueProposal)).toBe(true);
@@ -1175,23 +1175,23 @@ describe('InitCommand', () => {
 
       const proposalContent = await fs.readFile(continueProposal, 'utf-8');
       expect(proposalContent).toContain('---');
-      expect(proposalContent).toContain('name: openspec-proposal');
+      expect(proposalContent).toContain('name: ogd-proposal');
       expect(proposalContent).toContain('invokable: true');
-      expect(proposalContent).toContain('<!-- OPENSPEC:START -->');
+      expect(proposalContent).toContain('<!-- OGD:START -->');
 
       const applyContent = await fs.readFile(continueApply, 'utf-8');
       expect(applyContent).toContain('---');
-      expect(applyContent).toContain('name: openspec-apply');
-      expect(applyContent).toContain('description: Implement an approved OpenSpec change and keep tasks in sync.');
+      expect(applyContent).toContain('name: ogd-apply');
+      expect(applyContent).toContain('description: Implement an approved ogd change and keep tasks in sync.');
       expect(applyContent).toContain('invokable: true');
       expect(applyContent).toContain('Work through tasks sequentially');
 
       const archiveContent = await fs.readFile(continueArchive, 'utf-8');
       expect(archiveContent).toContain('---');
-      expect(archiveContent).toContain('name: openspec-archive');
-      expect(archiveContent).toContain('description: Archive a deployed OpenSpec change and update specs.');
+      expect(archiveContent).toContain('name: ogd-archive');
+      expect(archiveContent).toContain('description: Archive a deployed ogd change and update specs.');
       expect(archiveContent).toContain('invokable: true');
-      expect(archiveContent).toContain('openspec archive <id> --yes');
+      expect(archiveContent).toContain('ogd archive <id> --yes');
     });
 
     it('should mark Continue as already configured during extend mode', async () => {
@@ -1215,10 +1215,10 @@ describe('InitCommand', () => {
       expect(await fileExists(codeBuddyPath)).toBe(true);
 
       const content = await fs.readFile(codeBuddyPath, 'utf-8');
-      expect(content).toContain('<!-- OPENSPEC:START -->');
-      expect(content).toContain("@/openspec/AGENTS.md");
-      expect(content).toContain('openspec update');
-      expect(content).toContain('<!-- OPENSPEC:END -->');
+      expect(content).toContain('<!-- OGD:START -->');
+      expect(content).toContain("@/ogd/AGENTS.md");
+      expect(content).toContain('ogd update');
+      expect(content).toContain('<!-- OGD:END -->');
     });
 
     it('should update existing CODEBUDDY.md with markers', async () => {
@@ -1232,10 +1232,10 @@ describe('InitCommand', () => {
       await initCommand.execute(testDir);
 
       const updatedContent = await fs.readFile(codeBuddyPath, 'utf-8');
-      expect(updatedContent).toContain('<!-- OPENSPEC:START -->');
-      expect(updatedContent).toContain("@/openspec/AGENTS.md");
-      expect(updatedContent).toContain('openspec update');
-      expect(updatedContent).toContain('<!-- OPENSPEC:END -->');
+      expect(updatedContent).toContain('<!-- OGD:START -->');
+      expect(updatedContent).toContain("@/ogd/AGENTS.md");
+      expect(updatedContent).toContain('ogd update');
+      expect(updatedContent).toContain('<!-- OGD:END -->');
       expect(updatedContent).toContain('Custom instructions here');
     });
 
@@ -1246,15 +1246,15 @@ describe('InitCommand', () => {
 
       const crushProposal = path.join(
         testDir,
-        '.crush/commands/openspec/proposal.md'
+        '.crush/commands/ogd/proposal.md'
       );
       const crushApply = path.join(
         testDir,
-        '.crush/commands/openspec/apply.md'
+        '.crush/commands/ogd/apply.md'
       );
       const crushArchive = path.join(
         testDir,
-        '.crush/commands/openspec/archive.md'
+        '.crush/commands/ogd/archive.md'
       );
 
       expect(await fileExists(crushProposal)).toBe(true);
@@ -1263,28 +1263,28 @@ describe('InitCommand', () => {
 
       const proposalContent = await fs.readFile(crushProposal, 'utf-8');
       expect(proposalContent).toContain('---');
-      expect(proposalContent).toContain('name: OpenSpec: Proposal');
-      expect(proposalContent).toContain('description: Scaffold a new OpenSpec change and validate strictly.');
-      expect(proposalContent).toContain('category: OpenSpec');
-      expect(proposalContent).toContain('tags: [openspec, change]');
-      expect(proposalContent).toContain('<!-- OPENSPEC:START -->');
+      expect(proposalContent).toContain('name: OGD: Proposal');
+      expect(proposalContent).toContain('description: Scaffold a new ogd change and validate strictly.');
+      expect(proposalContent).toContain('category: OGD');
+      expect(proposalContent).toContain('tags: [ogd, change]');
+      expect(proposalContent).toContain('<!-- OGD:START -->');
       expect(proposalContent).toContain('**Guardrails**');
 
       const applyContent = await fs.readFile(crushApply, 'utf-8');
       expect(applyContent).toContain('---');
-      expect(applyContent).toContain('name: OpenSpec: Apply');
-      expect(applyContent).toContain('description: Implement an approved OpenSpec change and keep tasks in sync.');
-      expect(applyContent).toContain('category: OpenSpec');
-      expect(applyContent).toContain('tags: [openspec, apply]');
+      expect(applyContent).toContain('name: OGD: Apply');
+      expect(applyContent).toContain('description: Implement an approved ogd change and keep tasks in sync.');
+      expect(applyContent).toContain('category: OGD');
+      expect(applyContent).toContain('tags: [ogd, apply]');
       expect(applyContent).toContain('Work through tasks sequentially');
 
       const archiveContent = await fs.readFile(crushArchive, 'utf-8');
       expect(archiveContent).toContain('---');
-      expect(archiveContent).toContain('name: OpenSpec: Archive');
-      expect(archiveContent).toContain('description: Archive a deployed OpenSpec change and update specs.');
-      expect(archiveContent).toContain('category: OpenSpec');
-      expect(archiveContent).toContain('tags: [openspec, archive]');
-      expect(archiveContent).toContain('openspec archive <id> --yes');
+      expect(archiveContent).toContain('name: OGD: Archive');
+      expect(archiveContent).toContain('description: Archive a deployed ogd change and update specs.');
+      expect(archiveContent).toContain('category: OGD');
+      expect(archiveContent).toContain('tags: [ogd, archive]');
+      expect(archiveContent).toContain('ogd archive <id> --yes');
     });
 
     it('should mark Crush as already configured during extend mode', async () => {
@@ -1306,15 +1306,15 @@ describe('InitCommand', () => {
 
       const costrictProposal = path.join(
         testDir,
-        '.cospec/openspec/commands/openspec-proposal.md'
+        '.cospec/ogd/commands/ogd-proposal.md'
       );
       const costrictApply = path.join(
         testDir,
-        '.cospec/openspec/commands/openspec-apply.md'
+        '.cospec/ogd/commands/ogd-apply.md'
       );
       const costrictArchive = path.join(
         testDir,
-        '.cospec/openspec/commands/openspec-archive.md'
+        '.cospec/ogd/commands/ogd-archive.md'
       );
 
       expect(await fileExists(costrictProposal)).toBe(true);
@@ -1323,22 +1323,22 @@ describe('InitCommand', () => {
 
       const proposalContent = await fs.readFile(costrictProposal, 'utf-8');
       expect(proposalContent).toContain('---');
-      expect(proposalContent).toContain('description: "Scaffold a new OpenSpec change and validate strictly."');
+      expect(proposalContent).toContain('description: "Scaffold a new ogd change and validate strictly."');
       expect(proposalContent).toContain('argument-hint: feature description or request');
-      expect(proposalContent).toContain('<!-- OPENSPEC:START -->');
+      expect(proposalContent).toContain('<!-- OGD:START -->');
       expect(proposalContent).toContain('**Guardrails**');
 
       const applyContent = await fs.readFile(costrictApply, 'utf-8');
       expect(applyContent).toContain('---');
-      expect(applyContent).toContain('description: "Implement an approved OpenSpec change and keep tasks in sync."');
+      expect(applyContent).toContain('description: "Implement an approved ogd change and keep tasks in sync."');
       expect(applyContent).toContain('argument-hint: change-id');
       expect(applyContent).toContain('Work through tasks sequentially');
 
       const archiveContent = await fs.readFile(costrictArchive, 'utf-8');
       expect(archiveContent).toContain('---');
-      expect(archiveContent).toContain('description: "Archive a deployed OpenSpec change and update specs."');
+      expect(archiveContent).toContain('description: "Archive a deployed ogd change and update specs."');
       expect(archiveContent).toContain('argument-hint: change-id');
-      expect(archiveContent).toContain('openspec archive <id> --yes');
+      expect(archiveContent).toContain('ogd archive <id> --yes');
     });
 
     it('should mark CoStrict as already configured during extend mode', async () => {
@@ -1360,15 +1360,15 @@ describe('InitCommand', () => {
 
       const rooProposal = path.join(
         testDir,
-        '.roo/commands/openspec-proposal.md'
+        '.roo/commands/ogd-proposal.md'
       );
       const rooApply = path.join(
         testDir,
-        '.roo/commands/openspec-apply.md'
+        '.roo/commands/ogd-apply.md'
       );
       const rooArchive = path.join(
         testDir,
-        '.roo/commands/openspec-archive.md'
+        '.roo/commands/ogd-archive.md'
       );
 
       expect(await fileExists(rooProposal)).toBe(true);
@@ -1376,16 +1376,16 @@ describe('InitCommand', () => {
       expect(await fileExists(rooArchive)).toBe(true);
 
       const proposalContent = await fs.readFile(rooProposal, 'utf-8');
-      expect(proposalContent).toContain('# OpenSpec: Proposal');
+      expect(proposalContent).toContain('# OGD: Proposal');
       expect(proposalContent).toContain('**Guardrails**');
 
       const applyContent = await fs.readFile(rooApply, 'utf-8');
-      expect(applyContent).toContain('# OpenSpec: Apply');
+      expect(applyContent).toContain('# OGD: Apply');
       expect(applyContent).toContain('Work through tasks sequentially');
 
       const archiveContent = await fs.readFile(rooArchive, 'utf-8');
-      expect(archiveContent).toContain('# OpenSpec: Archive');
-      expect(archiveContent).toContain('openspec archive <id> --yes');
+      expect(archiveContent).toContain('# OGD: Archive');
+      expect(archiveContent).toContain('ogd archive <id> --yes');
     });
 
     it('should mark RooCode as already configured during extend mode', async () => {
@@ -1407,15 +1407,15 @@ describe('InitCommand', () => {
 
       const qoderProposal = path.join(
         testDir,
-        '.qoder/commands/openspec/proposal.md'
+        '.qoder/commands/ogd/proposal.md'
       );
       const qoderApply = path.join(
         testDir,
-        '.qoder/commands/openspec/apply.md'
+        '.qoder/commands/ogd/apply.md'
       );
       const qoderArchive = path.join(
         testDir,
-        '.qoder/commands/openspec/archive.md'
+        '.qoder/commands/ogd/archive.md'
       );
 
       expect(await fileExists(qoderProposal)).toBe(true);
@@ -1424,23 +1424,23 @@ describe('InitCommand', () => {
 
       const proposalContent = await fs.readFile(qoderProposal, 'utf-8');
       expect(proposalContent).toContain('---');
-      expect(proposalContent).toContain('name: OpenSpec: Proposal');
-      expect(proposalContent).toContain('description: Scaffold a new OpenSpec change and validate strictly.');
-      expect(proposalContent).toContain('category: OpenSpec');
-      expect(proposalContent).toContain('<!-- OPENSPEC:START -->');
+      expect(proposalContent).toContain('name: OGD: Proposal');
+      expect(proposalContent).toContain('description: Scaffold a new ogd change and validate strictly.');
+      expect(proposalContent).toContain('category: OGD');
+      expect(proposalContent).toContain('<!-- OGD:START -->');
       expect(proposalContent).toContain('**Guardrails**');
 
       const applyContent = await fs.readFile(qoderApply, 'utf-8');
       expect(applyContent).toContain('---');
-      expect(applyContent).toContain('name: OpenSpec: Apply');
-      expect(applyContent).toContain('description: Implement an approved OpenSpec change and keep tasks in sync.');
+      expect(applyContent).toContain('name: OGD: Apply');
+      expect(applyContent).toContain('description: Implement an approved ogd change and keep tasks in sync.');
       expect(applyContent).toContain('Work through tasks sequentially');
 
       const archiveContent = await fs.readFile(qoderArchive, 'utf-8');
       expect(archiveContent).toContain('---');
-      expect(archiveContent).toContain('name: OpenSpec: Archive');
-      expect(archiveContent).toContain('description: Archive a deployed OpenSpec change and update specs.');
-      expect(archiveContent).toContain('openspec archive <id> --yes');
+      expect(archiveContent).toContain('name: OGD: Archive');
+      expect(archiveContent).toContain('description: Archive a deployed ogd change and update specs.');
+      expect(archiveContent).toContain('ogd archive <id> --yes');
     });
 
     it('should mark Qoder as already configured during extend mode', async () => {
@@ -1464,10 +1464,10 @@ describe('InitCommand', () => {
       expect(await fileExists(costrictPath)).toBe(true);
 
       const content = await fs.readFile(costrictPath, 'utf-8');
-      expect(content).toContain('<!-- OPENSPEC:START -->');
-      expect(content).toContain("@/openspec/AGENTS.md");
-      expect(content).toContain('openspec update');
-      expect(content).toContain('<!-- OPENSPEC:END -->');
+      expect(content).toContain('<!-- OGD:START -->');
+      expect(content).toContain("@/ogd/AGENTS.md");
+      expect(content).toContain('ogd update');
+      expect(content).toContain('<!-- OGD:END -->');
     });
 
     it('should create QODER.md when Qoder is selected', async () => {
@@ -1479,10 +1479,10 @@ describe('InitCommand', () => {
       expect(await fileExists(qoderPath)).toBe(true);
 
       const content = await fs.readFile(qoderPath, 'utf-8');
-      expect(content).toContain('<!-- OPENSPEC:START -->');
-      expect(content).toContain("@/openspec/AGENTS.md");
-      expect(content).toContain('openspec update');
-      expect(content).toContain('<!-- OPENSPEC:END -->');
+      expect(content).toContain('<!-- OGD:START -->');
+      expect(content).toContain("@/ogd/AGENTS.md");
+      expect(content).toContain('ogd update');
+      expect(content).toContain('<!-- OGD:END -->');
     });
     it('should update existing COSTRICT.md with markers', async () => {
       queueSelections('costrict', DONE);
@@ -1495,7 +1495,7 @@ describe('InitCommand', () => {
       await initCommand.execute(testDir);
 
       const updatedContent = await fs.readFile(costrictPath, 'utf-8');
-      expect(updatedContent).toContain('<!-- OPENSPEC:START -->');
+      expect(updatedContent).toContain('<!-- OGD:START -->');
       expect(updatedContent).toContain('# My CoStrict Instructions');
       expect(updatedContent).toContain('Custom instructions here');
     });
@@ -1511,10 +1511,10 @@ describe('InitCommand', () => {
       await initCommand.execute(testDir);
 
       const updatedContent = await fs.readFile(qoderPath, 'utf-8');
-      expect(updatedContent).toContain('<!-- OPENSPEC:START -->');
-      expect(updatedContent).toContain("@/openspec/AGENTS.md");
-      expect(updatedContent).toContain('openspec update');
-      expect(updatedContent).toContain('<!-- OPENSPEC:END -->');
+      expect(updatedContent).toContain('<!-- OGD:START -->');
+      expect(updatedContent).toContain("@/ogd/AGENTS.md");
+      expect(updatedContent).toContain('ogd update');
+      expect(updatedContent).toContain('<!-- OGD:END -->');
       expect(updatedContent).toContain('Custom instructions here');
     });
   });
@@ -1529,11 +1529,11 @@ describe('InitCommand', () => {
       const claudePath = path.join(testDir, 'CLAUDE.md');
       const cursorProposal = path.join(
         testDir,
-        '.cursor/commands/openspec-proposal.md'
+        '.cursor/commands/ogd-proposal.md'
       );
       const windsurfProposal = path.join(
         testDir,
-        '.windsurf/workflows/openspec-proposal.md'
+        '.windsurf/workflows/ogd-proposal.md'
       );
 
       expect(await fileExists(claudePath)).toBe(true);
@@ -1549,11 +1549,11 @@ describe('InitCommand', () => {
       const claudePath = path.join(testDir, 'CLAUDE.md');
       const cursorProposal = path.join(
         testDir,
-        '.cursor/commands/openspec-proposal.md'
+        '.cursor/commands/ogd-proposal.md'
       );
       const windsurfProposal = path.join(
         testDir,
-        '.windsurf/workflows/openspec-proposal.md'
+        '.windsurf/workflows/ogd-proposal.md'
       );
 
       expect(await fileExists(claudePath)).toBe(true);
@@ -1569,7 +1569,7 @@ describe('InitCommand', () => {
       const claudePath = path.join(testDir, 'CLAUDE.md');
       const cursorProposal = path.join(
         testDir,
-        '.cursor/commands/openspec-proposal.md'
+        '.cursor/commands/ogd-proposal.md'
       );
 
       // Should still create AGENTS.md but no tool-specific files
@@ -1595,7 +1595,7 @@ describe('InitCommand', () => {
       const claudePath = path.join(testDir, 'CLAUDE.md');
       const cursorProposal = path.join(
         testDir,
-        '.cursor/commands/openspec-proposal.md'
+        '.cursor/commands/ogd-proposal.md'
       );
 
       expect(await fileExists(claudePath)).toBe(true);
@@ -1613,7 +1613,7 @@ describe('InitCommand', () => {
 
   describe('already configured detection', () => {
     it('should NOT show tools as already configured in fresh project with existing CLAUDE.md', async () => {
-      // Simulate user having their own CLAUDE.md before running openspec init
+      // Simulate user having their own CLAUDE.md before running ogd init
       const claudePath = path.join(testDir, 'CLAUDE.md');
       await fs.writeFile(claudePath, '# My Custom Claude Instructions\n');
 
@@ -1674,7 +1674,7 @@ describe('InitCommand', () => {
       const codexPromptsDir = path.join(testDir, '.codex/prompts');
       await fs.mkdir(codexPromptsDir, { recursive: true });
       await fs.writeFile(
-        path.join(codexPromptsDir, 'openspec-proposal.md'),
+        path.join(codexPromptsDir, 'ogd-proposal.md'),
         '# Existing prompt\n'
       );
 
@@ -1704,7 +1704,7 @@ describe('InitCommand', () => {
         async (filePath: any, ...args: any[]) => {
           if (
             typeof filePath === 'string' &&
-            filePath.includes('.openspec-test-')
+            filePath.includes('.ogd-test-')
           ) {
             throw new Error('EACCES: permission denied');
           }

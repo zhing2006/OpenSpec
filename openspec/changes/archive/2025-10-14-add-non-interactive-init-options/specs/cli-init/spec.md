@@ -17,14 +17,14 @@ The command SHALL support non-interactive operation through command-line options
 #### Scenario: Skip tool configuration non-interactively
 - **WHEN** run with `--tools none`
 - **THEN** skip AI tool configuration entirely
-- **AND** only create the OpenSpec directory structure and template files
+- **AND** only create the OGD directory structure and template files
 
 #### Scenario: Invalid tool specification
 - **WHEN** run with `--tools` containing any IDs not present in the AI tool registry
 - **THEN** exit with code 1 and display available values (`all`, `none`, or the supported tool IDs)
 
 #### Scenario: Help text lists available tool IDs
-- **WHEN** displaying CLI help for `openspec init`
+- **WHEN** displaying CLI help for `ogd init`
 - **THEN** show the `--tools` option description with the valid values derived from the AI tool registry
 
 ## MODIFIED Requirements

@@ -1,18 +1,18 @@
 # Allow Additional AI Tool Initialization After Setup
 
 ## Summary
-- Let `openspec init` configure new AI coding tools for projects that already contain an OpenSpec structure.
+- Let `ogd init` configure new AI coding tools for projects that already contain an OGD structure.
 - Keep the initialization flow safe by skipping structure creation and only generating files for tools the user explicitly selects.
 - Provide clear feedback so users know which tool files were added versus already present.
 
 ## Motivation
-Today `openspec init` exits with an error once an `openspec/` directory exists. That protects the directory layout, but it blocks
+Today `ogd init` exits with an error once an `ogd/` directory exists. That protects the directory layout, but it blocks
 teams that start with one assistant (for example, Claude Code) and later want to add another such as Cursor. They have to create
 those files by hand or rerun `init` in a clean clone, which undermines the "easy onboarding" promise. Letting the command extend
 an existing installation keeps the workflow consistent and avoids manual file management.
 
 ## Proposal
-1. Detect an existing OpenSpec structure at the start of `openspec init` and branch into an "extend" mode instead of exiting.
+1. Detect an existing OGD structure at the start of `ogd init` and branch into an "extend" mode instead of exiting.
    - Announce that the base structure already exists and that the command will only manage AI tool configuration files.
    - Keep the existing guard for directories or files we must not overwrite.
 2. Present the usual AI tool selection prompt even in extend mode, showing which tools are already configured.
@@ -22,10 +22,10 @@ an existing installation keeps the workflow consistent and avoids manual file ma
    workspace files) while leaving untouched tools intact apart from marker-managed sections.
    - Do nothing when the user selects no new tools and keep the previous error messaging to avoid silently succeeding.
 4. Summarize the outcome (created, refreshed, skipped) before exiting with code 0 when work was performed.
-   - Include friendly guidance that future updates to shared content still come from `openspec update`.
+   - Include friendly guidance that future updates to shared content still come from `ogd update`.
 
 ## Out of Scope
-- Changing how `openspec update` discovers or updates AI tool files.
+- Changing how `ogd update` discovers or updates AI tool files.
 - Supporting brand-new AI tools beyond those already wired into the CLI.
 - Adding non-interactive flags for selecting multiple tools in one run (follow-up if needed).
 

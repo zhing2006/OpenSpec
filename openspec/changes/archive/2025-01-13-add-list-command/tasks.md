@@ -6,11 +6,11 @@
   - [x] 1.1.2 Implement task counting from tasks.md files
   - [x] 1.1.3 Format output as simple table
 - [x] 1.2 Add list command to CLI in `src/cli/index.ts`
-  - [x] 1.2.1 Register `openspec list` command
+  - [x] 1.2.1 Register `ogd list` command
   - [x] 1.2.2 Connect to list.ts implementation
 
 ## 2. Error Handling
-- [x] 2.1 Handle missing openspec/changes/ directory
+- [x] 2.1 Handle missing ogd/changes/ directory
 - [x] 2.2 Handle changes without tasks.md files
 - [x] 2.3 Handle empty changes directory
 

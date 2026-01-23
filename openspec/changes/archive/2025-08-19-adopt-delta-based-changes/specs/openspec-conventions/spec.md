@@ -1,4 +1,4 @@
-# OpenSpec Conventions - Changes
+# OGD Conventions - Changes
 
 ## MODIFIED Requirements
 

@@ -17,7 +17,7 @@ The archive command will programmatically apply these deltas using normalized he
 
 ## Impact
 
-**Affected specs**: openspec-conventions, cli-archive, cli-diff
+**Affected specs**: OGD-conventions, cli-archive, cli-diff
 
 **Benefits**:
 - GitHub diffs show only actual changes (25 lines instead of 150+)

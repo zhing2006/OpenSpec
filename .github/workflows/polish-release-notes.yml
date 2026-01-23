@@ -22,7 +22,7 @@ permissions:
 jobs:
   polish:
     # Only run on the main repo, not forks
-    if: github.repository == 'Fission-AI/OpenSpec'
+    if: github.repository == 'zhing2006/OpenGameDesign'
     runs-on: ubuntu-latest
 
     steps:
@@ -44,11 +44,11 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           claude_args: "--allowedTools Write,Read"
           prompt: |
-            Transform the changelog in `current-notes.md` into release notes for OpenSpec ${{ env.TAG_NAME }}.
+            Transform the changelog in `current-notes.md` into release notes for OGD ${{ env.TAG_NAME }}.
 
             ## Voice
 
-            OpenSpec is a developer tool. Write like you're talking to a peer:
+            OGD is a developer tool. Write like you're talking to a peer:
             - Direct and practical, not marketing copy
             - Focus on what changed and why it matters
             - Skip the hype, keep it real
@@ -99,7 +99,7 @@ jobs:
 
             ## Rules
 
-            1. Write for developers using OpenSpec with AI coding assistants
+            1. Write for developers using OGD with AI coding assistants
             2. Remove commit hashes (like `eb152eb:`), PR numbers, and changesets wrappers (`### Minor Changes`)
             3. Lead with what users can do, not implementation details
             4. One to two sentences per item, max

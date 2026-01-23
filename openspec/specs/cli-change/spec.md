@@ -9,27 +9,27 @@ The system SHALL provide a `change` command with subcommands for displaying, lis
 
 #### Scenario: Show change as JSON
 
-- **WHEN** executing `openspec change show update-error --json`
+- **WHEN** executing `ogd change show update-error --json`
 - **THEN** parse the markdown change file
 - **AND** extract change structure and deltas
 - **AND** output valid JSON to stdout
 
 #### Scenario: List all changes
 
-- **WHEN** executing `openspec change list`
-- **THEN** scan the openspec/changes directory
+- **WHEN** executing `ogd change list`
+- **THEN** scan the ogd/changes directory
 - **AND** return list of all pending changes
 - **AND** support JSON output with `--json` flag
 
 #### Scenario: Show only requirement changes
 
-- **WHEN** executing `openspec change show update-error --requirements-only`
+- **WHEN** executing `ogd change show update-error --requirements-only`
 - **THEN** display only the requirement changes (ADDED/MODIFIED/REMOVED/RENAMED)
 - **AND** exclude why and what changes sections
 
 #### Scenario: Validate change structure
 
-- **WHEN** executing `openspec change validate update-error`
+- **WHEN** executing `ogd change validate update-error`
 - **THEN** parse the change file
 - **AND** validate against Zod schema
 - **AND** ensure deltas are well-formed
@@ -40,13 +40,13 @@ The system SHALL maintain backward compatibility with the existing `list` comman
 
 #### Scenario: Legacy list command
 
-- **WHEN** executing `openspec list`
+- **WHEN** executing `ogd list`
 - **THEN** display current list of changes (existing behavior)
-- **AND** show deprecation notice: "Note: 'openspec list' is deprecated. Use 'openspec change list' instead."
+- **AND** show deprecation notice: "Note: 'ogd list' is deprecated. Use 'ogd change list' instead."
 
 #### Scenario: Legacy list with --all flag
 
-- **WHEN** executing `openspec list --all`
+- **WHEN** executing `ogd list --all`
 - **THEN** display all changes (existing behavior)
 - **AND** show same deprecation notice
 
@@ -56,7 +56,7 @@ The change show command SHALL support interactive selection when no change name 
 
 #### Scenario: Interactive change selection for show
 
-- **WHEN** executing `openspec change show` without arguments
+- **WHEN** executing `ogd change show` without arguments
 - **THEN** display an interactive list of available changes
 - **AND** allow the user to select a change to show
 - **AND** display the selected change content
@@ -65,7 +65,7 @@ The change show command SHALL support interactive selection when no change name 
 #### Scenario: Non-interactive fallback keeps current behavior
 
 - **GIVEN** stdin is not a TTY or `--no-interactive` is provided or environment variable `OPEN_SPEC_INTERACTIVE=0`
-- **WHEN** executing `openspec change show` without a change name
+- **WHEN** executing `ogd change show` without a change name
 - **THEN** do not prompt interactively
 - **AND** print the existing hint including available change IDs
 - **AND** set `process.exitCode = 1`
@@ -76,7 +76,7 @@ The change validate command SHALL support interactive selection when no change n
 
 #### Scenario: Interactive change selection for validation
 
-- **WHEN** executing `openspec change validate` without arguments
+- **WHEN** executing `ogd change validate` without arguments
 - **THEN** display an interactive list of available changes
 - **AND** allow the user to select a change to validate
 - **AND** validate the selected change
@@ -84,7 +84,7 @@ The change validate command SHALL support interactive selection when no change n
 #### Scenario: Non-interactive fallback keeps current behavior
 
 - **GIVEN** stdin is not a TTY or `--no-interactive` is provided or environment variable `OPEN_SPEC_INTERACTIVE=0`
-- **WHEN** executing `openspec change validate` without a change name
+- **WHEN** executing `ogd change validate` without a change name
 - **THEN** do not prompt interactively
 - **AND** print the existing hint including available change IDs
 - **AND** set `process.exitCode = 1`

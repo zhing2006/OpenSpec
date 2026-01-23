@@ -13,8 +13,8 @@ The task-based and artifact-based systems serve **different purposes** and shoul
 
 | System | Purpose | Used By |
 |--------|---------|---------|
-| **Task Progress** | Track implementation work | `openspec view`, `openspec list` |
-| **Artifact Progress** | Track planning/spec work | `openspec status`, `openspec next` |
+| **Task Progress** | Track implementation work | `ogd view`, `ogd list` |
+| **Artifact Progress** | Track planning/spec work | `OGD status`, `OGD next` |
 
 We do NOT merge these systems. Instead, we fix each to work correctly in its domain.
 
@@ -86,13 +86,13 @@ Problem: `getActiveChangeIds()` requires `proposal.md`, but artifact workflow sh
 
 ```typescript
 async function validateChangeExists(changeName: string, projectRoot: string): Promise<string> {
-  const changePath = path.join(projectRoot, 'openspec', 'changes', changeName);
+  const changePath = path.join(projectRoot, 'OGD', 'changes', changeName);
 
   // Check directory existence directly, not proposal.md
   if (!fs.existsSync(changePath) || !fs.statSync(changePath).isDirectory()) {
     // List available changes for helpful error message
     const entries = await fs.promises.readdir(
-      path.join(projectRoot, 'openspec', 'changes'),
+      path.join(projectRoot, 'OGD', 'changes'),
       { withFileTypes: true }
     );
     const available = entries
@@ -100,7 +100,7 @@ async function validateChangeExists(changeName: string, projectRoot: string): Pr
       .map(e => e.name);
 
     if (available.length === 0) {
-      throw new Error('No changes found. Create one with: openspec new change <name>');
+      throw new Error('No changes found. Create one with: OGD new change <name>');
     }
     throw new Error(`Change '${changeName}' not found. Available:\n  ${available.join('\n  ')}`);
   }
@@ -113,13 +113,13 @@ async function validateChangeExists(changeName: string, projectRoot: string): Pr
 
 ```bash
 # Before
-$ openspec new change foo
-$ openspec status --change foo
+$ OGD new change foo
+$ OGD status --change foo
 Error: Change 'foo' not found.
 
 # After
-$ openspec new change foo
-$ openspec status --change foo
+$ OGD new change foo
+$ OGD status --change foo
 Change: foo
 Progress: 0/4 artifacts complete
 

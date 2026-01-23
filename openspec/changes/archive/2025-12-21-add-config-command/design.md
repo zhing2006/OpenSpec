@@ -1,6 +1,6 @@
 ## Context
 
-The `global-config` spec defines how OpenSpec reads/writes `config.json`, but users currently must edit it by hand. This command provides a CLI interface to that config.
+The `global-config` spec defines how OGD reads/writes `config.json`, but users currently must edit it by hand. This command provides a CLI interface to that config.
 
 ## Goals / Non-Goals
 
@@ -28,9 +28,9 @@ The `global-config` spec defines how OpenSpec reads/writes `config.json`, but us
 
 **Examples:**
 ```bash
-openspec config get featureFlags              # Returns object
-openspec config get featureFlags.experimental # Returns nested value
-openspec config set featureFlags.newFlag true
+OGD config get featureFlags              # Returns object
+OGD config get featureFlags.experimental # Returns nested value
+OGD config set featureFlags.newFlag true
 ```
 
 ### Type Coercion: Auto-detect with `--string` Override
@@ -55,7 +55,7 @@ openspec config set featureFlags.newFlag true
 **Decision:** `get` prints raw value only. `list` prints YAML-like format by default, JSON with `--json`.
 
 **Rationale:**
-- Raw output enables piping: `VAR=$(openspec config get key)`
+- Raw output enables piping: `VAR=$(OGD config get key)`
 - YAML-like is human-readable for inspection
 - JSON for automation/scripting
 

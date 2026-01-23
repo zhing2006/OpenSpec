@@ -2,7 +2,7 @@
 
 ## Context
 
-OpenSpec recently added Nix flake support to enable Nix users to install the tool. This includes:
+OGD recently added Nix flake support to enable Nix users to install the tool. This includes:
 - `flake.nix`: Nix package definition with pnpm dependency fetching
 - `scripts/update-flake.sh`: Automation script to update version and hash when releasing
 
@@ -29,7 +29,7 @@ Currently, there is no CI validation ensuring these Nix artifacts remain functio
 - Testing on macOS (GitHub-hosted macOS runners are slower and more expensive; Nix flake already declares macOS support)
 - Building for all declared systems (x86_64-linux, aarch64-linux, x86_64-darwin, aarch64-darwin) - focus on most common platform
 - Validating Nix flake quality/style (nixpkgs-fmt, etc.) - can be added later if needed
-- Running OpenSpec's full test suite through Nix build - existing CI already does this
+- Running OGD's full test suite through Nix build - existing CI already does this
 
 ## Decisions
 
@@ -199,7 +199,7 @@ If Nix validation causes issues:
 - **Q**: Should we validate on macOS as well?
   - **A**: No for initial implementation. Linux validation is sufficient and macOS runners are slower/more expensive. Can add later if users report macOS-specific issues.
 
-- **Q**: Should we run full OpenSpec tests through the Nix build?
+- **Q**: Should we run full OGD tests through the Nix build?
   - **A**: No. The Nix build already runs `pnpm test` as part of its build phase. Existing CI jobs cover testing thoroughly. Nix validation focuses on build success.
 
 - **Q**: What timeout should we use for the Nix validation job?

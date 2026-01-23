@@ -8,7 +8,7 @@ Users frequently need to view changes and specs but must know in advance whether
 ## What Changes
 
 - Add new top-level `show` command for displaying changes or specs with intelligent selection
-- Support direct item display: `openspec show <item>` with automatic type detection
+- Support direct item display: `OGD show <item>` with automatic type detection
 - Interactive selection when no arguments provided
 - Enhance existing `change show` and `spec show` to support interactive selection (backwards compatibility)
 - Maintain all existing format options (--json, --deltas-only, --requirements, etc.)

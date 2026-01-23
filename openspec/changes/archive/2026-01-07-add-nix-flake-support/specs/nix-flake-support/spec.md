@@ -1,40 +1,40 @@
 ## ADDED Requirements
 
 ### Requirement: Multi-platform Nix flake
-The system SHALL provide a Nix flake that builds OpenSpec for multiple platforms.
+The system SHALL provide a Nix flake that builds OGD for multiple platforms.
 
 #### Scenario: Build on Linux x86_64
 - **WHEN** user runs `nix build` on x86_64-linux system
-- **THEN** system builds OpenSpec package successfully
-- **AND** package includes the `openspec` binary
+- **THEN** system builds OGD package successfully
+- **AND** package includes the `OGD` binary
 
 #### Scenario: Build on macOS ARM
 - **WHEN** user runs `nix build` on aarch64-darwin system
-- **THEN** system builds OpenSpec package successfully
-- **AND** package includes the `openspec` binary
+- **THEN** system builds OGD package successfully
+- **AND** package includes the `OGD` binary
 
 #### Scenario: Build on Linux ARM
 - **WHEN** user runs `nix build` on aarch64-linux system
-- **THEN** system builds OpenSpec package successfully
+- **THEN** system builds OGD package successfully
 
 #### Scenario: Build on macOS x86_64
 - **WHEN** user runs `nix build` on x86_64-darwin system
-- **THEN** system builds OpenSpec package successfully
+- **THEN** system builds OGD package successfully
 
 ### Requirement: Direct execution via nix run
-The system SHALL allow users to run OpenSpec directly from GitHub without installing.
+The system SHALL allow users to run OGD directly from GitHub without installing.
 
 #### Scenario: Run init command from GitHub
-- **WHEN** user runs `nix run github:Fission-AI/OpenSpec -- init`
-- **THEN** system downloads and builds OpenSpec
-- **AND** executes `openspec init` command
+- **WHEN** user runs `nix run github:zhing2006/OpenGameDesign -- init`
+- **THEN** system downloads and builds OGD
+- **AND** executes `ogd init` command
 
-#### Scenario: Run any OpenSpec command
-- **WHEN** user runs `nix run github:Fission-AI/OpenSpec -- <command> <args>`
-- **THEN** system executes `openspec <command> <args>`
+#### Scenario: Run any OGD command
+- **WHEN** user runs `nix run github:zhing2006/OpenGameDesign -- <command> <args>`
+- **THEN** system executes `OGD <command> <args>`
 
 ### Requirement: pnpm dependency management
-The system SHALL use pnpm for building OpenSpec in the Nix flake.
+The system SHALL use pnpm for building OGD in the Nix flake.
 
 #### Scenario: Fetch dependencies with pnpm
 - **WHEN** Nix builds the package
@@ -51,7 +51,7 @@ The system SHALL use pnpm for building OpenSpec in the Nix flake.
 The system SHALL use Node.js 20 as specified in package.json engines field.
 
 #### Scenario: Build with correct Node version
-- **WHEN** Nix builds OpenSpec
+- **WHEN** Nix builds OGD
 - **THEN** system uses nodejs_20 from nixpkgs
 - **AND** build succeeds without version compatibility errors
 
@@ -59,21 +59,21 @@ The system SHALL use Node.js 20 as specified in package.json engines field.
 The system SHALL provide a Nix development shell for contributors.
 
 #### Scenario: Enter dev shell
-- **WHEN** user runs `nix develop` in OpenSpec repository
+- **WHEN** user runs `nix develop` in OGD repository
 - **THEN** system provides shell with nodejs_20 and pnpm_9
 - **AND** displays welcome message with versions
 - **AND** provides instructions to run `pnpm install`
 
 ### Requirement: Proper binary installation
-The system SHALL install the openspec binary correctly.
+The system SHALL install the OGD binary correctly.
 
 #### Scenario: Binary in PATH
 - **WHEN** package is built or installed
-- **THEN** `openspec` binary is available in `$out/bin/openspec`
+- **THEN** `OGD` binary is available in `$out/bin/OGD`
 - **AND** binary is executable
 - **AND** binary can be invoked without full path when installed
 
 #### Scenario: Binary executes correctly
-- **WHEN** user runs the installed `openspec` command
+- **WHEN** user runs the installed `OGD` command
 - **THEN** system executes the CLI entry point
 - **AND** all subcommands work correctly

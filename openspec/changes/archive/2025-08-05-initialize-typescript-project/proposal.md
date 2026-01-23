@@ -1,7 +1,7 @@
 # Initialize TypeScript Project
 
 ## Why
-The OpenSpec project needs a proper TypeScript foundation to build the minimal CLI that helps developers set up OpenSpec file structures and keep AI instructions updated.
+The OGD project needs a proper TypeScript foundation to build the minimal CLI that helps developers set up OGD file structures and keep AI instructions updated.
 
 ## What Changes
 - Create TypeScript project configuration with ESM modules (package.json, tsconfig.json)

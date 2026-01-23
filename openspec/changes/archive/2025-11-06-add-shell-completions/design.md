@@ -19,12 +19,12 @@ This design establishes a plugin-based architecture for shell completions that p
 - **Double TAB (TAB TAB):** Displays all possible completions as a list
 - **Type more characters + TAB:** Narrows matches and completes or shows refined list
 
-**OpenSpec Integration:**
+**OGD Integration:**
 ```bash
-# After installing: openspec completion install bash
-openspec val<TAB>           # Completes to "openspec validate"
-openspec validate <TAB><TAB>  # Shows: --all --changes --specs --strict --json [change-ids] [spec-ids]
-openspec show add-<TAB><TAB>  # Shows all changes starting with "add-"
+# After installing: OGD completion install bash
+OGD val<TAB>           # Completes to "ogd validate"
+ogd validate <TAB><TAB>  # Shows: --all --changes --specs --strict --json [change-ids] [spec-ids]
+OGD show add-<TAB><TAB>  # Shows all changes starting with "add-"
 ```
 
 **Implementation:** Uses bash-completion framework with `_init_completion`, `compgen`, and `COMPREPLY` array.
@@ -37,11 +37,11 @@ openspec show add-<TAB><TAB>  # Shows all changes starting with "add-"
 - **Enter:** Selects highlighted option
 - **Ctrl+C / Esc:** Cancels completion menu
 
-**OpenSpec Integration:**
+**OGD Integration:**
 ```zsh
-# After installing: openspec completion install zsh
-openspec val<TAB>    # Shows menu with "validate" and "view" highlighted
-openspec show <TAB>  # Shows menu with all change IDs and spec IDs, categorized
+# After installing: OGD completion install zsh
+OGD val<TAB>    # Shows menu with "validate" and "view" highlighted
+OGD show <TAB>  # Shows menu with all change IDs and spec IDs, categorized
 ```
 
 **Implementation:** Uses Zsh completion system with `_arguments`, `_describe`, and `compadd` built-ins. Oh My Zsh provides enhanced menu styling automatically.
@@ -55,12 +55,12 @@ openspec show <TAB>  # Shows menu with all change IDs and spec IDs, categorized
 - **TAB again:** Cycles through options or navigates menu
 - **Enter:** Accepts current selection
 
-**OpenSpec Integration:**
+**OGD Integration:**
 ```fish
-# After installing: openspec completion install fish
-openspec val       # Gray suggestion shows "validate" immediately
-openspec show a    # Real-time suggestions for changes starting with "a"
-openspec <TAB>     # Shows all commands with descriptions in paged menu
+# After installing: OGD completion install fish
+OGD val       # Gray suggestion shows "validate" immediately
+OGD show a    # Real-time suggestions for changes starting with "a"
+OGD <TAB>     # Shows all commands with descriptions in paged menu
 ```
 
 **Implementation:** Uses Fish's declarative `complete -c` syntax. Completions are auto-loaded from `~/.config/fish/completions/`.
@@ -73,12 +73,12 @@ openspec <TAB>     # Shows all commands with descriptions in paged menu
 - **Ctrl+Space:** Shows IntelliSense-style menu (PSReadLine v2.2+)
 - **Arrow Keys:** Navigate menu if shown
 
-**OpenSpec Integration:**
+**OGD Integration:**
 ```powershell
-# After installing: openspec completion install powershell
-openspec val<TAB>       # Cycles: validate → view → validate
-openspec show <TAB>     # Cycles through change IDs one by one
-openspec <Ctrl+Space>   # Shows IntelliSense menu with all commands
+# After installing: OGD completion install powershell
+OGD val<TAB>       # Cycles: validate → view → validate
+OGD show <TAB>     # Cycles through change IDs one by one
+OGD <Ctrl+Space>   # Shows IntelliSense menu with all commands
 ```
 
 **Implementation:** Uses `Register-ArgumentCompleter` with custom script block that returns `[System.Management.Automation.CompletionResult]` objects.
@@ -137,7 +137,7 @@ type CommandDefinition = {
 const COMMAND_REGISTRY: CommandDefinition[] = [
   {
     name: 'init',
-    description: 'Initialize OpenSpec in your project',
+    description: 'Initialize OGD in your project',
     flags: [
       { name: '--tools', description: 'Configure AI tools non-interactively', hasValue: true }
     ],
@@ -184,8 +184,8 @@ class CompletionProvider {
     // Similar caching logic
   }
 
-  isOpenSpecProject(): boolean {
-    // Check for openspec/ directory
+  isOGDProject(): boolean {
+    // Check for ogd/ directory
   }
 }
 ```
@@ -199,7 +199,7 @@ class CompletionProvider {
 **Design Decisions:**
 - 2-second cache TTL balances freshness with performance
 - Cache per-process (not persistent) to avoid stale data across sessions
-- Graceful degradation when outside OpenSpec projects
+- Graceful degradation when outside OGD projects
 
 ### 4. Separate Installation Logic
 
@@ -279,7 +279,7 @@ function createGenerator(shell: SupportedShell, provider: CompletionProvider): C
 
 **This Proposal (Zsh-only):**
 ```
-openspec completion
+OGD completion
 ├── zsh               # Generate Zsh completion script
 ├── install [shell]   # Install Zsh completion (auto-detects or explicit zsh)
 └── uninstall [shell] # Remove Zsh completion (auto-detects or explicit zsh)
@@ -287,7 +287,7 @@ openspec completion
 
 **Future (after follow-up proposals):**
 ```
-openspec completion
+OGD completion
 ├── bash              # Generate Bash completion script (future)
 ├── zsh               # Generate Zsh completion script (this proposal)
 ├── fish              # Generate Fish completion script (future)
@@ -306,7 +306,7 @@ src/
 ├── core/
 │   └── completions/
 │       ├── types.ts               # Interfaces: CompletionGenerator, CommandDefinition, etc.
-│       ├── command-registry.ts    # Single source of truth for OpenSpec commands
+│       ├── command-registry.ts    # Single source of truth for OGD commands
 │       ├── completion-provider.ts # Dynamic change/spec ID discovery with caching
 │       ├── factory.ts             # Factory for instantiating Zsh generator/installer
 │       ├── generators/
@@ -333,10 +333,10 @@ Zsh implementation prioritizes Oh My Zsh because:
 **Installation Strategy:**
 ```typescript
 if (isOhMyZshInstalled()) {
-  // Install to ~/.oh-my-zsh/custom/completions/_openspec
+  // Install to ~/.oh-my-zsh/custom/completions/_OGD
   // Automatically loaded by Oh My Zsh
 } else {
-  // Install to ~/.zsh/completions/_openspec
+  // Install to ~/.zsh/completions/_OGD
   // Update ~/.zshrc with fpath and compinit if needed
 }
 ```
@@ -367,7 +367,7 @@ if (this.changeCache && Date.now() - this.changeCache.timestamp < this.CACHE_TTL
 Completions should degrade gracefully rather than break workflows:
 
 1. **Unsupported shell** - Clear error with list of supported shells
-2. **Not in OpenSpec project** - Skip dynamic completions, only offer static commands
+2. **Not in OGD project** - Skip dynamic completions, only offer static commands
 3. **Permission errors** - Suggest alternative installation methods
 4. **Missing config directories** - Auto-create with user notification
 5. **Already installed** - Offer to reinstall/update
@@ -390,7 +390,7 @@ Each component is independently testable:
 
 3. **Manual Testing**
    - Real shell environments (Oh My Zsh, Bash, Fish, PowerShell)
-   - Tab completion behavior in OpenSpec projects
+   - Tab completion behavior in OGD projects
    - Dynamic change/spec ID suggestions
    - Installation/uninstallation workflows
 

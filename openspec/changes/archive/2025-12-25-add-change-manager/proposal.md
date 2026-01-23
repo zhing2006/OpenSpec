@@ -1,7 +1,7 @@
 ## Why
 
 There's no programmatic way to create a new change directory. Users must manually:
-1. Create `openspec/changes/<name>/` directory
+1. Create `ogd/changes/<name>/` directory
 2. Create a `proposal.md` file
 3. Hope they got the naming right
 
@@ -17,7 +17,7 @@ This is error-prone and blocks automation (e.g., Claude commands, scripts).
 
 | Function | Description |
 |----------|-------------|
-| `createChange(projectRoot, name)` | Creates `openspec/changes/<name>/` directory |
+| `createChange(projectRoot, name)` | Creates `ogd/changes/<name>/` directory |
 | `validateChangeName(name)` | Returns `{ valid: boolean; error?: string }` |
 
 ### Name Validation Rules

@@ -10,7 +10,7 @@ The diff command SHALL display unified diff output in text format.
 
 #### Scenario: Unified diff output (deprecated)
 
-- **WHEN** running `openspec diff <change>`
+- **WHEN** running `OGD diff <change>`
 - **THEN** show a unified text diff of files
 - **AND** include `+`/`-` prefixed lines representing additions and removals
 
@@ -22,7 +22,7 @@ The command SHALL show a requirement-level comparison displaying only changed re
 
 #### Scenario: Side-by-side comparison of changes
 
-- **WHEN** running `openspec diff <change>`
+- **WHEN** running `OGD diff <change>`
 - **THEN** display only requirements that have changed
 - **AND** show them in a side-by-side format that:
   - Clearly shows the current version on the left

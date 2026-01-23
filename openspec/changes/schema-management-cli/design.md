@@ -1,9 +1,9 @@
 ## Context
 
-OpenSpec uses workflow schemas to define artifact sequences for change proposals. Currently, schemas are resolved from three locations (project → user → package), but managing custom schemas requires manual file creation with no tooling support. The resolver infrastructure exists (`src/core/artifact-graph/resolver.ts`) but there's no CLI exposure for schema management operations.
+OGD uses workflow schemas to define artifact sequences for change proposals. Currently, schemas are resolved from three locations (project → user → package), but managing custom schemas requires manual file creation with no tooling support. The resolver infrastructure exists (`src/core/artifact-graph/resolver.ts`) but there's no CLI exposure for schema management operations.
 
 Users who want to customize workflows must:
-1. Manually create directory structures under `openspec/schemas/<name>/`
+1. Manually create directory structures under `ogd/schemas/<name>/`
 2. Copy and modify `schema.yaml` files without validation
 3. Debug resolution issues by inspecting the filesystem directly
 
@@ -27,15 +27,15 @@ This creates friction for schema customization and leads to runtime errors when 
 
 ## Decisions
 
-### 1. Command Structure: `openspec schema <subcommand>`
+### 1. Command Structure: `OGD schema <subcommand>`
 
-Add a new command group following the existing pattern used by `openspec config` and `openspec completion`.
+Add a new command group following the existing pattern used by `OGD config` and `OGD completion`.
 
 **Rationale:** Grouping related commands under a noun (schema) matches the established CLI patterns and provides a natural namespace for future schema operations.
 
 **Alternatives considered:**
-- Flat commands (`openspec schema-init`, `openspec schema-fork`): Rejected because it pollutes the top-level namespace and doesn't scale well.
-- Extending existing commands (`openspec init --schema`): Rejected because schema management is distinct from project initialization.
+- Flat commands (`OGD schema-init`, `OGD schema-fork`): Rejected because it pollutes the top-level namespace and doesn't scale well.
+- Extending existing commands (`ogd init --schema`): Rejected because schema management is distinct from project initialization.
 
 ### 2. Implementation Location
 
@@ -64,13 +64,13 @@ Use `@inquirer/prompts` (already a dependency) for:
 - Multi-select for artifact selection with descriptions
 - Optional: set as project default
 
-**Rationale:** Matches the UX established by `openspec init` and `openspec config reset`. Provides a guided experience while keeping the wizard lightweight.
+**Rationale:** Matches the UX established by `ogd init` and `OGD config reset`. Provides a guided experience while keeping the wizard lightweight.
 
 ### 5. Fork Source Resolution
 
 `schema fork <source>` resolves the source schema using the existing `getSchemaDir()` function, respecting the full resolution order (project → user → package). This allows forking from any accessible schema.
 
-The destination is always project-local: `openspec/schemas/<name>/`
+The destination is always project-local: `ogd/schemas/<name>/`
 
 **Rationale:** Forking to project scope makes sense because:
 - Custom schemas are project-specific decisions
@@ -87,7 +87,7 @@ All commands support `--json` flag for machine-readable output:
 
 Text output uses ora spinners for progress and clear success/error messaging.
 
-**Rationale:** Consistent with existing OpenSpec commands and enables scripting/automation.
+**Rationale:** Consistent with existing OGD commands and enables scripting/automation.
 
 ### 7. Schema `which` Command Design
 

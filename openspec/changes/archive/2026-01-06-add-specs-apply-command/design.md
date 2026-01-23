@@ -1,6 +1,6 @@
 ## Context
 
-Currently, delta specs are only applied to main specs when running `openspec archive`. This bundles two concerns:
+Currently, delta specs are only applied to main specs when running `ogd archive`. This bundles two concerns:
 1. Applying spec changes (delta → main)
 2. Archiving the change (move to archive folder)
 
@@ -40,7 +40,7 @@ Users want flexibility to sync specs earlier, especially when iterating. The arc
 - Simpler implementation and mental model
 
 **Alternatives considered**:
-- Track `specsSynced: true` in `.openspec.yaml` (rejected: unnecessary complexity)
+- Track `specsSynced: true` in `.OGD.yaml` (rejected: unnecessary complexity)
 - Store snapshot of synced deltas (rejected: over-engineering)
 
 ### 3. Agent-driven approach (no CLI command)

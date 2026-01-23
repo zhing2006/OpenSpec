@@ -8,13 +8,13 @@ The system SHALL provide a `view` command that displays a dashboard overview of 
 
 #### Scenario: Basic dashboard display
 
-- **WHEN** user runs `openspec view`
+- **WHEN** user runs `ogd view`
 - **THEN** system displays a formatted dashboard with sections for summary, active changes, completed changes, and specifications
 
-#### Scenario: No OpenSpec directory
+#### Scenario: No OGD directory
 
-- **WHEN** user runs `openspec view` in a directory without OpenSpec
-- **THEN** system displays error message "✗ No openspec directory found"
+- **WHEN** user runs `ogd view` in a directory without OGD
+- **THEN** system displays error message "✗ No OGD directory found"
 
 ### Requirement: Summary Section
 

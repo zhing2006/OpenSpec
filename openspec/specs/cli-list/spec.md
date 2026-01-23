@@ -2,20 +2,20 @@
 
 ## Purpose
 
-The `openspec list` command SHALL provide developers with a quick overview of all active changes in the project, showing their names and task completion status.
+The `ogd list` command SHALL provide developers with a quick overview of all active changes in the project, showing their names and task completion status.
 ## Requirements
 ### Requirement: Command Execution
 The command SHALL scan and analyze either active changes or specs based on the selected mode.
 
 #### Scenario: Scanning for changes (default)
-- **WHEN** `openspec list` is executed without flags
-- **THEN** scan the `openspec/changes/` directory for change directories
+- **WHEN** `ogd list` is executed without flags
+- **THEN** scan the `ogd/changes/` directory for change directories
 - **AND** exclude the `archive/` subdirectory from results
 - **AND** parse each change's `tasks.md` file to count task completion
 
 #### Scenario: Scanning for specs
-- **WHEN** `openspec list --specs` is executed
-- **THEN** scan the `openspec/specs/` directory for capabilities
+- **WHEN** `ogd list --specs` is executed
+- **THEN** scan the `ogd/specs/` directory for capabilities
 - **AND** read each capability's `spec.md`
 - **AND** parse requirements to compute requirement counts
 
@@ -79,8 +79,8 @@ The command SHALL gracefully handle missing files and directories with appropria
 
 #### Scenario: Missing changes directory
 
-- **WHEN** `openspec/changes/` directory doesn't exist
-- **THEN** display error: "No OpenSpec changes directory found. Run 'openspec init' first."
+- **WHEN** `ogd/changes/` directory doesn't exist
+- **THEN** display error: "No ogd changes directory found. Run 'ogd init' first."
 - **AND** exit with code 1
 
 ### Requirement: Sorting
@@ -100,4 +100,4 @@ Developers need a quick way to:
 - Understand the overall project evolution status
 - Get a bird's-eye view without opening multiple files
 
-This command provides that visibility with minimal effort, following OpenSpec's philosophy of simplicity and clarity.
+This command provides that visibility with minimal effort, following OGD's philosophy of simplicity and clarity.

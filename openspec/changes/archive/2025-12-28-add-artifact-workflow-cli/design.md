@@ -25,11 +25,11 @@ Slice 4 of the artifact workflow POC. The core functionality (ArtifactGraph, Ins
 Commands are top-level for maximum fluidity:
 
 ```
-openspec status --change <id>
-openspec next --change <id>
-openspec instructions <artifact> --change <id>
-openspec templates [--schema <name>]
-openspec new change <name>
+OGD status --change <id>
+OGD next --change <id>
+OGD instructions <artifact> --change <id>
+OGD templates [--schema <name>]
+OGD new change <name>
 ```
 
 **Rationale:**
@@ -58,8 +58,8 @@ No other files touched, no risk to stable functionality.
 All change-specific commands require `--change <id>`:
 
 ```bash
-openspec status --change add-auth   # explicit, works
-openspec status                      # error: missing --change
+OGD status --change add-auth   # explicit, works
+OGD status                      # error: missing --change
 ```
 
 **Rationale:**
@@ -73,13 +73,13 @@ openspec status                      # error: missing --change
 Creating changes uses explicit subcommand:
 
 ```bash
-openspec new change add-feature
+OGD new change add-feature
 ```
 
 **Rationale:**
-- `openspec new <name>` is ambiguous (new what?)
-- `openspec new change <name>` is clear and extensible
-- Can add `openspec new spec <name>` later if needed
+- `OGD new <name>` is ambiguous (new what?)
+- `OGD new change <name>` is clear and extensible
+- Can add `OGD new spec <name>` later if needed
 
 ### Output Formats
 

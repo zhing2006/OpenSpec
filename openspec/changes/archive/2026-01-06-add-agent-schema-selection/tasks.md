@@ -5,19 +5,19 @@
 ## 1. Schema Discovery
 
 - [x] 1.1 Add CLI command or helper to list schemas with descriptions (for agent use)
-- [x] 1.2 Ensure `openspec templates --schema <name>` returns artifact list for any schema
+- [x] 1.2 Ensure `OGD templates --schema <name>` returns artifact list for any schema
 
 ## 2. Update New Change Skill
 
 - [x] 2.1 Add schema selection prompt using AskUserQuestion tool
 - [x] 2.2 Present available schemas with descriptions (spec-driven, tdd, etc.)
-- [x] 2.3 Pass selected schema to `openspec new change --schema <name>`
+- [x] 2.3 Pass selected schema to `OGD new change --schema <name>`
 - [x] 2.4 Update output to show which schema/workflow was selected
 
 ## 3. Update Continue Change Skill
 
 - [x] 3.1 Remove hardcoded artifact references (proposal, specs, design, tasks)
-- [x] 3.2 Read artifact list dynamically from `openspec status --json`
+- [x] 3.2 Read artifact list dynamically from `OGD status --json`
 - [x] 3.3 Adjust artifact creation guidelines to be schema-agnostic
 - [x] 3.4 Handle schema-specific artifact types (e.g., TDD's `tests` artifact)
 

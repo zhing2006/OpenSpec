@@ -19,11 +19,11 @@ The system SHALL support an `apply` block in schema definitions that controls wh
 
 ### Requirement: Apply Instructions Command
 
-The system SHALL generate schema-aware apply instructions via `openspec instructions apply`.
+The system SHALL generate schema-aware apply instructions via `OGD instructions apply`.
 
 #### Scenario: Generate apply instructions
 
-- **WHEN** user runs `openspec instructions apply --change <id>`
+- **WHEN** user runs `OGD instructions apply --change <id>`
 - **AND** all required artifacts (per schema's `apply.requires`) exist
 - **THEN** the system outputs:
   - Context files from all existing artifacts
@@ -32,14 +32,14 @@ The system SHALL generate schema-aware apply instructions via `openspec instruct
 
 #### Scenario: Apply blocked by missing artifacts
 
-- **WHEN** user runs `openspec instructions apply --change <id>`
+- **WHEN** user runs `OGD instructions apply --change <id>`
 - **AND** required artifacts are missing
 - **THEN** the system indicates apply is blocked
 - **AND** lists which artifacts must be created first
 
 #### Scenario: Apply instructions JSON output
 
-- **WHEN** user runs `openspec instructions apply --change <id> --json`
+- **WHEN** user runs `OGD instructions apply --change <id> --json`
 - **THEN** the system outputs JSON with:
   - `contextFiles`: array of paths to existing artifacts
   - `instruction`: the apply instruction text
@@ -54,7 +54,7 @@ The system SHALL display artifact completion status for a change, including appl
 
 #### Scenario: Status JSON includes apply requirements
 
-- **WHEN** user runs `openspec status --change <id> --json`
+- **WHEN** user runs `OGD status --change <id> --json`
 - **THEN** the system outputs JSON with:
   - `changeName`, `schemaName`, `isComplete`, `artifacts` array
   - `applyRequires`: array of artifact IDs needed for apply phase

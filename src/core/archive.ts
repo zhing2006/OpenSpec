@@ -16,22 +16,22 @@ export class ArchiveCommand {
     options: { yes?: boolean; skipSpecs?: boolean; noValidate?: boolean; validate?: boolean } = {}
   ): Promise<void> {
     const targetPath = '.';
-    const changesDir = path.join(targetPath, 'openspec', 'changes');
+    const changesDir = path.join(targetPath, 'ogd', 'changes');
     const archiveDir = path.join(changesDir, 'archive');
-    const mainSpecsDir = path.join(targetPath, 'openspec', 'specs');
+    const mainSpecsDir = path.join(targetPath, 'ogd', 'specs');
 
     // Check if changes directory exists
     try {
       await fs.access(changesDir);
     } catch {
-      throw new Error("No OpenSpec changes directory found. Run 'openspec init' first.");
+      throw new Error("未找到 OGD 变更目录。请先运行 'ogd init'。");
     }
 
     // Get change name interactively if not provided
     if (!changeName) {
       const selectedChange = await this.selectChange(changesDir);
       if (!selectedChange) {
-        console.log('No change selected. Aborting.');
+        console.log('未选择变更。操作中止。');
         return;
       }
       changeName = selectedChange;
@@ -43,10 +43,10 @@ export class ArchiveCommand {
     try {
       const stat = await fs.stat(changeDir);
       if (!stat.isDirectory()) {
-        throw new Error(`Change '${changeName}' not found.`);
+        throw new Error(`变更 '${changeName}' 未找到。`);
       }
     } catch {
-      throw new Error(`Change '${changeName}' not found.`);
+      throw new Error(`变更 '${changeName}' 未找到。`);
     }
 
     const skipValidation = options.validate === false || options.noValidate === true;

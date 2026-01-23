@@ -4,6 +4,6 @@
 - [x] 1.3 Migrate the highest-value existing CLI exec tests (e.g., validate) onto `runCLI` and summarize Phase 1 coverage in this proposal for the next phase.
 
 ## 2. Phase 2 – Expand Cross-Shell Validation
-- [x] 2.1 Exercise both entry points (`node dist/cli/index.js`, `bin/openspec.js`) in the spawn suite and add diagnostics for shell/OS context.
+- [x] 2.1 Exercise both entry points (`node dist/cli/index.js`, `bin/OGD.js`) in the spawn suite and add diagnostics for shell/OS context.
 - [x] 2.2 Extend GitHub Actions to run the spawn suite on bash jobs for Linux/macOS and a `pwsh` job on Windows; capture shell/OS diagnostics and note follow-ups for additional shells.
 

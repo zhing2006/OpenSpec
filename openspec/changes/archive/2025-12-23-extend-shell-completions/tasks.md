@@ -10,7 +10,7 @@
 - [x] Update `CompletionFactory.createInstaller()` to support bash
 - [x] Create test file `test/core/completions/generators/bash-generator.test.ts` mirroring zsh test structure
 - [x] Create test file `test/core/completions/installers/bash-installer.test.ts` mirroring zsh test structure
-- [x] Verify bash completions work manually: `openspec completion install bash && exec bash`
+- [x] Verify bash completions work manually: `OGD completion install bash && exec bash`
 
 ## Phase 2: Fish Support
 
@@ -20,7 +20,7 @@
 - [x] Update `CompletionFactory.createInstaller()` to support fish
 - [x] Create test file `test/core/completions/generators/fish-generator.test.ts`
 - [x] Create test file `test/core/completions/installers/fish-installer.test.ts`
-- [x] Verify fish completions work manually: `openspec completion install fish`
+- [x] Verify fish completions work manually: `OGD completion install fish`
 
 ## Phase 3: PowerShell Support
 
@@ -42,8 +42,8 @@
 
 ## Phase 5: Validation and Cleanup
 
-- [x] Run `openspec validate extend-shell-completions --strict` and resolve all issues
+- [x] Run `ogd validate extend-shell-completions --strict` and resolve all issues
 - [x] Update error messages to list all four supported shells
-- [x] Verify `openspec completion --help` documentation is current
+- [x] Verify `OGD completion --help` documentation is current
 - [x] Test auto-detection works for all shells
 - [x] Ensure uninstall works cleanly for all shells

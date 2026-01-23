@@ -1,6 +1,6 @@
 ## Why
 
-The current OpenSpec system relies on conventions and AI inference for artifact ordering. A formal artifact graph with dependency awareness would enable deterministic "what's ready?" queries, making the system more predictable and enabling future features like automated pipeline execution.
+The current OGD system relies on conventions and AI inference for artifact ordering. A formal artifact graph with dependency awareness would enable deterministic "what's ready?" queries, making the system more predictable and enabling future features like automated pipeline execution.
 
 ## What Changes
 

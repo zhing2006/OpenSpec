@@ -1,6 +1,6 @@
 ## Why
 
-OpenSpec users on NixOS or using the Nix package manager cannot easily install or run OpenSpec without going through npm. Adding a Nix flake makes OpenSpec a first-class citizen in the Nix ecosystem, enabling users to run `nix run github:Fission-AI/OpenSpec -- init` or include OpenSpec in their development environments declaratively.
+OGD users on NixOS or using the Nix package manager cannot easily install or run OGD without going through npm. Adding a Nix flake makes OGD a first-class citizen in the Nix ecosystem, enabling users to run `nix run github:zhing2006/OpenGameDesign -- init` or include OGD in their development environments declaratively.
 
 ## What Changes
 
@@ -12,7 +12,7 @@ OpenSpec users on NixOS or using the Nix package manager cannot easily install o
 ## Capabilities
 
 ### New Capabilities
-- `nix-flake-support`: Nix flake configuration for building and running OpenSpec
+- `nix-flake-support`: Nix flake configuration for building and running OGD
 
 ### Modified Capabilities
 - None

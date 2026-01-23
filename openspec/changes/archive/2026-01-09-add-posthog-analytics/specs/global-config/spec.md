@@ -1,12 +1,12 @@
 ## MODIFIED Requirements
 
 ### Requirement: Global configuration storage
-The system SHALL store global configuration in `~/.config/openspec/config.json`, including telemetry state with `anonymousId` and `noticeSeen` fields.
+The system SHALL store global configuration in `~/.config/ogd/config.json`, including telemetry state with `anonymousId` and `noticeSeen` fields.
 
 #### Scenario: Initial config creation
 - **WHEN** no global config file exists
 - **AND** the first telemetry event is about to be sent
-- **THEN** the system creates `~/.config/openspec/config.json` with telemetry configuration
+- **THEN** the system creates `~/.config/ogd/config.json` with telemetry configuration
 
 #### Scenario: Telemetry config structure
 - **WHEN** reading or writing telemetry configuration

@@ -1,11 +1,11 @@
 ## Why
 
-OpenSpec currently has no mechanism for user-level global settings or feature flags. As the CLI grows, we need a standard location to store user preferences, experimental features, and other configuration that persists across projects. Following XDG Base Directory Specification provides a well-understood, cross-platform approach.
+OGD currently has no mechanism for user-level global settings or feature flags. As the CLI grows, we need a standard location to store user preferences, experimental features, and other configuration that persists across projects. Following XDG Base Directory Specification provides a well-understood, cross-platform approach.
 
 ## What Changes
 
 - Add new `src/core/global-config.ts` module with:
-  - Path resolution following XDG Base Directory spec (`$XDG_CONFIG_HOME/openspec/` or fallback)
+  - Path resolution following XDG Base Directory spec (`$XDG_CONFIG_HOME/ogd/` or fallback)
   - Cross-platform support (Unix, macOS, Windows)
   - Lazy config loading with sensible defaults
   - TypeScript types for config shape

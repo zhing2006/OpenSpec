@@ -19,9 +19,9 @@
 - [x] 3.2 Implement single-schema validation using existing `parseSchema()` from `schema.ts`
 - [x] 3.3 Add template existence check for each artifact's template file
 - [x] 3.4 Add dependency graph cycle detection (reuse topological sort logic)
-- [x] 3.5 Add validate-all mode when no name provided (scan `openspec/schemas/`)
+- [x] 3.5 Add validate-all mode when no name provided (scan `ogd/schemas/`)
 - [x] 3.6 Add text output with pass/fail indicators and error messages
-- [x] 3.7 Add JSON output matching existing `openspec validate` format: `{ valid, issues: [] }`
+- [x] 3.7 Add JSON output matching existing `ogd validate` format: `{ valid, issues: [] }`
 - [x] 3.8 Add verbose mode showing each validation step
 
 ## 4. Schema Fork Command
@@ -43,7 +43,7 @@
 - [x] 5.4 Implement interactive artifact selection with descriptions (multi-select)
 - [x] 5.5 Create schema directory and `schema.yaml` with selected configuration
 - [x] 5.6 Create default template files for selected artifacts
-- [x] 5.7 Add `--default` flag to update `openspec/config.yaml` with new schema as default
+- [x] 5.7 Add `--default` flag to update `ogd/config.yaml` with new schema as default
 - [x] 5.8 Add overwrite protection: check if schema exists, require `--force`
 - [x] 5.9 Add text output with created path and next steps
 - [x] 5.10 Add JSON output: `{ created, path, schema }`

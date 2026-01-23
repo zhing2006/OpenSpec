@@ -34,7 +34,7 @@ The agent SHALL verify that all required work has been completed.
 
 #### Scenario: Spec coverage check
 - **WHEN** verifying completeness
-- **AND** delta specs exist in `openspec/changes/<name>/specs/`
+- **AND** delta specs exist in `ogd/changes/<name>/specs/`
 - **THEN** the agent extracts all requirements from delta specs
 - **AND** searches codebase for implementation of each requirement
 - **AND** reports which requirements appear to have implementation vs which are missing

@@ -1,6 +1,6 @@
 ## Context
 
-OpenSpec needs a standard location for user-level configuration that works across platforms and follows established conventions. This will serve as the foundation for settings, feature flags, and future artifacts like workflows or templates.
+OGD needs a standard location for user-level configuration that works across platforms and follows established conventions. This will serve as the foundation for settings, feature flags, and future artifacts like workflows or templates.
 
 ## Goals / Non-Goals
 
@@ -24,8 +24,8 @@ OpenSpec needs a standard location for user-level configuration that works acros
 **Decision:** Use XDG Base Directory Specification with platform fallbacks.
 
 ```
-Unix/macOS: $XDG_CONFIG_HOME/openspec/ or ~/.config/openspec/
-Windows:    %APPDATA%/openspec/
+Unix/macOS: $XDG_CONFIG_HOME/ogd/ or ~/.config/ogd/
+Windows:    %APPDATA%/ogd/
 ```
 
 **Rationale:**
@@ -34,7 +34,7 @@ Windows:    %APPDATA%/openspec/
 - Windows uses its native convention (%APPDATA%) for better integration
 
 **Alternatives considered:**
-- `~/.openspec/` - Simple but clutters home directory
+- `~/.ogd/` - Simple but clutters home directory
 - `~/Library/Application Support/` on macOS - Overkill for a CLI tool
 
 ### Config File Format

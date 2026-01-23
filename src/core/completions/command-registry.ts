@@ -29,13 +29,13 @@ const COMMON_FLAGS = {
 } as const;
 
 /**
- * Registry of all OpenSpec CLI commands with their flags and metadata.
+ * Registry of all OGD CLI commands with their flags and metadata.
  * This registry is used to generate shell completion scripts.
  */
 export const COMMAND_REGISTRY: CommandDefinition[] = [
   {
     name: 'init',
-    description: 'Initialize OpenSpec in your project',
+    description: 'Initialize OGD in your project',
     acceptsPositional: true,
     positionalType: 'path',
     flags: [
@@ -48,7 +48,7 @@ export const COMMAND_REGISTRY: CommandDefinition[] = [
   },
   {
     name: 'update',
-    description: 'Update OpenSpec instruction files',
+    description: 'Update OGD instruction files',
     acceptsPositional: true,
     positionalType: 'path',
     flags: [],
@@ -95,7 +95,7 @@ export const COMMAND_REGISTRY: CommandDefinition[] = [
       COMMON_FLAGS.jsonValidation,
       {
         name: 'concurrency',
-        description: 'Max concurrent validations (defaults to env OPENSPEC_CONCURRENCY or 6)',
+        description: 'Max concurrent validations (defaults to env OGD_CONCURRENCY or 6)',
         takesValue: true,
       },
       COMMON_FLAGS.noInteractive,
@@ -157,7 +157,7 @@ export const COMMAND_REGISTRY: CommandDefinition[] = [
   },
   {
     name: 'feedback',
-    description: 'Submit feedback about OpenSpec',
+    description: 'Submit feedback about OGD',
     acceptsPositional: true,
     flags: [
       {
@@ -169,7 +169,7 @@ export const COMMAND_REGISTRY: CommandDefinition[] = [
   },
   {
     name: 'change',
-    description: 'Manage OpenSpec change proposals (deprecated)',
+    description: 'Manage ogd change proposals (deprecated)',
     flags: [],
     subcommands: [
       {
@@ -216,7 +216,7 @@ export const COMMAND_REGISTRY: CommandDefinition[] = [
   },
   {
     name: 'spec',
-    description: 'Manage OpenSpec specifications',
+    description: 'Manage OGD specifications',
     flags: [],
     subcommands: [
       {
@@ -269,7 +269,7 @@ export const COMMAND_REGISTRY: CommandDefinition[] = [
   },
   {
     name: 'completion',
-    description: 'Manage shell completions for OpenSpec CLI',
+    description: 'Manage shell completions for OGD CLI',
     flags: [],
     subcommands: [
       {
@@ -308,7 +308,7 @@ export const COMMAND_REGISTRY: CommandDefinition[] = [
   },
   {
     name: 'config',
-    description: 'View and modify global OpenSpec configuration',
+    description: 'View and modify global OGD configuration',
     flags: [
       {
         name: 'scope',

@@ -15,8 +15,8 @@ export class PowerShellInstaller {
    * Markers for PowerShell profile configuration management
    */
   private readonly PROFILE_MARKERS = {
-    start: '# OPENSPEC:START',
-    end: '# OPENSPEC:END',
+    start: '# OGD:START',
+    end: '# OGD:END',
   };
 
   constructor(homeDir: string = os.homedir()) {
@@ -77,7 +77,7 @@ export class PowerShellInstaller {
   getInstallationPath(): string {
     const profilePath = this.getProfilePath();
     const profileDir = path.dirname(profilePath);
-    return path.join(profileDir, 'OpenSpecCompletion.ps1');
+    return path.join(profileDir, 'OGDCompletion.ps1');
   }
 
   /**
@@ -108,7 +108,7 @@ export class PowerShellInstaller {
    */
   private generateProfileConfig(scriptPath: string): string {
     return [
-      '# OpenSpec shell completions configuration',
+      '# OGD shell completions configuration',
       `if (Test-Path "${scriptPath}") {`,
       `    . "${scriptPath}"`,
       '}',
@@ -144,16 +144,16 @@ export class PowerShellInstaller {
           continue; // Already configured, skip
         }
 
-        // Add OpenSpec completion configuration with markers
-        const openspecBlock = [
+        // Add OGD completion configuration with markers
+        const ogdBlock = [
           '',
-          '# OPENSPEC:START - OpenSpec completion (managed block, do not edit manually)',
+          '# OGD:START - OGD completion (managed block, do not edit manually)',
           scriptLine,
-          '# OPENSPEC:END',
+          '# OGD:END',
           '',
         ].join('\n');
 
-        const newContent = profileContent + openspecBlock;
+        const newContent = profileContent + ogdBlock;
         await fs.writeFile(profilePath, newContent, 'utf-8');
         anyConfigured = true;
       } catch (error) {
@@ -185,13 +185,13 @@ export class PowerShellInstaller {
           continue; // Profile doesn't exist, nothing to remove
         }
 
-        // Remove OPENSPEC:START -> OPENSPEC:END block
-        const startMarker = '# OPENSPEC:START';
-        const endMarker = '# OPENSPEC:END';
+        // Remove OGD:START -> OGD:END block
+        const startMarker = '# OGD:START';
+        const endMarker = '# OGD:END';
         const startIndex = profileContent.indexOf(startMarker);
 
         if (startIndex === -1) {
-          continue; // No OpenSpec block found
+          continue; // No OGD block found
         }
 
         const endIndex = profileContent.indexOf(endMarker, startIndex);
@@ -308,7 +308,7 @@ export class PowerShellInstaller {
       '',
       `To enable completions, add the following to your PowerShell profile (${profilePath}):`,
       '',
-      '  # Source OpenSpec completions',
+      '  # Source OGD completions',
       `  if (Test-Path "${installedPath}") {`,
       `      . "${installedPath}"`,
       '  }',

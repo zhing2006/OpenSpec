@@ -9,7 +9,7 @@
 ## 2. Directory Structure
 - [x] 2.1 Create src/ directory for source code
 - [x] 2.2 Create src/cli/ for CLI commands
-- [x] 2.3 Create src/core/ for core OpenSpec logic
+- [x] 2.3 Create src/core/ for core OGD logic
 - [x] 2.4 Create src/utils/ for shared utilities
 
 ## 3. Build Configuration

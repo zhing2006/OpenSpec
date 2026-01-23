@@ -9,8 +9,8 @@ describe('artifact-workflow CLI commands', () => {
   let changesDir: string;
 
   beforeEach(async () => {
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'openspec-artifact-workflow-'));
-    changesDir = path.join(tempDir, 'openspec', 'changes');
+    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'OGD-artifact-workflow-'));
+    changesDir = path.join(tempDir, 'ogd', 'changes');
     await fs.mkdir(changesDir, { recursive: true });
   });
 
@@ -147,7 +147,7 @@ describe('artifact-workflow CLI commands', () => {
       const result = await runCLI(['status', '--change', 'nonexistent'], { cwd: tempDir });
       expect(result.exitCode).toBe(1);
       const output = getOutput(result);
-      expect(output).toContain("Change 'nonexistent' not found");
+      expect(output).toContain("变更 'nonexistent' 未找到。");
       expect(output).toContain('existing-change');
     });
 
@@ -406,7 +406,7 @@ describe('artifact-workflow CLI commands', () => {
       });
       expect(result.exitCode).toBe(0);
       // Should show the instruction from spec-driven schema apply block
-      expect(result.stdout).toContain('work through pending tasks');
+      expect(result.stdout).toContain('阅读上下文文件，按任务列表完成设计工作');
     });
 
     it('shows all_done state when all tasks are complete', async () => {
@@ -468,7 +468,7 @@ describe('artifact-workflow CLI commands', () => {
     it('fallback: requires all artifacts when schema has no apply block', async () => {
       // Create a minimal schema without an apply block in user schemas dir
       const userDataDir = path.join(tempDir, 'user-data');
-      const noApplySchemaDir = path.join(userDataDir, 'openspec', 'schemas', 'no-apply');
+      const noApplySchemaDir = path.join(userDataDir, 'ogd', 'schemas', 'no-apply');
       const templatesDir = path.join(noApplySchemaDir, 'templates');
       await fs.mkdir(templatesDir, { recursive: true });
 
@@ -518,7 +518,7 @@ artifacts:
     it('fallback: ready when all artifacts exist for schema without apply block', async () => {
       // Create a minimal schema without an apply block
       const userDataDir = path.join(tempDir, 'user-data-2');
-      const noApplySchemaDir = path.join(userDataDir, 'openspec', 'schemas', 'no-apply-full');
+      const noApplySchemaDir = path.join(userDataDir, 'ogd', 'schemas', 'no-apply-full');
       const templatesDir = path.join(noApplySchemaDir, 'templates');
       await fs.mkdir(templatesDir, { recursive: true });
 
@@ -621,7 +621,7 @@ artifacts:
       expect(output).toContain('.claude/skills/');
 
       // Verify skill files were created
-      const skillFile = path.join(tempDir, '.claude', 'skills', 'openspec-explore', 'SKILL.md');
+      const skillFile = path.join(tempDir, '.claude', 'skills', 'OGD-explore', 'SKILL.md');
       const stat = await fs.stat(skillFile);
       expect(stat.isFile()).toBe(true);
     });
@@ -636,7 +636,7 @@ artifacts:
       expect(output).toContain('.cursor/skills/');
 
       // Verify skill files were created
-      const skillFile = path.join(tempDir, '.cursor', 'skills', 'openspec-explore', 'SKILL.md');
+      const skillFile = path.join(tempDir, '.cursor', 'skills', 'OGD-explore', 'SKILL.md');
       const stat = await fs.stat(skillFile);
       expect(stat.isFile()).toBe(true);
 
@@ -656,7 +656,7 @@ artifacts:
       expect(output).toContain('.windsurf/skills/');
 
       // Verify skill files were created
-      const skillFile = path.join(tempDir, '.windsurf', 'skills', 'openspec-explore', 'SKILL.md');
+      const skillFile = path.join(tempDir, '.windsurf', 'skills', 'OGD-explore', 'SKILL.md');
       const stat = await fs.stat(skillFile);
       expect(stat.isFile()).toBe(true);
     });
@@ -666,9 +666,9 @@ artifacts:
     describe('new change uses config schema', () => {
       it('creates change with schema from project config', async () => {
         // Create project config with tdd schema
-        // Note: changesDir is already at tempDir/openspec/changes (created in beforeEach)
+        // Note: changesDir is already at tempDir/ogd/changes (created in beforeEach)
         await fs.writeFile(
-          path.join(tempDir, 'openspec', 'config.yaml'),
+          path.join(tempDir, 'ogd', 'config.yaml'),
           'schema: tdd\n'
         );
 
@@ -677,16 +677,16 @@ artifacts:
         expect(result.exitCode).toBe(0);
 
         // Verify the change was created with tdd schema
-        const metadataPath = path.join(changesDir, 'test-change', '.openspec.yaml');
+        const metadataPath = path.join(changesDir, 'test-change', '.ogd.yaml');
         const metadata = await fs.readFile(metadataPath, 'utf-8');
         expect(metadata).toContain('schema: tdd');
       }, 60000);
 
       it('CLI schema overrides config schema', async () => {
         // Create project config with tdd schema
-        // Note: openspec directory already exists (from changesDir creation in beforeEach)
+        // Note: OGD directory already exists (from changesDir creation in beforeEach)
         await fs.writeFile(
-          path.join(tempDir, 'openspec', 'config.yaml'),
+          path.join(tempDir, 'ogd', 'config.yaml'),
           'schema: tdd\n'
         );
 
@@ -698,7 +698,7 @@ artifacts:
         expect(result.exitCode).toBe(0);
 
         // Verify the change uses the CLI-specified schema
-        const metadataPath = path.join(changesDir, 'override-test', '.openspec.yaml');
+        const metadataPath = path.join(changesDir, 'override-test', '.ogd.yaml');
         const metadata = await fs.readFile(metadataPath, 'utf-8');
         expect(metadata).toContain('schema: spec-driven');
       }, 60000);
@@ -707,9 +707,9 @@ artifacts:
     describe('instructions command with config', () => {
       it('injects context and rules from config into instructions', async () => {
         // Create project config with context and rules
-        // Note: openspec directory already exists (from changesDir creation in beforeEach)
+        // Note: OGD directory already exists (from changesDir creation in beforeEach)
         await fs.writeFile(
-          path.join(tempDir, 'openspec', 'config.yaml'),
+          path.join(tempDir, 'ogd', 'config.yaml'),
           `schema: spec-driven
 context: |
   Tech stack: TypeScript, React
@@ -742,9 +742,9 @@ rules:
 
       it('does not inject rules for non-matching artifact', async () => {
         // Create project config with rules only for proposal
-        // Note: openspec directory already exists (from changesDir creation in beforeEach)
+        // Note: OGD directory already exists (from changesDir creation in beforeEach)
         await fs.writeFile(
-          path.join(tempDir, 'openspec', 'config.yaml'),
+          path.join(tempDir, 'ogd', 'config.yaml'),
           `schema: spec-driven
 rules:
   proposal:
@@ -794,7 +794,7 @@ rules:
         // Create change with explicit schema in metadata
         const changeDir = await createTestChange('metadata-only-change');
         await fs.writeFile(
-          path.join(changeDir, '.openspec.yaml'),
+          path.join(changeDir, '.ogd.yaml'),
           'schema: tdd\ncreated: "2025-01-05"\n'
         );
 
@@ -811,9 +811,9 @@ rules:
     describe('config changes reflected immediately', () => {
       it('config changes are reflected without restart', async () => {
         // Create initial config
-        // Note: openspec directory already exists (from changesDir creation in beforeEach)
+        // Note: OGD directory already exists (from changesDir creation in beforeEach)
         await fs.writeFile(
-          path.join(tempDir, 'openspec', 'config.yaml'),
+          path.join(tempDir, 'ogd', 'config.yaml'),
           `schema: spec-driven
 context: Initial context
 `
@@ -832,7 +832,7 @@ context: Initial context
 
         // Update config
         await fs.writeFile(
-          path.join(tempDir, 'openspec', 'config.yaml'),
+          path.join(tempDir, 'ogd', 'config.yaml'),
           `schema: spec-driven
 context: Updated context
 `

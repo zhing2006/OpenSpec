@@ -1,6 +1,6 @@
 ## Why
 
-OpenSpec specifications lack a consistent structure that makes sections visually identifiable and programmatically parseable across different specs. This makes it harder to maintain consistency and build tooling.
+OGD specifications lack a consistent structure that makes sections visually identifiable and programmatically parseable across different specs. This makes it harder to maintain consistency and build tooling.
 
 ## What Changes
 
@@ -30,7 +30,7 @@ OpenSpec specifications lack a consistent structure that makes sections visually
 
 ## Impact
 
-- Affected specs: openspec-conventions (enhancement to existing capability)
+- Affected specs: OGD-conventions (enhancement to existing capability)
 - Affected code: None initially - this is a documentation standard enhancement
 - Migration: Gradual - existing specs migrate as they're modified
 - Tooling: Enables future parsing tools but doesn't require them

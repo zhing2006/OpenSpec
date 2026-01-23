@@ -17,7 +17,7 @@ async function fileExists(filePath: string): Promise<boolean> {
 const tempRoots: string[] = [];
 
 async function prepareFixture(fixtureName: string): Promise<string> {
-  const base = await fs.mkdtemp(path.join(tmpdir(), 'openspec-cli-e2e-'));
+  const base = await fs.mkdtemp(path.join(tmpdir(), 'OGD-cli-e2e-'));
   tempRoots.push(base);
   const projectDir = path.join(base, 'project');
   await fs.mkdir(projectDir, { recursive: true });
@@ -30,11 +30,11 @@ afterAll(async () => {
   await Promise.all(tempRoots.map((dir) => fs.rm(dir, { recursive: true, force: true })));
 });
 
-describe('openspec CLI e2e basics', () => {
+describe('OGD CLI e2e basics', () => {
   it('shows help output', async () => {
     const result = await runCLI(['--help']);
     expect(result.exitCode).toBe(0);
-    expect(result.stdout).toContain('Usage: openspec');
+    expect(result.stdout).toContain('Usage: ogd');
     expect(result.stderr).toBe('');
 
   });
@@ -48,7 +48,7 @@ describe('openspec CLI e2e basics', () => {
       .join(', ');
     const normalizedOutput = result.stdout.replace(/\s+/g, ' ').trim();
     expect(normalizedOutput).toContain(
-      `Use "all", "none", or a comma-separated list of: ${expectedTools}`
+      `使用 "all"、"none" 或以下工具的逗号分隔列表: ${expectedTools}`
     );
   });
 
@@ -94,7 +94,7 @@ describe('openspec CLI e2e basics', () => {
 
       // Check that tool configurations were created
       const claudePath = path.join(emptyProjectDir, 'CLAUDE.md');
-      const cursorProposal = path.join(emptyProjectDir, '.cursor/commands/openspec-proposal.md');
+      const cursorProposal = path.join(emptyProjectDir, '.cursor/commands/ogd-proposal.md');
       expect(await fileExists(claudePath)).toBe(true);
       expect(await fileExists(cursorProposal)).toBe(true);
     });
@@ -109,7 +109,7 @@ describe('openspec CLI e2e basics', () => {
       expect(result.stdout).toContain('Tool summary:');
 
       const claudePath = path.join(emptyProjectDir, 'CLAUDE.md');
-      const cursorProposal = path.join(emptyProjectDir, '.cursor/commands/openspec-proposal.md');
+      const cursorProposal = path.join(emptyProjectDir, '.cursor/commands/ogd-proposal.md');
       expect(await fileExists(claudePath)).toBe(true);
       expect(await fileExists(cursorProposal)).toBe(false); // Not selected
     });
@@ -124,7 +124,7 @@ describe('openspec CLI e2e basics', () => {
       expect(result.stdout).toContain('Tool summary:');
 
       const claudePath = path.join(emptyProjectDir, 'CLAUDE.md');
-      const cursorProposal = path.join(emptyProjectDir, '.cursor/commands/openspec-proposal.md');
+      const cursorProposal = path.join(emptyProjectDir, '.cursor/commands/ogd-proposal.md');
       const rootAgentsPath = path.join(emptyProjectDir, 'AGENTS.md');
 
       expect(await fileExists(rootAgentsPath)).toBe(true);

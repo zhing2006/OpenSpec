@@ -2,17 +2,17 @@
 
 ## Why
 
-Users need a way to update their local OpenSpec instructions (README.md and CLAUDE.md) when the OpenSpec package releases new versions with improved AI agent instructions or structural conventions.
+Users need a way to update their local OGD instructions (README.md and CLAUDE.md) when the OGD package releases new versions with improved AI agent instructions or structural conventions.
 
 ## What Changes
 
-- Add new `openspec update` CLI command that updates OpenSpec instructions
-- Replace `openspec/README.md` with the latest template
-  - Safe because this file is fully OpenSpec-managed
-- Update only the OpenSpec-managed block in `CLAUDE.md` using markers
+- Add new `ogd update` CLI command that updates OGD instructions
+- Replace `ogd/README.md` with the latest template
+  - Safe because this file is fully OGD-managed
+- Update only the OGD-managed block in `CLAUDE.md` using markers
   - Preserve all user content outside markers
   - If `CLAUDE.md` is missing, create it with the managed block
-- Display success message after update (ASCII-safe): "Updated OpenSpec instructions"
+- Display success message after update (ASCII-safe): "Updated OGD instructions"
   - A leading checkmark MAY be shown when the terminal supports it
   - Operation is idempotent (re-running yields identical results)
 
@@ -26,4 +26,4 @@ Users need a way to update their local OpenSpec instructions (README.md and CLAU
 
 ## Out of Scope
 
-- No `.openspec/config.json` is introduced by this change. The default directory name `openspec` is used.
+- No `.ogd/config.json` is introduced by this change. The default directory name `OGD` is used.

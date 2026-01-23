@@ -1,11 +1,11 @@
 # CLI Archive Command Specification
 
 ## Purpose
-The archive command moves completed changes from the active changes directory to the archive folder with date-based naming, following OpenSpec conventions.
+The archive command moves completed changes from the active changes directory to the archive folder with date-based naming, following OGD conventions.
 
 ## Command Syntax
 ```bash
-openspec archive [change-name] [--yes|-y]
+ogd archive [change-name] [--yes|-y]
 ```
 
 Options:
@@ -75,13 +75,13 @@ Before moving the change to archive, the command SHALL apply delta changes to ma
 #### Scenario: Applying delta changes
 
 - **WHEN** archiving a change with delta-based specs
-- **THEN** parse and apply delta changes as defined in openspec-conventions
+- **THEN** parse and apply delta changes as defined in OGD-conventions
 - **AND** validate all operations before applying
 
 #### Scenario: Validating delta changes
 
 - **WHEN** processing delta changes
-- **THEN** perform validations as specified in openspec-conventions
+- **THEN** perform validations as specified in OGD-conventions
 - **AND** if validation fails, show specific errors and abort
 
 #### Scenario: Conflict detection
@@ -104,13 +104,13 @@ The spec update confirmation SHALL provide clear visibility into changes before 
 - **AND** format the confirmation prompt as:
   ```
   The following specs will be updated:
-  
+
   NEW specs to be created:
     - cli-archive (from changes/add-archive-command/specs/cli-archive/spec.md)
-  
+
   EXISTING specs to be updated:
     - cli-init (from changes/update-init-command/specs/cli-init/spec.md)
-  
+
   Update 2 specs and archive 'add-archive-command'? [y/N]:
   ```
 #### Scenario: Handling confirmation response
@@ -134,7 +134,7 @@ The command SHALL handle various error conditions gracefully.
 
 - **WHEN** errors occur
 - **THEN** handle the following conditions:
-  - Missing openspec/changes/ directory
+  - Missing ogd/changes/ directory
   - Change not found
   - Archive target already exists
   - File system permissions issues
@@ -145,7 +145,7 @@ The archive command SHALL support a `--skip-specs` flag that skips all spec upda
 
 #### Scenario: Skipping spec updates with flag
 
-- **WHEN** executing `openspec archive <change> --skip-specs`
+- **WHEN** executing `ogd archive <change> --skip-specs`
 - **THEN** skip spec discovery and update confirmation
 - **AND** proceed directly to moving the change to archive
 - **AND** display a message indicating specs were skipped
@@ -173,7 +173,7 @@ The command SHALL provide clear feedback about delta operations.
   - Number of requirements modified
   - Number of requirements removed
   - Number of requirements renamed
-- **AND** use standard output symbols (+ ~ - →) as defined in openspec-conventions:
+- **AND** use standard output symbols (+ ~ - →) as defined in OGD-conventions:
   ```
   Applying changes to specs/user-auth/spec.md:
     + 2 added
@@ -188,14 +188,14 @@ The archive command SHALL validate changes before applying them to ensure data i
 
 #### Scenario: Pre-archive validation
 
-- **WHEN** executing `openspec archive change-name`
+- **WHEN** executing `ogd archive change-name`
 - **THEN** validate the change structure first
 - **AND** only proceed if validation passes
 - **AND** show validation errors if it fails
 
 #### Scenario: Force archive without validation
 
-- **WHEN** executing `openspec archive change-name --no-validate`
+- **WHEN** executing `ogd archive change-name --no-validate`
 - **THEN** skip validation (unsafe mode)
 - **AND** show warning about skipping validation
 

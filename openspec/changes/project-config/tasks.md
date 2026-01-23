@@ -49,7 +49,7 @@
 - [x] 5.2 Add config creation section after skills/commands creation with header and description
 - [x] 5.3 Integrate `promptForConfig()` calls with proper flow control
 - [x] 5.4 Add Ctrl+C (ExitPromptError) handling - log cancellation message, continue with setup (non-fatal)
-- [x] 5.5 Write created config to `openspec/config.yaml` using YAML stringify
+- [x] 5.5 Write created config to `ogd/config.yaml` using YAML stringify
 - [x] 5.6 Display success summary showing path, schema, context lines, rules count
 - [x] 5.7 Show usage examples and git commit suggestion
 - [x] 5.8 Handle existing config case with skip message and manual update instructions

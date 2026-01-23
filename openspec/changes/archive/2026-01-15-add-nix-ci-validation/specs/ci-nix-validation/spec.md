@@ -10,7 +10,7 @@ The CI system SHALL validate that the Nix flake builds successfully on every pul
 
 - **WHEN** a pull request or push to main is made
 - **THEN** the CI SHALL execute `nix build` and verify it completes with exit code 0
-- **AND** the build output SHALL contain the openspec binary
+- **AND** the build output SHALL contain the OGD binary
 
 #### Scenario: Flake build failure
 

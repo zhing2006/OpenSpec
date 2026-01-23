@@ -1,10 +1,10 @@
-# OpenSpec Instructions
+# OGD Instructions
 
-This document provides instructions for AI coding assistants on how to use OpenSpec conventions for spec-driven development. Follow these rules precisely when working on OpenSpec-enabled projects.
+This document provides instructions for AI coding assistants on how to use OGD conventions for spec-driven development. Follow these rules precisely when working on OGD-enabled projects.
 
 ## Core Principle
 
-OpenSpec is an AI-native system for change-driven development where:
+OGD is an AI-native system for change-driven development where:
 - **Specs** (`specs/`) reflect what IS currently built and deployed
 - **Changes** (`changes/`) contain proposals for what SHOULD be changed
 - **AI drives the process** - You generate proposals, humans review and approve
@@ -30,9 +30,9 @@ When triggered, document the specific justification in your change proposal.
 ## Directory Structure
 
 ```
-openspec/
+ogd/
 ├── project.md              # Project-specific context (tech stack, conventions)
-├── README.md               # This file - OpenSpec instructions
+├── README.md               # This file - OGD instructions
 ├── specs/                  # Current truth - what IS built
 │   ├── [capability]/       # Single, focused capability
 │   │   ├── spec.md         # WHAT the capability does and WHY
@@ -100,13 +100,13 @@ When a user requests a significant change:
 
 ```bash
 # 1. Create the change directory
-openspec/changes/[descriptive-name]/
+ogd/changes/[descriptive-name]/
 
 # 2. Generate proposal.md with all context
 ## Why
 [1-2 sentences on the problem/opportunity]
 
-## What Changes  
+## What Changes
 [Bullet list of changes, including breaking changes]
 
 ## Impact
@@ -275,7 +275,7 @@ PR #1: Alice implements auth components
 - Complete tasks 1.1, 1.2, 1.3
 - Update tasks.md marking these complete
 
-PR #2: Bob implements UI components  
+PR #2: Bob implements UI components
 - Complete tasks 2.1, 2.2
 - Update tasks.md marking these complete
 
@@ -389,7 +389,7 @@ Default to creating a proposal. It's easier to skip an unnecessary proposal than
 
 ### AI Workflow Adaptations
 
-Task tracking with OpenSpec:
+Task tracking with OGD:
 - Track exploration tasks separately from implementation
 - Document proposal creation steps as you go
 - Keep implementation tasks separate until proposal approved

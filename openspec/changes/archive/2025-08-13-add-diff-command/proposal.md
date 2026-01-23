@@ -1,4 +1,4 @@
-# Add Diff Command to OpenSpec CLI
+# Add Diff Command to OGD CLI
 
 ## Why
 
@@ -6,7 +6,7 @@ Developers need to easily view differences between proposed spec changes and cur
 
 ## What Changes
 
-- Add `openspec diff [change-name]` command that shows differences between change specs and current specs
+- Add `OGD diff [change-name]` command that shows differences between change specs and current specs
 - Compare files in `changes/[change-name]/specs/` with corresponding files in `specs/`
 - Display unified diff output showing added/removed/modified lines
 - Support colored output for better readability

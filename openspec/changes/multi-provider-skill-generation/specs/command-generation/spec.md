@@ -15,9 +15,9 @@ The system SHALL define a tool-agnostic `CommandContent` interface for command d
 - **WHEN** defining a command to generate
 - **THEN** `CommandContent` SHALL include:
   - `id`: string identifier (e.g., 'explore', 'apply')
-  - `name`: human-readable name (e.g., 'OpenSpec Explore')
+  - `name`: human-readable name (e.g., 'OGD Explore')
   - `description`: brief description of command purpose
-  - `category`: grouping category (e.g., 'OpenSpec')
+  - `category`: grouping category (e.g., 'OGD')
   - `tags`: array of tag strings
   - `body`: the command instruction content
 

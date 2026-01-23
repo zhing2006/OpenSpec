@@ -6,13 +6,13 @@ The archive command SHALL validate changes before applying them to ensure data i
 
 #### Scenario: Pre-archive validation
 
-- **WHEN** executing `openspec archive change-name`
+- **WHEN** executing `ogd archive change-name`
 - **THEN** validate the change structure first
 - **AND** only proceed if validation passes
 - **AND** show validation errors if it fails
 
 #### Scenario: Force archive without validation
 
-- **WHEN** executing `openspec archive change-name --no-validate`
+- **WHEN** executing `ogd archive change-name --no-validate`
 - **THEN** skip validation (unsafe mode)
 - **AND** show warning about skipping validation

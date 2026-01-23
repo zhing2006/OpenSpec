@@ -2,11 +2,11 @@
 
 ## Why
 
-Users need a quick, at-a-glance overview of their OpenSpec project status without running multiple commands. Currently, users must run `openspec list --changes` and `openspec list --specs` separately to understand the project state. A unified dashboard view would improve developer experience and provide immediate insight into project progress.
+Users need a quick, at-a-glance overview of their OGD project status without running multiple commands. Currently, users must run `ogd list --changes` and `ogd list --specs` separately to understand the project state. A unified dashboard view would improve developer experience and provide immediate insight into project progress.
 
 ## What Changes
 
-### Added `openspec view` Command
+### Added `ogd view` Command
 
 The new command provides an interactive dashboard displaying:
 - Summary metrics (total specs, requirements, changes, task progress)

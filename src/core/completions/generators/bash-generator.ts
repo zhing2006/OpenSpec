@@ -2,7 +2,7 @@ import { CompletionGenerator, CommandDefinition, FlagDefinition } from '../types
 import { BASH_DYNAMIC_HELPERS } from '../templates/bash-templates.js';
 
 /**
- * Generates Bash completion scripts for the OpenSpec CLI.
+ * Generates Bash completion scripts for the OGD CLI.
  * Follows Bash completion conventions using complete builtin and COMPREPLY array.
  */
 export class BashGenerator implements CompletionGenerator {
@@ -31,10 +31,10 @@ export class BashGenerator implements CompletionGenerator {
     const helpers = BASH_DYNAMIC_HELPERS;
 
     // Assemble final script with template literal
-    return `# Bash completion script for OpenSpec CLI
+    return `# Bash completion script for OGD CLI
 # Auto-generated - do not edit manually
 
-_openspec_completion() {
+_ogd_completion() {
   local cur prev words cword
 
   # Use _init_completion if available (from bash-completion package)
@@ -71,7 +71,7 @@ ${commandCases}
 }
 
 ${helpers}
-complete -F _openspec_completion openspec
+complete -F _ogd_completion ogd
 `;
   }
 
@@ -160,13 +160,13 @@ complete -F _openspec_completion openspec
 
     switch (positionalType) {
       case 'change-id':
-        lines.push(`${indent}_openspec_complete_changes`);
+        lines.push(`${indent}_ogd_complete_changes`);
         break;
       case 'spec-id':
-        lines.push(`${indent}_openspec_complete_specs`);
+        lines.push(`${indent}_ogd_complete_specs`);
         break;
       case 'change-or-spec-id':
-        lines.push(`${indent}_openspec_complete_items`);
+        lines.push(`${indent}_ogd_complete_items`);
         break;
       case 'shell':
         lines.push(`${indent}local shells="zsh bash fish powershell"`);

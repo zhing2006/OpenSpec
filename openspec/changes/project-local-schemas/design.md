@@ -1,10 +1,10 @@
 ## Context
 
-OpenSpec currently resolves schemas from two locations:
-1. User override: `~/.local/share/openspec/schemas/<name>/`
+OGD currently resolves schemas from two locations:
+1. User override: `~/.local/share/ogd/schemas/<name>/`
 2. Package built-in: `<npm-package>/schemas/<name>/`
 
-This change adds a third, highest-priority level: project-local schemas at `./openspec/schemas/<name>/`.
+This change adds a third, highest-priority level: project-local schemas at `./ogd/schemas/<name>/`.
 
 The resolver functions in `src/core/artifact-graph/resolver.ts` currently don't take a `projectRoot` parameter because user and package paths are absolute. To support project-local schemas, we need to pass project root context into the resolver.
 
@@ -19,7 +19,7 @@ The resolver functions in `src/core/artifact-graph/resolver.ts` currently don't 
 **Non-Goals:**
 - Schema inheritance or `extends` keyword
 - Template-level overrides (partial forks)
-- Schema management CLI commands (`openspec schema copy/which/diff/reset`)
+- Schema management CLI commands (`OGD schema copy/which/diff/reset`)
 - Validation that project-local schema names don't conflict with built-ins (shadowing is intentional)
 
 ## Decisions
@@ -52,8 +52,8 @@ resolveSchema(name: string, projectRoot?: string): SchemaYaml
 - Package built-ins are the fallback defaults
 
 ```
-1. ./openspec/schemas/<name>/              # Project-local (highest)
-2. ~/.local/share/openspec/schemas/<name>/ # User override
+1. ./ogd/schemas/<name>/              # Project-local (highest)
+2. ~/.local/share/ogd/schemas/<name>/ # User override
 3. <npm-package>/schemas/<name>/           # Package built-in (lowest)
 ```
 
@@ -63,7 +63,7 @@ resolveSchema(name: string, projectRoot?: string): SchemaYaml
 
 ```typescript
 function getProjectSchemasDir(projectRoot: string): string {
-  return path.join(projectRoot, 'openspec', 'schemas');
+  return path.join(projectRoot, 'OGD', 'schemas');
 }
 ```
 
@@ -84,9 +84,9 @@ function getProjectSchemasDir(projectRoot: string): string {
 ## Risks / Trade-offs
 
 ### Risk: Confusion when project schema shadows built-in
-A team could create `openspec/schemas/spec-driven/` that shadows the built-in, causing confusion when someone expects default behavior.
+A team could create `ogd/schemas/spec-driven/` that shadows the built-in, causing confusion when someone expects default behavior.
 
-**Mitigation:** The `openspec schemas` command shows the source of each schema. Users can see `spec-driven (project)` vs `spec-driven (package)`.
+**Mitigation:** The `OGD schemas` command shows the source of each schema. Users can see `spec-driven (project)` vs `spec-driven (package)`.
 
 ### Risk: Missing projectRoot parameter
 If callers forget to pass `projectRoot`, project-local schemas won't be found.

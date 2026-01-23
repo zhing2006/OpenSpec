@@ -2,9 +2,9 @@ import { SlashCommandConfigurator } from './base.js';
 import { SlashCommandId } from '../../templates/index.js';
 
 const NEW_FILE_PATHS: Record<SlashCommandId, string> = {
-  proposal: '.roo/commands/openspec-proposal.md',
-  apply: '.roo/commands/openspec-apply.md',
-  archive: '.roo/commands/openspec-archive.md'
+  proposal: '.roo/commands/ogd-proposal.md',
+  apply: '.roo/commands/ogd-apply.md',
+  archive: '.roo/commands/ogd-archive.md'
 };
 
 export class RooCodeSlashCommandConfigurator extends SlashCommandConfigurator {
@@ -17,11 +17,11 @@ export class RooCodeSlashCommandConfigurator extends SlashCommandConfigurator {
 
   protected getFrontmatter(id: SlashCommandId): string | undefined {
     const descriptions: Record<SlashCommandId, string> = {
-      proposal: 'Scaffold a new OpenSpec change and validate strictly.',
-      apply: 'Implement an approved OpenSpec change and keep tasks in sync.',
-      archive: 'Archive a deployed OpenSpec change and update specs.'
+      proposal: 'Scaffold a new ogd change and validate strictly.',
+      apply: 'Implement an approved ogd change and keep tasks in sync.',
+      archive: 'Archive a deployed ogd change and update specs.'
     };
     const description = descriptions[id];
-    return `# OpenSpec: ${id.charAt(0).toUpperCase() + id.slice(1)}\n\n${description}`;
+    return `# OGD: ${id.charAt(0).toUpperCase() + id.slice(1)}\n\n${description}`;
   }
 }

@@ -2,22 +2,22 @@ import { SlashCommandConfigurator } from './base.js';
 import { SlashCommandId } from '../../templates/index.js';
 
 const FILE_PATHS = {
-  proposal: '.cospec/openspec/commands/openspec-proposal.md',
-  apply: '.cospec/openspec/commands/openspec-apply.md',
-  archive: '.cospec/openspec/commands/openspec-archive.md',
+  proposal: '.cospec/ogd/commands/ogd-proposal.md',
+  apply: '.cospec/ogd/commands/ogd-apply.md',
+  archive: '.cospec/ogd/commands/ogd-archive.md',
 } as const satisfies Record<SlashCommandId, string>;
 
 const FRONTMATTER = {
   proposal: `---
-description: "Scaffold a new OpenSpec change and validate strictly."
+description: "Scaffold a new ogd change and validate strictly."
 argument-hint: feature description or request
 ---`,
   apply: `---
-description: "Implement an approved OpenSpec change and keep tasks in sync."
+description: "Implement an approved ogd change and keep tasks in sync."
 argument-hint: change-id
 ---`,
   archive: `---
-description: "Archive a deployed OpenSpec change and update specs."
+description: "Archive a deployed ogd change and update specs."
 argument-hint: change-id
 ---`
 } as const satisfies Record<SlashCommandId, string>;

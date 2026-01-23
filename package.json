@@ -1,21 +1,22 @@
 {
-  "name": "@fission-ai/openspec",
-  "version": "0.23.0",
-  "description": "AI-native system for spec-driven development",
+  "name": "@game-design/ogd",
+  "version": "0.1.0",
+  "description": "AI 驱动的游戏设计文档生成工具 - 规范驱动的游戏设计工作流",
   "keywords": [
-    "openspec",
+    "game-design",
+    "ogd",
     "specs",
     "cli",
     "ai",
-    "development"
+    "游戏设计"
   ],
-  "homepage": "https://github.com/Fission-AI/OpenSpec",
+  "homepage": "https://github.com/zhing2006/OpenGameDesign",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Fission-AI/OpenSpec"
+    "url": "https://github.com/zhing2006/OpenGameDesign"
   },
   "license": "MIT",
-  "author": "OpenSpec Contributors",
+  "author": "OpenGameDesign Contributors",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -27,7 +28,7 @@
     }
   },
   "bin": {
-    "openspec": "./bin/openspec.js"
+    "ogd": "./bin/ogd.js"
   },
   "files": [
     "dist",
@@ -42,7 +43,7 @@
     "lint": "eslint src/",
     "build": "node build.js",
     "dev": "tsc --watch",
-    "dev:cli": "pnpm build && node bin/openspec.js",
+    "dev:cli": "pnpm build && node bin/ogd.js",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",

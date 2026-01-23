@@ -5,8 +5,8 @@ The system SHALL provide an `/opsx:sync` skill that syncs delta specs from a cha
 
 #### Scenario: Sync delta specs to main specs
 - **WHEN** agent executes `/opsx:sync` with a change name
-- **THEN** the agent reads delta specs from `openspec/changes/<name>/specs/`
-- **AND** reads corresponding main specs from `openspec/specs/`
+- **THEN** the agent reads delta specs from `ogd/changes/<name>/specs/`
+- **AND** reads corresponding main specs from `ogd/specs/`
 - **AND** reconciles main specs to match what the deltas describe
 
 #### Scenario: Idempotent operation
@@ -49,7 +49,7 @@ The agent SHALL reconcile main specs with delta specs using the delta operation 
 
 #### Scenario: New capability spec
 - **WHEN** delta spec exists for a capability not in main specs
-- **THEN** create new main spec file at `openspec/specs/<capability>/spec.md`
+- **THEN** create new main spec file at `ogd/specs/<capability>/spec.md`
 
 ### Requirement: Skill Output
 The skill SHALL provide clear feedback on what was synced.

@@ -88,7 +88,7 @@ Templates are markdown. Injection prepends a header section with context:
 change: add-auth
 artifact: proposal
 schema: spec-driven
-output: openspec/changes/add-auth/proposal.md
+output: ogd/changes/add-auth/proposal.md
 ---
 
 ## Dependencies

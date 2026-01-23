@@ -1,6 +1,6 @@
-## 1. Update OpenSpec Conventions Spec
+## 1. Update OGD Conventions Spec
 
-- [x] 1.1 Add "Specification Format" section to openspec-conventions
+- [x] 1.1 Add "Specification Format" section to OGD-conventions
 - [x] 1.2 Document structured format with Requirement/Scenario headers
 - [x] 1.3 Define bold keyword usage (WHEN/THEN/AND) for scenarios
 - [x] 1.4 Include examples demonstrating the format within the spec itself

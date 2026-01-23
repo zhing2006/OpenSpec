@@ -1,5 +1,5 @@
 ## Why
-The current `openspec init` command requires interactive prompts, preventing automation in CI/CD pipelines and scripted setups. Adding non-interactive options will enable programmatic initialization for automated workflows while maintaining the existing interactive experience as the default.
+The current `ogd init` command requires interactive prompts, preventing automation in CI/CD pipelines and scripted setups. Adding non-interactive options will enable programmatic initialization for automated workflows while maintaining the existing interactive experience as the default.
 
 ## What Changes
 - Replace the multiple flag design with a single `--tools` option that accepts `all`, `none`, or a comma-separated list of tool IDs

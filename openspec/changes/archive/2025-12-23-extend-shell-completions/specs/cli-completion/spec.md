@@ -86,7 +86,7 @@ The completion command SHALL generate completion scripts for all supported shell
 
 #### Scenario: Generating Zsh completion
 
-- **WHEN** user executes `openspec completion generate zsh`
+- **WHEN** user executes `OGD completion generate zsh`
 - **THEN** output a complete Zsh completion script to stdout
 - **AND** include completions for all commands: init, list, show, validate, archive, view, update, change, spec, completion
 - **AND** include all command-specific flags and options
@@ -95,29 +95,29 @@ The completion command SHALL generate completion scripts for all supported shell
 
 #### Scenario: Generating Bash completion
 
-- **WHEN** user executes `openspec completion generate bash`
+- **WHEN** user executes `OGD completion generate bash`
 - **THEN** output a complete Bash completion script to stdout
 - **AND** include completions for all commands and subcommands
 - **AND** use `complete -F` with custom completion function
 - **AND** populate `COMPREPLY` with appropriate suggestions
-- **AND** support dynamic completion for change and spec IDs via `openspec __complete`
+- **AND** support dynamic completion for change and spec IDs via `OGD __complete`
 
 #### Scenario: Generating Fish completion
 
-- **WHEN** user executes `openspec completion generate fish`
+- **WHEN** user executes `OGD completion generate fish`
 - **THEN** output a complete Fish completion script to stdout
-- **AND** use `complete -c openspec` with conditions
+- **AND** use `complete -c OGD` with conditions
 - **AND** include command-specific completions with `--condition` predicates
-- **AND** support dynamic completion for change and spec IDs via `openspec __complete`
+- **AND** support dynamic completion for change and spec IDs via `OGD __complete`
 - **AND** include descriptions for each completion option
 
 #### Scenario: Generating PowerShell completion
 
-- **WHEN** user executes `openspec completion generate powershell`
+- **WHEN** user executes `OGD completion generate powershell`
 - **THEN** output a complete PowerShell completion script to stdout
-- **AND** use `Register-ArgumentCompleter -CommandName openspec`
+- **AND** use `Register-ArgumentCompleter -CommandName OGD`
 - **AND** implement scriptblock that handles command context
-- **AND** support dynamic completion for change and spec IDs via `openspec __complete`
+- **AND** support dynamic completion for change and spec IDs via `OGD __complete`
 - **AND** return `[System.Management.Automation.CompletionResult]` objects
 
 ### Requirement: Installation Automation
@@ -126,42 +126,42 @@ The completion command SHALL automatically install completion scripts into shell
 
 #### Scenario: Installing for Oh My Zsh
 
-- **WHEN** user executes `openspec completion install zsh`
+- **WHEN** user executes `OGD completion install zsh`
 - **THEN** detect if Oh My Zsh is installed by checking for `$ZSH` environment variable or `~/.oh-my-zsh/` directory
 - **AND** create custom completions directory at `~/.oh-my-zsh/custom/completions/` if it doesn't exist
-- **AND** write completion script to `~/.oh-my-zsh/custom/completions/_openspec`
+- **AND** write completion script to `~/.oh-my-zsh/custom/completions/_OGD`
 - **AND** ensure `~/.oh-my-zsh/custom/completions` is in `$fpath` by updating `~/.zshrc` if needed
 - **AND** display success message with instruction to run `exec zsh` or restart terminal
 
 #### Scenario: Installing for standard Zsh
 
-- **WHEN** user executes `openspec completion install zsh` and Oh My Zsh is not detected
+- **WHEN** user executes `OGD completion install zsh` and Oh My Zsh is not detected
 - **THEN** create completions directory at `~/.zsh/completions/` if it doesn't exist
-- **AND** write completion script to `~/.zsh/completions/_openspec`
+- **AND** write completion script to `~/.zsh/completions/_OGD`
 - **AND** add `fpath=(~/.zsh/completions $fpath)` to `~/.zshrc` if not already present
 - **AND** add `autoload -Uz compinit && compinit` to `~/.zshrc` if not already present
 - **AND** display success message with instruction to run `exec zsh` or restart terminal
 
 #### Scenario: Installing for Bash with bash-completion
 
-- **WHEN** user executes `openspec completion install bash`
+- **WHEN** user executes `OGD completion install bash`
 - **THEN** detect if bash-completion is installed by checking for `/usr/share/bash-completion` or `/etc/bash_completion.d`
-- **AND** if bash-completion is available, write to `/etc/bash_completion.d/openspec` (with sudo) or `~/.local/share/bash-completion/completions/openspec`
-- **AND** if bash-completion is not available, write to `~/.bash_completion.d/openspec` and source it from `~/.bashrc`
+- **AND** if bash-completion is available, write to `/etc/bash_completion.d/OGD` (with sudo) or `~/.local/share/bash-completion/completions/OGD`
+- **AND** if bash-completion is not available, write to `~/.bash_completion.d/OGD` and source it from `~/.bashrc`
 - **AND** add sourcing line to `~/.bashrc` using marker-based updates if needed
 - **AND** display success message with instruction to run `exec bash` or restart terminal
 
 #### Scenario: Installing for Fish
 
-- **WHEN** user executes `openspec completion install fish`
+- **WHEN** user executes `OGD completion install fish`
 - **THEN** create Fish completions directory at `~/.config/fish/completions/` if it doesn't exist
-- **AND** write completion script to `~/.config/fish/completions/openspec.fish`
+- **AND** write completion script to `~/.config/fish/completions/OGD.fish`
 - **AND** Fish automatically loads completions from this directory (no config file modification needed)
 - **AND** display success message indicating completions are immediately available
 
 #### Scenario: Installing for PowerShell
 
-- **WHEN** user executes `openspec completion install powershell`
+- **WHEN** user executes `OGD completion install powershell`
 - **THEN** detect PowerShell profile location via `$PROFILE` environment variable or default paths
 - **AND** create profile directory if it doesn't exist
 - **AND** add completion script import to profile using marker-based updates
@@ -170,7 +170,7 @@ The completion command SHALL automatically install completion scripts into shell
 
 #### Scenario: Auto-detecting shell for installation
 
-- **WHEN** user executes `openspec completion install` without specifying a shell
+- **WHEN** user executes `OGD completion install` without specifying a shell
 - **THEN** detect current shell using shell detection logic
 - **AND** install completion for the detected shell (zsh, bash, fish, or powershell)
 - **AND** display which shell was detected
@@ -188,17 +188,17 @@ The completion command SHALL remove installed completion scripts and configurati
 
 #### Scenario: Uninstalling Zsh completion
 
-- **WHEN** user executes `openspec completion uninstall zsh`
+- **WHEN** user executes `OGD completion uninstall zsh`
 - **THEN** prompt for confirmation before proceeding (unless `--yes` flag provided)
 - **AND** if user declines, cancel uninstall and display "Uninstall cancelled."
-- **AND** if user confirms, remove `~/.oh-my-zsh/custom/completions/_openspec` if Oh My Zsh is detected
-- **AND** remove `~/.zsh/completions/_openspec` if standard Zsh setup is detected
+- **AND** if user confirms, remove `~/.oh-my-zsh/custom/completions/_OGD` if Oh My Zsh is detected
+- **AND** remove `~/.zsh/completions/_OGD` if standard Zsh setup is detected
 - **AND** remove fpath modifications from `~/.zshrc` using marker-based removal
 - **AND** display success message
 
 #### Scenario: Uninstalling Bash completion
 
-- **WHEN** user executes `openspec completion uninstall bash`
+- **WHEN** user executes `OGD completion uninstall bash`
 - **THEN** prompt for confirmation (unless `--yes` flag provided)
 - **AND** if user confirms, remove completion file from bash-completion directory or `~/.bash_completion.d/`
 - **AND** remove sourcing lines from `~/.bashrc` using marker-based removal
@@ -206,14 +206,14 @@ The completion command SHALL remove installed completion scripts and configurati
 
 #### Scenario: Uninstalling Fish completion
 
-- **WHEN** user executes `openspec completion uninstall fish`
+- **WHEN** user executes `OGD completion uninstall fish`
 - **THEN** prompt for confirmation (unless `--yes` flag provided)
-- **AND** if user confirms, remove `~/.config/fish/completions/openspec.fish`
+- **AND** if user confirms, remove `~/.config/fish/completions/OGD.fish`
 - **AND** display success message (no config file modification needed)
 
 #### Scenario: Uninstalling PowerShell completion
 
-- **WHEN** user executes `openspec completion uninstall powershell`
+- **WHEN** user executes `OGD completion uninstall powershell`
 - **THEN** prompt for confirmation (unless `--yes` flag provided)
 - **AND** if user confirms, remove completion import from PowerShell profile using marker-based removal
 - **AND** remove completion script file
@@ -221,7 +221,7 @@ The completion command SHALL remove installed completion scripts and configurati
 
 #### Scenario: Auto-detecting shell for uninstallation
 
-- **WHEN** user executes `openspec completion uninstall` without specifying a shell
+- **WHEN** user executes `OGD completion uninstall` without specifying a shell
 - **THEN** detect current shell and uninstall completion for that shell
 
 #### Scenario: Not installed
@@ -268,7 +268,7 @@ The completion implementation SHALL follow clean architecture principles with Ty
 - **AND** implement methods:
   - `getChangeIds(): Promise<string[]>` - Discovers active change IDs
   - `getSpecIds(): Promise<string[]>` - Discovers spec IDs
-  - `isOpenSpecProject(): boolean` - Checks if current directory is OpenSpec-enabled
+  - `isOGDProject(): boolean` - Checks if current directory is OGD-enabled
 - **AND** implement caching with 2-second TTL using class properties
 
 #### Scenario: Command registry

@@ -15,5 +15,5 @@
 - [x] 2.2 Add init tests for .clinerules/ file creation
 - [x] 2.3 Add update tests for CLINE.md updates
 - [x] 2.4 Add update tests for .clinerules/ file refreshes
-- [x] 2.5 Test integration with openspec init --tools cline
+- [x] 2.5 Test integration with ogd init --tools cline
 - [x] 2.6 Verify all 225 tests pass

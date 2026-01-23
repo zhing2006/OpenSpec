@@ -13,15 +13,15 @@ import {
 import chalk from 'chalk';
 import ora from 'ora';
 import { FileSystemUtils } from '../utils/file-system.js';
-import { TemplateManager, ProjectContext } from './templates/index.js';
+import { TemplateManager, PillarsContext } from './templates/index.js';
 import { ToolRegistry } from './configurators/registry.js';
 import { SlashCommandRegistry } from './configurators/slash/registry.js';
 import {
-  OpenSpecConfig,
+  OGDConfig,
   AI_TOOLS,
-  OPENSPEC_DIR_NAME,
+  OGD_DIR_NAME,
   AIToolOption,
-  OPENSPEC_MARKERS,
+  OGD_MARKERS,
 } from './config.js';
 import { PALETTE } from './styles/palette.js';
 
@@ -32,11 +32,8 @@ const PROGRESS_SPINNER = {
 
 const LETTER_MAP: Record<string, string[]> = {
   O: [' ████ ', '██  ██', '██  ██', '██  ██', ' ████ '],
-  P: ['█████ ', '██  ██', '█████ ', '██    ', '██    '],
-  E: ['██████', '██    ', '█████ ', '██    ', '██████'],
-  N: ['██  ██', '███ ██', '██ ███', '██  ██', '██  ██'],
-  S: [' █████', '██    ', ' ████ ', '    ██', '█████ '],
-  C: [' █████', '██    ', '██    ', '██    ', ' █████'],
+  G: [' █████', '██    ', '██ ███', '██  ██', ' ████ '],
+  D: ['████  ', '██  ██', '██  ██', '██  ██', '████  '],
   ' ': ['  ', '  ', '  ', '  ', '  '],
 };
 
@@ -295,11 +292,11 @@ const toolSelectionWizard = createPrompt<string[], ToolWizardConfig>(
 
     if (step === 'intro') {
       const introHeadline = config.extendMode
-        ? 'Extend your OpenSpec tooling'
-        : 'Configure your OpenSpec tooling';
+        ? 'Extend your OGD tooling'
+        : 'Configure your OGD tooling';
       const introBody = config.extendMode
         ? 'We detected an existing setup. We will help you refresh or add integrations.'
-        : "Let's get your AI assistants connected so they understand OpenSpec.";
+        : "Let's get your AI assistants connected so they understand OGD.";
 
       lines.push(PALETTE.white(introHeadline));
       lines.push(PALETTE.midGray(introBody));
@@ -384,11 +381,11 @@ export class InitCommand {
 
   async execute(targetPath: string): Promise<void> {
     const projectPath = path.resolve(targetPath);
-    const openspecDir = OPENSPEC_DIR_NAME;
-    const openspecPath = path.join(projectPath, openspecDir);
+    const ogdDir = OGD_DIR_NAME;
+    const ogdPath = path.join(projectPath, ogdDir);
 
     // Validation happens silently in the background
-    const extendMode = await this.validate(projectPath, openspecPath);
+    const extendMode = await this.validate(projectPath, ogdPath);
     const existingToolStates = await this.getExistingToolStates(projectPath, extendMode);
 
     this.renderBanner(extendMode);
@@ -417,29 +414,29 @@ export class InitCommand {
     // Step 1: Create directory structure
     if (!extendMode) {
       const structureSpinner = this.startSpinner(
-        'Creating OpenSpec structure...'
+        'Creating OGD structure...'
       );
-      await this.createDirectoryStructure(openspecPath);
-      await this.generateFiles(openspecPath, config);
+      await this.createDirectoryStructure(ogdPath);
+      await this.generateFiles(ogdPath, config);
       structureSpinner.stopAndPersist({
         symbol: PALETTE.white('▌'),
-        text: PALETTE.white('OpenSpec structure created'),
+        text: PALETTE.white('OGD structure created'),
       });
     } else {
       ora({ stream: process.stdout }).info(
         PALETTE.midGray(
-          'ℹ OpenSpec already initialized. Checking for missing files...'
+          'ℹ OGD already initialized. Checking for missing files...'
         )
       );
-      await this.createDirectoryStructure(openspecPath);
-      await this.ensureTemplateFiles(openspecPath, config);
+      await this.createDirectoryStructure(ogdPath);
+      await this.ensureTemplateFiles(ogdPath, config);
     }
 
     // Step 2: Configure AI tools
     const toolSpinner = this.startSpinner('Configuring AI tools...');
     const rootStubStatus = await this.configureAITools(
       projectPath,
-      openspecDir,
+      ogdDir,
       config.aiTools
     );
     toolSpinner.stopAndPersist({
@@ -461,9 +458,9 @@ export class InitCommand {
 
   private async validate(
     projectPath: string,
-    _openspecPath: string
+    _ogdPath: string
   ): Promise<boolean> {
-    const extendMode = await FileSystemUtils.directoryExists(_openspecPath);
+    const extendMode = await FileSystemUtils.directoryExists(_ogdPath);
 
     // Check write permissions
     if (!(await FileSystemUtils.ensureWritePermissions(projectPath))) {
@@ -475,7 +472,7 @@ export class InitCommand {
   private async getConfiguration(
     existingTools: Record<string, boolean>,
     extendMode: boolean
-  ): Promise<OpenSpecConfig> {
+  ): Promise<OGDConfig> {
     const selectedTools = await this.getSelectedTools(existingTools, extendMode);
     return { aiTools: selectedTools };
   }
@@ -579,7 +576,7 @@ export class InitCommand {
         value: '__heading-native__',
         label: {
           primary:
-            'Natively supported providers (✔ OpenSpec custom slash commands available)',
+            'Natively supported providers (✔ OGD custom slash commands available)',
         },
         selectable: false,
       },
@@ -649,15 +646,15 @@ export class InitCommand {
     projectPath: string,
     toolId: string
   ): Promise<boolean> {
-    // A tool is only considered "configured by OpenSpec" if its files contain OpenSpec markers.
+    // A tool is only considered "configured by OGD" if its files contain OGD markers.
     // For tools with both config files and slash commands, BOTH must have markers.
     // For slash commands, at least one file with markers is sufficient (not all required).
 
-    // Helper to check if a file exists and contains OpenSpec markers
+    // Helper to check if a file exists and contains OGD markers
     const fileHasMarkers = async (absolutePath: string): Promise<boolean> => {
       try {
         const content = await FileSystemUtils.readFile(absolutePath);
-        return content.includes(OPENSPEC_MARKERS.start) && content.includes(OPENSPEC_MARKERS.end);
+        return content.includes(OGD_MARKERS.start) && content.includes(OGD_MARKERS.end);
       } catch {
         return false;
       }
@@ -666,14 +663,14 @@ export class InitCommand {
     let hasConfigFile = false;
     let hasSlashCommands = false;
 
-    // Check if the tool has a config file with OpenSpec markers
+    // Check if the tool has a config file with OGD markers
     const configFile = ToolRegistry.get(toolId)?.configFileName;
     if (configFile) {
       const configPath = path.join(projectPath, configFile);
       hasConfigFile = (await FileSystemUtils.fileExists(configPath)) && (await fileHasMarkers(configPath));
     }
 
-    // Check if any slash command file exists with OpenSpec markers
+    // Check if any slash command file exists with OGD markers
     const slashConfigurator = SlashCommandRegistry.get(toolId);
     if (slashConfigurator) {
       for (const target of slashConfigurator.getTargets()) {
@@ -705,12 +702,12 @@ export class InitCommand {
     return false;
   }
 
-  private async createDirectoryStructure(openspecPath: string): Promise<void> {
+  private async createDirectoryStructure(ogdPath: string): Promise<void> {
     const directories = [
-      openspecPath,
-      path.join(openspecPath, 'specs'),
-      path.join(openspecPath, 'changes'),
-      path.join(openspecPath, 'changes', 'archive'),
+      ogdPath,
+      path.join(ogdPath, 'specs'),
+      path.join(ogdPath, 'changes'),
+      path.join(ogdPath, 'changes', 'archive'),
     ];
 
     for (const dir of directories) {
@@ -719,32 +716,32 @@ export class InitCommand {
   }
 
   private async generateFiles(
-    openspecPath: string,
-    config: OpenSpecConfig
+    ogdPath: string,
+    config: OGDConfig
   ): Promise<void> {
-    await this.writeTemplateFiles(openspecPath, config, false);
+    await this.writeTemplateFiles(ogdPath, config, false);
   }
 
   private async ensureTemplateFiles(
-    openspecPath: string,
-    config: OpenSpecConfig
+    ogdPath: string,
+    config: OGDConfig
   ): Promise<void> {
-    await this.writeTemplateFiles(openspecPath, config, true);
+    await this.writeTemplateFiles(ogdPath, config, true);
   }
 
   private async writeTemplateFiles(
-    openspecPath: string,
-    config: OpenSpecConfig,
+    ogdPath: string,
+    config: OGDConfig,
     skipExisting: boolean
   ): Promise<void> {
-    const context: ProjectContext = {
+    const context: PillarsContext = {
       // Could be enhanced with prompts for project details
     };
 
     const templates = TemplateManager.getTemplates(context);
 
     for (const template of templates) {
-      const filePath = path.join(openspecPath, template.path);
+      const filePath = path.join(ogdPath, template.path);
 
       // Skip if file exists and we're in skipExisting mode
       if (skipExisting && (await FileSystemUtils.fileExists(filePath))) {
@@ -762,23 +759,23 @@ export class InitCommand {
 
   private async configureAITools(
     projectPath: string,
-    openspecDir: string,
+    ogdDir: string,
     toolIds: string[]
   ): Promise<RootStubStatus> {
     const rootStubStatus = await this.configureRootAgentsStub(
       projectPath,
-      openspecDir
+      ogdDir
     );
 
     for (const toolId of toolIds) {
       const configurator = ToolRegistry.get(toolId);
       if (configurator && configurator.isAvailable) {
-        await configurator.configure(projectPath, openspecDir);
+        await configurator.configure(projectPath, ogdDir);
       }
 
       const slashConfigurator = SlashCommandRegistry.get(toolId);
       if (slashConfigurator && slashConfigurator.isAvailable) {
-        await slashConfigurator.generateAll(projectPath, openspecDir);
+        await slashConfigurator.generateAll(projectPath, ogdDir);
       }
     }
 
@@ -787,7 +784,7 @@ export class InitCommand {
 
   private async configureRootAgentsStub(
     projectPath: string,
-    openspecDir: string
+    ogdDir: string
   ): Promise<RootStubStatus> {
     const configurator = ToolRegistry.get('agents');
     if (!configurator || !configurator.isAvailable) {
@@ -797,7 +794,7 @@ export class InitCommand {
     const stubPath = path.join(projectPath, configurator.configFileName);
     const existed = await FileSystemUtils.fileExists(stubPath);
 
-    await configurator.configure(projectPath, openspecDir);
+    await configurator.configure(projectPath, ogdDir);
 
     return existed ? 'updated' : 'created';
   }
@@ -813,8 +810,8 @@ export class InitCommand {
   ): void {
     console.log(); // Empty line for spacing
     const successHeadline = extendMode
-      ? 'OpenSpec tool configuration updated!'
-      : 'OpenSpec initialized successfully!';
+      ? 'OGD tool configuration updated!'
+      : 'ogd initialized successfully!';
     ora().succeed(PALETTE.white(successHeadline));
 
     console.log();
@@ -858,7 +855,7 @@ export class InitCommand {
     console.log();
     console.log(
       PALETTE.midGray(
-        'Use `openspec update` to refresh shared OpenSpec instructions in the future.'
+        'Use `ogd update` to refresh shared OGD instructions in the future.'
       )
     );
 
@@ -873,7 +870,7 @@ export class InitCommand {
       );
       console.log(
         PALETTE.midGray(
-          'to ensure the new /openspec commands appear in your command palette.'
+          'to ensure the new /ogd commands appear in your command palette.'
         )
       );
     }
@@ -886,34 +883,34 @@ export class InitCommand {
     console.log(
       chalk.gray('────────────────────────────────────────────────────────────')
     );
-    console.log(PALETTE.white('1. Populate your project context:'));
+    console.log(PALETTE.white('1. 填写设计支柱:'));
     console.log(
       PALETTE.lightGray(
-        '   "Please read openspec/project.md and help me fill it out'
+        '   "请阅读 ogd/pillars.md 并帮我填写游戏的设计支柱'
       )
     );
     console.log(
       PALETTE.lightGray(
-        '    with details about my project, tech stack, and conventions"\n'
+        '    包括游戏类型、核心体验和设计原则"\n'
       )
     );
-    console.log(PALETTE.white('2. Create your first change proposal:'));
+    console.log(PALETTE.white('2. 创建第一个变更提案:'));
     console.log(
       PALETTE.lightGray(
-        '   "I want to add [YOUR FEATURE HERE]. Please create an'
+        '   "我想添加 [你的功能]。请创建一个'
       )
     );
     console.log(
-      PALETTE.lightGray('    OpenSpec change proposal for this feature"\n')
+      PALETTE.lightGray('    OGD 变更提案"\n')
     );
-    console.log(PALETTE.white('3. Learn the OpenSpec workflow:'));
+    console.log(PALETTE.white('3. 了解 OGD 工作流:'));
     console.log(
       PALETTE.lightGray(
-        '   "Please explain the OpenSpec workflow from openspec/AGENTS.md'
+        '   "请解释 ogd/AGENTS.md 中的 OGD 工作流'
       )
     );
     console.log(
-      PALETTE.lightGray('    and how I should work with you on this project"')
+      PALETTE.lightGray('    以及如何使用 OGD 进行游戏设计"')
     );
     console.log(
       PALETTE.darkGray(
@@ -951,7 +948,7 @@ export class InitCommand {
 
   private renderBanner(_extendMode: boolean): void {
     const rows = ['', '', '', '', ''];
-    for (const char of 'OPENSPEC') {
+    for (const char of 'OGD') {
       const glyph = LETTER_MAP[char] ?? LETTER_MAP[' '];
       for (let i = 0; i < rows.length; i += 1) {
         rows[i] += `${glyph[i]}  `;
@@ -971,7 +968,7 @@ export class InitCommand {
       console.log(rowStyles[index](row.replace(/\s+$/u, '')));
     });
     console.log();
-    console.log(PALETTE.white('Welcome to OpenSpec!'));
+    console.log(PALETTE.white('Welcome to OGD (OpenGameDesign)!'));
     console.log();
   }
 

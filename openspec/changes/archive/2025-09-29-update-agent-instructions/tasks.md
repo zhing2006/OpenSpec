@@ -1,13 +1,13 @@
 # Implementation Tasks
 
-## 1. Restructure OpenSpec README.md
+## 1. Restructure OGD README.md
 - [x] 1.1 Front-load the three-stage workflow as primary content
 - [x] 1.2 Restructure with hierarchy: Core Workflow → Quick Start → Commands → Details → Edge Cases
 - [x] 1.3 Reduce total length by 50% (target: ~285 lines from current ~575)
 - [x] 1.4 Add "Before Any Task" context-gathering checklist
 - [x] 1.5 Add "Before Creating Specs" rule to check existing specs first
 
-## 2. Add Decision Clarity  
+## 2. Add Decision Clarity
 - [x] 2.1 Create clear decision trees for "Create Proposal?" scenarios
 - [x] 2.2 Remove ambiguous conditions that confuse agents
 - [x] 2.3 Add concrete examples for each decision branch
@@ -15,12 +15,12 @@
 - [x] 2.5 Add explicit Stage 2 implementation steps (read → implement → mark complete)
 
 ## 3. Update CLI Documentation
-- [x] 3.1 Document `openspec list` and `openspec list --specs` commands
-- [x] 3.2 Document `openspec show` with all flags and interactive mode
-- [x] 3.3 Document `openspec diff [change]` for viewing spec differences
-- [x] 3.4 Document `openspec archive` with --skip-specs option
-- [x] 3.5 Document `openspec validate` with --strict and batch modes
-- [x] 3.6 Document `openspec init` and `openspec update` commands
+- [x] 3.1 Document `ogd list` and `ogd list --specs` commands
+- [x] 3.2 Document `OGD show` with all flags and interactive mode
+- [x] 3.3 Document `OGD diff [change]` for viewing spec differences
+- [x] 3.4 Document `ogd archive` with --skip-specs option
+- [x] 3.5 Document `ogd validate` with --strict and batch modes
+- [x] 3.6 Document `ogd init` and `ogd update` commands
 - [x] 3.7 Remove all deprecated noun-first command references
 - [x] 3.8 Add concrete usage examples for each command variation
 - [x] 3.9 Document all flags: --json, --type, --no-interactive, etc.
@@ -61,7 +61,7 @@
 
 ## 8. Testing and Validation
 - [x] 8.1 Test all documented CLI commands for accuracy
-- [x] 8.2 Run `openspec init` to verify CLAUDE.md generation
+- [x] 8.2 Run `ogd init` to verify CLAUDE.md generation
 - [x] 8.3 Validate instruction clarity with example scenarios
 - [x] 8.4 Ensure no critical information was lost in streamlining
 - [x] 8.5 Verify decision trees eliminate ambiguity

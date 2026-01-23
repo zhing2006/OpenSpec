@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The `openspec completion` command SHALL provide shell completion functionality for all OpenSpec CLI commands, flags, and dynamic values (change IDs, spec IDs), with support for Zsh (including Oh My Zsh) and a scalable architecture ready for future shells (bash, fish, PowerShell). The completion system SHALL integrate with Zsh's native completion behavior rather than attempting to customize the user experience.
+The `OGD completion` command SHALL provide shell completion functionality for all OGD CLI commands, flags, and dynamic values (change IDs, spec IDs), with support for Zsh (including Oh My Zsh) and a scalable architecture ready for future shells (bash, fish, PowerShell). The completion system SHALL integrate with Zsh's native completion behavior rather than attempting to customize the user experience.
 
 ## ADDED Requirements
 
@@ -31,7 +31,7 @@ The completion command SHALL follow a subcommand pattern for generating and mana
 
 #### Scenario: Available subcommands
 
-- **WHEN** user executes `openspec completion --help`
+- **WHEN** user executes `OGD completion --help`
 - **THEN** display available subcommands:
   - `zsh` - Generate Zsh completion script
   - `install [shell]` - Install completion for Zsh (auto-detects or requires explicit shell)
@@ -60,7 +60,7 @@ The completion command SHALL generate Zsh completion scripts on demand.
 
 #### Scenario: Generating Zsh completion
 
-- **WHEN** user executes `openspec completion zsh`
+- **WHEN** user executes `OGD completion zsh`
 - **THEN** output a complete Zsh completion script to stdout
 - **AND** include completions for all commands: init, list, show, validate, archive, view, update, change, spec, completion
 - **AND** include all command-specific flags and options
@@ -74,17 +74,17 @@ The completion system SHALL provide context-aware dynamic completions for projec
 #### Scenario: Completing change IDs
 
 - **WHEN** completing arguments for commands that accept change names (show, validate, archive)
-- **THEN** discover active changes from `openspec/changes/` directory
-- **AND** exclude archived changes in `openspec/changes/archive/`
+- **THEN** discover active changes from `ogd/changes/` directory
+- **AND** exclude archived changes in `ogd/changes/archive/`
 - **AND** return change IDs as completion suggestions
-- **AND** only provide suggestions when inside an OpenSpec-enabled project
+- **AND** only provide suggestions when inside an OGD-enabled project
 
 #### Scenario: Completing spec IDs
 
 - **WHEN** completing arguments for commands that accept spec names (show, validate)
-- **THEN** discover specs from `openspec/specs/` directory
+- **THEN** discover specs from `ogd/specs/` directory
 - **AND** return spec IDs as completion suggestions
-- **AND** only provide suggestions when inside an OpenSpec-enabled project
+- **AND** only provide suggestions when inside an OGD-enabled project
 
 #### Scenario: Completion caching
 
@@ -95,7 +95,7 @@ The completion system SHALL provide context-aware dynamic completions for projec
 
 #### Scenario: Project detection
 
-- **WHEN** user requests completions outside an OpenSpec project
+- **WHEN** user requests completions outside an OGD project
 - **THEN** skip dynamic change/spec ID completions
 - **AND** only suggest static commands and flags
 
@@ -105,25 +105,25 @@ The completion command SHALL automatically install completion scripts into shell
 
 #### Scenario: Installing for Oh My Zsh
 
-- **WHEN** user executes `openspec completion install zsh`
+- **WHEN** user executes `OGD completion install zsh`
 - **THEN** detect if Oh My Zsh is installed by checking for `$ZSH` environment variable or `~/.oh-my-zsh/` directory
 - **AND** create custom completions directory at `~/.oh-my-zsh/custom/completions/` if it doesn't exist
-- **AND** write completion script to `~/.oh-my-zsh/custom/completions/_openspec`
+- **AND** write completion script to `~/.oh-my-zsh/custom/completions/_OGD`
 - **AND** ensure `~/.oh-my-zsh/custom/completions` is in `$fpath` by updating `~/.zshrc` if needed
 - **AND** display success message with instruction to run `exec zsh` or restart terminal
 
 #### Scenario: Installing for standard Zsh
 
-- **WHEN** user executes `openspec completion install zsh` and Oh My Zsh is not detected
+- **WHEN** user executes `OGD completion install zsh` and Oh My Zsh is not detected
 - **THEN** create completions directory at `~/.zsh/completions/` if it doesn't exist
-- **AND** write completion script to `~/.zsh/completions/_openspec`
+- **AND** write completion script to `~/.zsh/completions/_OGD`
 - **AND** add `fpath=(~/.zsh/completions $fpath)` to `~/.zshrc` if not already present
 - **AND** add `autoload -Uz compinit && compinit` to `~/.zshrc` if not already present
 - **AND** display success message with instruction to run `exec zsh` or restart terminal
 
 #### Scenario: Auto-detecting Zsh for installation
 
-- **WHEN** user executes `openspec completion install` without specifying a shell
+- **WHEN** user executes `OGD completion install` without specifying a shell
 - **THEN** detect current shell using shell detection logic
 - **AND** install completion if detected shell is Zsh
 - **AND** throw error if detected shell is not Zsh
@@ -142,15 +142,15 @@ The completion command SHALL remove installed completion scripts and configurati
 
 #### Scenario: Uninstalling Oh My Zsh completion
 
-- **WHEN** user executes `openspec completion uninstall zsh`
-- **THEN** remove `~/.oh-my-zsh/custom/completions/_openspec` if Oh My Zsh is detected
-- **AND** remove `~/.zsh/completions/_openspec` if standard Zsh setup is detected
+- **WHEN** user executes `OGD completion uninstall zsh`
+- **THEN** remove `~/.oh-my-zsh/custom/completions/_OGD` if Oh My Zsh is detected
+- **AND** remove `~/.zsh/completions/_OGD` if standard Zsh setup is detected
 - **AND** optionally remove fpath modifications from `~/.zshrc` (with confirmation)
 - **AND** display success message
 
 #### Scenario: Auto-detecting Zsh for uninstallation
 
-- **WHEN** user executes `openspec completion uninstall` without specifying a shell
+- **WHEN** user executes `OGD completion uninstall` without specifying a shell
 - **THEN** detect current shell and uninstall completion if shell is Zsh
 - **AND** throw error if detected shell is not Zsh
 
@@ -181,7 +181,7 @@ The completion implementation SHALL follow clean architecture principles with Ty
 - **AND** implement methods:
   - `getChangeIds(): Promise<string[]>` - Discovers active change IDs
   - `getSpecIds(): Promise<string[]>` - Discovers spec IDs
-  - `isOpenSpecProject(): boolean` - Checks if current directory is OpenSpec-enabled
+  - `isOGDProject(): boolean` - Checks if current directory is OGD-enabled
 - **AND** implement caching with 2-second TTL using class properties
 
 #### Scenario: Command registry
@@ -229,8 +229,8 @@ The completion command SHALL provide clear error messages for common failure sce
 
 #### Scenario: Shell not detected
 
-- **WHEN** `openspec completion install` cannot detect current shell or detects non-Zsh shell
-- **THEN** display error: "Could not detect Zsh. Please specify explicitly: openspec completion install zsh"
+- **WHEN** `OGD completion install` cannot detect current shell or detects non-Zsh shell
+- **THEN** display error: "Could not detect Zsh. Please specify explicitly: OGD completion install zsh"
 - **AND** exit with code 1
 
 ### Requirement: Output Format
@@ -241,7 +241,7 @@ The completion command SHALL provide machine-parseable and human-readable output
 
 - **WHEN** generating completion script to stdout
 - **THEN** output only the completion script content (no extra messages)
-- **AND** allow redirection to files: `openspec completion zsh > /path/to/_openspec`
+- **AND** allow redirection to files: `OGD completion zsh > /path/to/_OGD`
 
 #### Scenario: Installation success output
 

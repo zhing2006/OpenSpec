@@ -26,7 +26,7 @@ import {
 export function registerConfigCommand(program: Command): void {
   const configCmd = program
     .command('config')
-    .description('View and modify global OpenSpec configuration')
+    .description('查看和修改全局 OGD 配置')
     .option('--scope <scope>', 'Config scope (only "global" supported currently)')
     .hook('preAction', (thisCommand) => {
       const opts = thisCommand.opts();
@@ -39,7 +39,7 @@ export function registerConfigCommand(program: Command): void {
   // config path
   configCmd
     .command('path')
-    .description('Show config file location')
+    .description('显示配置文件位置')
     .action(() => {
       console.log(getGlobalConfigPath());
     });
@@ -47,7 +47,7 @@ export function registerConfigCommand(program: Command): void {
   // config list
   configCmd
     .command('list')
-    .description('Show all current settings')
+    .description('显示所有当前设置')
     .option('--json', 'Output as JSON')
     .action((options: { json?: boolean }) => {
       const config = getGlobalConfig();
@@ -91,7 +91,7 @@ export function registerConfigCommand(program: Command): void {
       if (!keyValidation.valid && !allowUnknown) {
         const reason = keyValidation.reason ? ` ${keyValidation.reason}.` : '';
         console.error(`Error: Invalid configuration key "${key}".${reason}`);
-        console.error('Use "openspec config list" to see available keys.');
+        console.error('Use "ogd config list" to see available keys.');
         console.error('Pass --allow-unknown to bypass this check.');
         process.exitCode = 1;
         return;
@@ -146,7 +146,7 @@ export function registerConfigCommand(program: Command): void {
     .action(async (options: { all?: boolean; yes?: boolean }) => {
       if (!options.all) {
         console.error('Error: --all flag is required for reset');
-        console.error('Usage: openspec config reset --all [-y]');
+        console.error('Usage: ogd config reset --all [-y]');
         process.exitCode = 1;
         return;
       }

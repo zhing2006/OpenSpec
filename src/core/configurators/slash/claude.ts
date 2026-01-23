@@ -2,29 +2,29 @@ import { SlashCommandConfigurator } from './base.js';
 import { SlashCommandId } from '../../templates/index.js';
 
 const FILE_PATHS: Record<SlashCommandId, string> = {
-  proposal: '.claude/commands/openspec/proposal.md',
-  apply: '.claude/commands/openspec/apply.md',
-  archive: '.claude/commands/openspec/archive.md'
+  proposal: '.claude/commands/ogd/proposal.md',
+  apply: '.claude/commands/ogd/apply.md',
+  archive: '.claude/commands/ogd/archive.md'
 };
 
 const FRONTMATTER: Record<SlashCommandId, string> = {
   proposal: `---
-name: OpenSpec - Proposal
-description: Scaffold a new OpenSpec change and validate strictly.
-category: OpenSpec
-tags: [openspec, change]
+name: OGD - Proposal
+description: Scaffold a new ogd change and validate strictly.
+category: OGD
+tags: [ogd, change]
 ---`,
   apply: `---
-name: OpenSpec - Apply
-description: Implement an approved OpenSpec change and keep tasks in sync.
-category: OpenSpec
-tags: [openspec, apply]
+name: OGD - Apply
+description: Implement an approved ogd change and keep tasks in sync.
+category: OGD
+tags: [ogd, apply]
 ---`,
   archive: `---
-name: OpenSpec - Archive
-description: Archive a deployed OpenSpec change and update specs.
-category: OpenSpec
-tags: [openspec, archive]
+name: OGD - Archive
+description: Archive a deployed ogd change and update specs.
+category: OGD
+tags: [ogd, archive]
 ---`
 };
 

@@ -2,25 +2,25 @@
 
 ## Purpose
 
-The `openspec diff` command provides developers with a visual comparison between proposed spec changes and the current deployed specs.
+The `OGD diff` command provides developers with a visual comparison between proposed spec changes and the current deployed specs.
 
 ## Command Syntax
 
 ```bash
-openspec diff [change-name]
+OGD diff [change-name]
 ```
 
 ## Behavior
 
 ### Without Arguments
 
-WHEN running `openspec diff` without arguments
+WHEN running `OGD diff` without arguments
 THEN list all available changes in the `changes/` directory (excluding archive)
 AND prompt user to select a change
 
 ### With Change Name
 
-WHEN running `openspec diff <change-name>`
+WHEN running `OGD diff <change-name>`
 THEN compare all spec files in `changes/<change-name>/specs/` with corresponding files in `specs/`
 
 ### Diff Output
@@ -50,28 +50,28 @@ WHEN terminal supports colors:
 
 WHEN specified change doesn't exist THEN display error "Change '<name>' not found"
 WHEN no specs directory in change THEN display "No spec changes found for '<name>'"
-WHEN changes directory doesn't exist THEN display "No OpenSpec changes directory found"
+WHEN changes directory doesn't exist THEN display "No ogd changes directory found"
 
 ## Examples
 
 ```bash
 # View diff for specific change
-$ openspec diff add-auth-feature
+$ OGD diff add-auth-feature
 
 --- specs/user-auth/spec.md
 +++ changes/add-auth-feature/specs/user-auth/spec.md
 @@ -10,6 +10,8 @@
  Users SHALL authenticate with email and password.
- 
+
 +Users MAY authenticate with OAuth providers.
 +
  WHEN credentials are valid THEN issue JWT token.
 
 # List all changes and select
-$ openspec diff
+$ OGD diff
 Available changes:
   1. add-auth-feature
   2. update-payment-flow
   3. add-status-command
-Select a change (1-3): 
+Select a change (1-3):
 ```

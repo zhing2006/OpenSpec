@@ -1,6 +1,6 @@
 import { FileSystemUtils } from '../../../utils/file-system.js';
 import { TemplateManager, SlashCommandId } from '../../templates/index.js';
-import { OPENSPEC_MARKERS } from '../../config.js';
+import { OGD_MARKERS } from '../../config.js';
 
 export interface SlashCommandTarget {
   id: SlashCommandId;
@@ -22,7 +22,7 @@ export abstract class SlashCommandConfigurator {
     }));
   }
 
-  async generateAll(projectPath: string, _openspecDir: string): Promise<string[]> {
+  async generateAll(projectPath: string, _ogdDir: string): Promise<string[]> {
     const createdOrUpdated: string[] = [];
 
     for (const target of this.getTargets()) {
@@ -37,7 +37,7 @@ export abstract class SlashCommandConfigurator {
         if (frontmatter) {
           sections.push(frontmatter.trim());
         }
-        sections.push(`${OPENSPEC_MARKERS.start}\n${body}\n${OPENSPEC_MARKERS.end}`);
+        sections.push(`${OGD_MARKERS.start}\n${body}\n${OGD_MARKERS.end}`);
         const content = sections.join('\n') + '\n';
         await FileSystemUtils.writeFile(filePath, content);
       }
@@ -48,7 +48,7 @@ export abstract class SlashCommandConfigurator {
     return createdOrUpdated;
   }
 
-  async updateExisting(projectPath: string, _openspecDir: string): Promise<string[]> {
+  async updateExisting(projectPath: string, _ogdDir: string): Promise<string[]> {
     const updated: string[] = [];
 
     for (const target of this.getTargets()) {
@@ -79,14 +79,14 @@ export abstract class SlashCommandConfigurator {
 
   protected async updateBody(filePath: string, body: string): Promise<void> {
     const content = await FileSystemUtils.readFile(filePath);
-    const startIndex = content.indexOf(OPENSPEC_MARKERS.start);
-    const endIndex = content.indexOf(OPENSPEC_MARKERS.end);
+    const startIndex = content.indexOf(OGD_MARKERS.start);
+    const endIndex = content.indexOf(OGD_MARKERS.end);
 
     if (startIndex === -1 || endIndex === -1 || endIndex <= startIndex) {
-      throw new Error(`Missing OpenSpec markers in ${filePath}`);
+      throw new Error(`Missing OGD markers in ${filePath}`);
     }
 
-    const before = content.slice(0, startIndex + OPENSPEC_MARKERS.start.length);
+    const before = content.slice(0, startIndex + OGD_MARKERS.start.length);
     const after = content.slice(endIndex);
     const updatedContent = `${before}\n${body}\n${after}`;
 

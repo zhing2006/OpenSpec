@@ -4,51 +4,51 @@ The init command SHALL generate slash command files for supported editors using 
 
 #### Scenario: Generating slash commands for Claude Code
 - **WHEN** the user selects Claude Code during initialization
-- **THEN** create `.claude/commands/openspec/proposal.md`, `.claude/commands/openspec/apply.md`, and `.claude/commands/openspec/archive.md`
+- **THEN** create `.claude/commands/ogd/proposal.md`, `.claude/commands/ogd/apply.md`, and `.claude/commands/ogd/archive.md`
 - **AND** populate each file from shared templates so command text matches other tools
-- **AND** each template includes instructions for the relevant OpenSpec workflow stage
+- **AND** each template includes instructions for the relevant OGD workflow stage
 
 #### Scenario: Generating slash commands for Cursor
 - **WHEN** the user selects Cursor during initialization
-- **THEN** create `.cursor/commands/openspec-proposal.md`, `.cursor/commands/openspec-apply.md`, and `.cursor/commands/openspec-archive.md`
+- **THEN** create `.cursor/commands/ogd-proposal.md`, `.cursor/commands/ogd-apply.md`, and `.cursor/commands/ogd-archive.md`
 - **AND** populate each file from shared templates so command text matches other tools
-- **AND** each template includes instructions for the relevant OpenSpec workflow stage
+- **AND** each template includes instructions for the relevant OGD workflow stage
 
 #### Scenario: Generating slash commands for Factory Droid
 - **WHEN** the user selects Factory Droid during initialization
-- **THEN** create `.factory/commands/openspec-proposal.md`, `.factory/commands/openspec-apply.md`, and `.factory/commands/openspec-archive.md`
+- **THEN** create `.factory/commands/ogd-proposal.md`, `.factory/commands/ogd-apply.md`, and `.factory/commands/ogd-archive.md`
 - **AND** populate each file from shared templates that include Factory-compatible YAML frontmatter for the `description` and `argument-hint` fields
 - **AND** include the `$ARGUMENTS` placeholder in the template body so droid receives any user-supplied input
-- **AND** wrap the generated content in OpenSpec managed markers so `openspec update` can safely refresh the commands
+- **AND** wrap the generated content in OGD managed markers so `ogd update` can safely refresh the commands
 
 #### Scenario: Generating slash commands for OpenCode
 - **WHEN** the user selects OpenCode during initialization
-- **THEN** create `.opencode/commands/openspec-proposal.md`, `.opencode/commands/openspec-apply.md`, and `.opencode/commands/openspec-archive.md`
+- **THEN** create `.opencode/commands/ogd-proposal.md`, `.opencode/commands/ogd-apply.md`, and `.opencode/commands/ogd-archive.md`
 - **AND** populate each file from shared templates so command text matches other tools
-- **AND** each template includes instructions for the relevant OpenSpec workflow stage
+- **AND** each template includes instructions for the relevant OGD workflow stage
 
 #### Scenario: Generating slash commands for Windsurf
 - **WHEN** the user selects Windsurf during initialization
-- **THEN** create `.windsurf/workflows/openspec-proposal.md`, `.windsurf/workflows/openspec-apply.md`, and `.windsurf/workflows/openspec-archive.md`
-- **AND** populate each file from shared templates (wrapped in OpenSpec markers) so workflow text matches other tools
-- **AND** each template includes instructions for the relevant OpenSpec workflow stage
+- **THEN** create `.windsurf/workflows/ogd-proposal.md`, `.windsurf/workflows/ogd-apply.md`, and `.windsurf/workflows/ogd-archive.md`
+- **AND** populate each file from shared templates (wrapped in OGD markers) so workflow text matches other tools
+- **AND** each template includes instructions for the relevant OGD workflow stage
 
 #### Scenario: Generating slash commands for Kilo Code
 - **WHEN** the user selects Kilo Code during initialization
-- **THEN** create `.kilocode/workflows/openspec-proposal.md`, `.kilocode/workflows/openspec-apply.md`, and `.kilocode/workflows/openspec-archive.md`
-- **AND** populate each file from shared templates (wrapped in OpenSpec markers) so workflow text matches other tools
-- **AND** each template includes instructions for the relevant OpenSpec workflow stage
+- **THEN** create `.kilocode/workflows/ogd-proposal.md`, `.kilocode/workflows/ogd-apply.md`, and `.kilocode/workflows/ogd-archive.md`
+- **AND** populate each file from shared templates (wrapped in OGD markers) so workflow text matches other tools
+- **AND** each template includes instructions for the relevant OGD workflow stage
 
 #### Scenario: Generating slash commands for Codex
 - **WHEN** the user selects Codex during initialization
-- **THEN** create global prompt files at `~/.codex/prompts/openspec-proposal.md`, `~/.codex/prompts/openspec-apply.md`, and `~/.codex/prompts/openspec-archive.md` (or under `$CODEX_HOME/prompts` if set)
+- **THEN** create global prompt files at `~/.codex/prompts/ogd-proposal.md`, `~/.codex/prompts/ogd-apply.md`, and `~/.codex/prompts/ogd-archive.md` (or under `$CODEX_HOME/prompts` if set)
 - **AND** populate each file from shared templates that map the first numbered placeholder (`$1`) to the primary user input (e.g., change identifier or question text)
-- **AND** wrap the generated content in OpenSpec markers so `openspec update` can refresh the prompts without touching surrounding custom notes
+- **AND** wrap the generated content in OGD markers so `ogd update` can refresh the prompts without touching surrounding custom notes
 
 #### Scenario: Generating slash commands for GitHub Copilot
 - **WHEN** the user selects GitHub Copilot during initialization
-- **THEN** create `.github/prompts/openspec-proposal.prompt.md`, `.github/prompts/openspec-apply.prompt.md`, and `.github/prompts/openspec-archive.prompt.md`
+- **THEN** create `.github/prompts/ogd-proposal.prompt.md`, `.github/prompts/ogd-apply.prompt.md`, and `.github/prompts/ogd-archive.prompt.md`
 - **AND** populate each file with YAML frontmatter containing a `description` field that summarizes the workflow stage
 - **AND** include `$ARGUMENTS` placeholder to capture user input
-- **AND** wrap the shared template body with OpenSpec markers so `openspec update` can refresh the content
-- **AND** each template includes instructions for the relevant OpenSpec workflow stage
+- **AND** wrap the shared template body with OGD markers so `ogd update` can refresh the content
+- **AND** each template includes instructions for the relevant OGD workflow stage

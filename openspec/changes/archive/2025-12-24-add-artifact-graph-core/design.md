@@ -2,7 +2,7 @@
 
 This implements "Slice 1: What's Ready?" from the artifact POC analysis. The core insight is using the filesystem as a database - artifact completion is detected by file existence, making the system stateless and version-control friendly.
 
-This module will coexist with the current OpenSpec system as a parallel capability, potentially enabling future migration or integration.
+This module will coexist with the current OGD system as a parallel capability, potentially enabling future migration or integration.
 
 ## Goals / Non-Goals
 
@@ -19,7 +19,7 @@ This module will coexist with the current OpenSpec system as a parallel capabili
 - Multi-change management (Slice 2)
 - Template resolution and enrichment (Slice 3)
 - Agent integration or Claude commands
-- Replacing existing OpenSpec functionality
+- Replacing existing OGD functionality
 
 ## Decisions
 
@@ -80,7 +80,7 @@ Use Zod for validating YAML schema structure and deriving TypeScript types.
 Schemas resolve from global user data directory, falling back to package built-ins.
 
 **Resolution order:**
-1. `${XDG_DATA_HOME:-~/.local/share}/openspec/schemas/<name>.yaml` - Global user override
+1. `${XDG_DATA_HOME:-~/.local/share}/ogd/schemas/<name>.yaml` - Global user override
 2. `<package>/schemas/<name>.yaml` - Built-in defaults
 
 **Rationale:**
@@ -92,8 +92,8 @@ Schemas resolve from global user data directory, falling back to package built-i
 
 **XDG compliance:**
 - Uses `XDG_DATA_HOME` env var when set (all platforms)
-- Unix/macOS fallback: `~/.local/share/openspec/`
-- Windows fallback: `%LOCALAPPDATA%/openspec/`
+- Unix/macOS fallback: `~/.local/share/ogd/`
+- Windows fallback: `%LOCALAPPDATA%/ogd/`
 
 **Alternatives considered:**
 - Project-level overrides: Added complexity, not needed initially
@@ -181,7 +181,7 @@ src/core/artifact-graph/
 ```
 
 **Schema Resolution Paths:**
-- Global user override: `${XDG_DATA_HOME:-~/.local/share}/openspec/schemas/<name>.yaml`
+- Global user override: `${XDG_DATA_HOME:-~/.local/share}/ogd/schemas/<name>.yaml`
 - Package built-in: `src/core/artifact-graph/schemas/<name>.yaml` (bundled with package)
 
 ## Risks / Trade-offs

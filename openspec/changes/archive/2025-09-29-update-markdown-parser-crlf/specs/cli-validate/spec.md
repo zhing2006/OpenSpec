@@ -5,5 +5,5 @@ The markdown parser SHALL correctly identify sections regardless of line ending 
 #### Scenario: Required sections parsed with CRLF line endings
 - **GIVEN** a change proposal markdown saved with CRLF line endings
 - **AND** the document contains `## Why` and `## What Changes`
-- **WHEN** running `openspec validate <change-id>`
+- **WHEN** running `ogd validate <change-id>`
 - **THEN** validation SHALL recognize the sections and NOT raise parsing errors

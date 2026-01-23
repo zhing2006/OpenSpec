@@ -1,6 +1,6 @@
 ## Why
 
-The `artifact-experimental-setup` command currently hardcodes skill output paths to `.claude/skills` and `.claude/commands/opsx`. This prevents users of other AI coding tools (Cursor, Windsurf, Codex, etc.) from using OpenSpec's skill generation. We need to support the diverse ecosystem of AI coding assistants, each with their own conventions for skill/instruction file locations and command frontmatter formats.
+The `artifact-experimental-setup` command currently hardcodes skill output paths to `.claude/skills` and `.claude/commands/opsx`. This prevents users of other AI coding tools (Cursor, Windsurf, Codex, etc.) from using OGD's skill generation. We need to support the diverse ecosystem of AI coding assistants, each with their own conventions for skill/instruction file locations and command frontmatter formats.
 
 ## What Changes
 

@@ -13,7 +13,7 @@ if (progress.total === 0 || progress.completed === progress.total) {
 }
 ```
 
-Result: `openspec new change foo && openspec view` shows `foo` as "Completed" when it has no content.
+Result: `OGD new change foo && ogd view` shows `foo` as "Completed" when it has no content.
 
 ### Bug 2: Artifact workflow commands can't find scaffolded changes
 
@@ -23,7 +23,7 @@ const proposalPath = path.join(changesPath, entry.name, 'proposal.md');
 await fs.access(proposalPath);  // Only returns changes WITH proposal.md
 ```
 
-Result: `openspec status --change foo` says "not found" even though the directory exists.
+Result: `OGD status --change foo` says "not found" even though the directory exists.
 
 ## Root Cause
 
@@ -58,21 +58,21 @@ Update `validateChangeExists()` to check if the directory exists, not if `propos
 
 | Command | Before | After |
 |---------|--------|-------|
-| `openspec view` | Empty = "Completed" | Empty = "Draft" |
-| `openspec status --change X` | Requires proposal.md | Works on any directory |
-| `openspec validate X` | Requires proposal.md | Unchanged (still requires it) |
+| `ogd view` | Empty = "Completed" | Empty = "Draft" |
+| `OGD status --change X` | Requires proposal.md | Works on any directory |
+| `ogd validate X` | Requires proposal.md | Unchanged (still requires it) |
 
 ## Breaking Changes
 
 ### Minimal Breaking Change
 
-1. **`openspec view` output**: Empty changes move from "Completed" section to new "Draft" section
+1. **`ogd view` output**: Empty changes move from "Completed" section to new "Draft" section
 
 ### Non-Breaking
 
 - Active/Completed semantics unchanged (still task-based)
 - `getActiveChangeIds()` unchanged
-- `openspec validate` unchanged
+- `ogd validate` unchanged
 - Archived changes unaffected
 
 ## Out of Scope
@@ -86,16 +86,16 @@ Update `validateChangeExists()` to check if the directory exists, not if `propos
 
 | Command | Uses `getActiveChangeIds()` | Should include scaffolded? | Change needed? |
 |---------|-----------------------------|-----------------------------|----------------|
-| `openspec view` | No (reads dirs directly) | Yes → Draft section | **Yes** |
-| `openspec list` | No (reads dirs directly) | Yes (shows "No tasks") | No |
-| `openspec status/next/instructions` | Yes | Yes | **Yes** |
-| `openspec validate` | Yes | No (can't validate empty) | No |
-| `openspec show` | Yes | No (nothing to show) | No |
+| `ogd view` | No (reads dirs directly) | Yes → Draft section | **Yes** |
+| `ogd list` | No (reads dirs directly) | Yes (shows "No tasks") | No |
+| `OGD status/next/instructions` | Yes | Yes | **Yes** |
+| `ogd validate` | Yes | No (can't validate empty) | No |
+| `OGD show` | Yes | No (nothing to show) | No |
 | Tab completions | Yes | Future enhancement | No |
 
 ## Success Criteria
 
-1. `openspec new change foo && openspec view` shows `foo` in "Draft" section
-2. `openspec new change foo && openspec status --change foo` works
+1. `OGD new change foo && ogd view` shows `foo` in "Draft" section
+2. `OGD new change foo && OGD status --change foo` works
 3. Changes with all tasks done still show as "Completed"
 4. All existing tests pass

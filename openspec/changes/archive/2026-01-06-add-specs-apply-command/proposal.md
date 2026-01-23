@@ -1,6 +1,6 @@
 ## Why
 
-Spec application is currently bundled with archive - users must run `openspec archive` to apply delta specs to main specs. This couples two distinct concerns (applying specs vs. archiving the change) and forces users to wait until they're "done" to see main specs updated. Users want the flexibility to sync specs earlier in the workflow while iterating.
+Spec application is currently bundled with archive - users must run `ogd archive` to apply delta specs to main specs. This couples two distinct concerns (applying specs vs. archiving the change) and forces users to wait until they're "done" to see main specs updated. Users want the flexibility to sync specs earlier in the workflow while iterating.
 
 ## What Changes
 
@@ -27,6 +27,6 @@ Spec application is currently bundled with archive - users must run `openspec ar
 
 ## Impact
 
-- **Skills**: New `openspec-sync-specs` skill in `skill-templates.ts`
+- **Skills**: New `OGD-sync-specs` skill in `skill-templates.ts`
 - **Archive**: No changes needed - already does reconciliation, will continue to work
 - **Agent workflow**: Users gain flexibility to sync specs before archive

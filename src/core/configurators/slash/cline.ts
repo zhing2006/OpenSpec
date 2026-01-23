@@ -2,9 +2,9 @@ import { SlashCommandConfigurator } from './base.js';
 import { SlashCommandId } from '../../templates/index.js';
 
 const FILE_PATHS: Record<SlashCommandId, string> = {
-  proposal: '.clinerules/workflows/openspec-proposal.md',
-  apply: '.clinerules/workflows/openspec-apply.md',
-  archive: '.clinerules/workflows/openspec-archive.md'
+  proposal: '.clinerules/workflows/ogd-proposal.md',
+  apply: '.clinerules/workflows/ogd-apply.md',
+  archive: '.clinerules/workflows/ogd-archive.md'
 };
 
 export class ClineSlashCommandConfigurator extends SlashCommandConfigurator {
@@ -17,11 +17,11 @@ export class ClineSlashCommandConfigurator extends SlashCommandConfigurator {
 
   protected getFrontmatter(id: SlashCommandId): string | undefined {
     const descriptions: Record<SlashCommandId, string> = {
-      proposal: 'Scaffold a new OpenSpec change and validate strictly.',
-      apply: 'Implement an approved OpenSpec change and keep tasks in sync.',
-      archive: 'Archive a deployed OpenSpec change and update specs.'
+      proposal: 'Scaffold a new ogd change and validate strictly.',
+      apply: 'Implement an approved ogd change and keep tasks in sync.',
+      archive: 'Archive a deployed ogd change and update specs.'
     };
     const description = descriptions[id];
-    return `# OpenSpec: ${id.charAt(0).toUpperCase() + id.slice(1)}\n\n${description}`;
+    return `# OGD: ${id.charAt(0).toUpperCase() + id.slice(1)}\n\n${description}`;
   }
 }

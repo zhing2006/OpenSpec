@@ -4,7 +4,7 @@
 
 ### Context
 
-All existing opsx experimental skills (explore, new, continue, apply, ff, sync, archive) are dynamically generated when users run `openspec artifact-experimental-setup`. They are not manually created files checked into the repository.
+All existing opsx experimental skills (explore, new, continue, apply, ff, sync, archive) are dynamically generated when users run `OGD artifact-experimental-setup`. They are not manually created files checked into the repository.
 
 ### Decision
 
@@ -16,7 +16,7 @@ All existing opsx experimental skills (explore, new, continue, apply, ff, sync, 
 
 2. **Maintainability**: Template functions in `skill-templates.ts` are the single source of truth. Changes to skill definitions automatically propagate to all users when they re-run setup.
 
-3. **Distribution**: Users get the verify skill automatically when running `openspec artifact-experimental-setup`, just like all other opsx skills. No special installation steps needed.
+3. **Distribution**: Users get the verify skill automatically when running `OGD artifact-experimental-setup`, just like all other opsx skills. No special installation steps needed.
 
 4. **Versioning**: Skills are generated from the installed npm package version, ensuring consistency between CLI version and skill behavior.
 
@@ -44,9 +44,9 @@ Update `artifactExperimentalSetupCommand()` in `src/commands/artifact-workflow.t
 
 #### 3. Generated Artifacts
 
-When users run `openspec artifact-experimental-setup`, the command creates:
+When users run `OGD artifact-experimental-setup`, the command creates:
 
-- `.claude/skills/openspec-verify-change/SKILL.md` - Agent Skills format
+- `.claude/skills/OGD-verify-change/SKILL.md` - Agent Skills format
 - `.claude/commands/opsx/verify.md` - Slash command format
 
 Both are generated from the template functions, with YAML frontmatter automatically added.
@@ -55,7 +55,7 @@ Both are generated from the template functions, with YAML frontmatter automatica
 
 **Alternative 1: Static skill files in repository**
 
-Create `.claude/skills/openspec-verify-change/SKILL.md` as a static file in the OpenSpec repository.
+Create `.claude/skills/OGD-verify-change/SKILL.md` as a static file in the OGD repository.
 
 **Rejected because:**
 - Inconsistent with all other opsx skills
@@ -65,7 +65,7 @@ Create `.claude/skills/openspec-verify-change/SKILL.md` as a static file in the 
 
 **Alternative 2: Separate verify setup command**
 
-Add `openspec setup-verify` as a separate command.
+Add `OGD setup-verify` as a separate command.
 
 **Rejected because:**
 - Fragments the setup experience
@@ -92,5 +92,5 @@ The implementation correctly follows this design if:
 1. Both template functions exist in `skill-templates.ts`
 2. Verify appears in both skills and commands arrays in `artifact-workflow.ts`
 3. Help text mentions `/opsx:verify`
-4. Running `openspec artifact-experimental-setup` generates both skill and command files
+4. Running `OGD artifact-experimental-setup` generates both skill and command files
 5. Build succeeds with no TypeScript errors

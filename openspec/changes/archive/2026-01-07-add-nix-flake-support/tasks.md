@@ -23,19 +23,19 @@
 ## 4. Configure Installation
 
 - [x] 4.1 Let npmInstallHook handle installation automatically
-- [x] 4.2 Verify binary ends up in $out/bin/openspec
+- [x] 4.2 Verify binary ends up in $out/bin/OGD
 
 ## 5. Add Metadata
 
 - [x] 5.1 Set meta.description
 - [x] 5.2 Set meta.homepage
 - [x] 5.3 Set meta.license (MIT)
-- [x] 5.4 Set meta.mainProgram = "openspec"
+- [x] 5.4 Set meta.mainProgram = "OGD"
 
 ## 6. Configure App Entry Point
 
 - [x] 6.1 Add apps output with forAllSystems
-- [x] 6.2 Set default app to openspec binary
+- [x] 6.2 Set default app to OGD binary
 - [x] 6.3 Test that nix run works
 
 ## 7. Add Development Shell
@@ -57,7 +57,7 @@
 - [x] 9.2 Test `nix run . -- --version` works
 - [x] 9.3 Test `nix develop` provides correct environment
 - [ ] 9.4 Test on macOS if available
-- [ ] 9.5 Test `nix run github:Fission-AI/OpenSpec -- init` after merge to main
+- [ ] 9.5 Test `nix run github:zhing2006/OpenGameDesign -- init` after merge to main
 
 ## 10. Documentation
 

@@ -1,11 +1,11 @@
 # CLI Archive Command Specification
 
 ## Purpose
-The archive command moves completed changes from the active changes directory to the archive folder with date-based naming, following OpenSpec conventions.
+The archive command moves completed changes from the active changes directory to the archive folder with date-based naming, following OGD conventions.
 
 ## Command Syntax
 ```bash
-openspec archive [change-name] [--yes|-y]
+ogd archive [change-name] [--yes|-y]
 ```
 
 Options:
@@ -57,7 +57,7 @@ THEN:
 2. Display a summary of spec updates to the user (see Confirmation Behavior below)
 3. Prompt for confirmation unless `--yes` flag is provided
 4. If confirmed, for each capability spec in the change directory:
-   - Copy the spec from `changes/[name]/specs/[capability]/spec.md` to `openspec/specs/[capability]/spec.md`
+   - Copy the spec from `changes/[name]/specs/[capability]/spec.md` to `ogd/specs/[capability]/spec.md`
    - Create the target directory structure if it doesn't exist
    - Overwrite existing spec files (specs represent current reality, change specs are the new reality)
    - Track which specs were updated for the success message
@@ -75,13 +75,13 @@ The spec update confirmation SHALL:
 - Format the confirmation prompt as:
   ```
   The following specs will be updated:
-  
+
   NEW specs to be created:
     - cli-archive (from changes/add-archive-command/specs/cli-archive/spec.md)
-  
+
   EXISTING specs to be updated:
     - cli-init (from changes/update-init-command/specs/cli-init/spec.md)
-  
+
   Update 2 specs and archive 'add-archive-command'? [y/N]:
   ```
 - Default to "No" for safety (require explicit "y" or "yes")
@@ -95,7 +95,7 @@ AND exit with non-zero status code
 ## Error Handling
 
 SHALL handle the following error conditions:
-- Missing openspec/changes/ directory
+- Missing ogd/changes/ directory
 - Change not found
 - Archive target already exists
 - File system permissions issues

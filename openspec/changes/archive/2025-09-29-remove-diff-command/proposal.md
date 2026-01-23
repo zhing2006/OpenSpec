@@ -2,9 +2,9 @@
 
 ## Problem
 
-The `openspec diff` command adds unnecessary complexity to the OpenSpec CLI for several reasons:
+The `OGD diff` command adds unnecessary complexity to the OGD CLI for several reasons:
 
-1. **Redundant functionality**: The `openspec show` command already provides comprehensive visualization of changes through structured JSON output and markdown rendering
+1. **Redundant functionality**: The `OGD show` command already provides comprehensive visualization of changes through structured JSON output and markdown rendering
 2. **Maintenance burden**: The diff command requires a separate dependency (jest-diff) and additional code complexity (~227 lines)
 3. **Limited value**: Developers can achieve better diff visualization using existing tools:
    - Git diff for actual file changes
@@ -14,9 +14,9 @@ The `openspec diff` command adds unnecessary complexity to the OpenSpec CLI for 
 
 ## Solution
 
-Remove the `openspec diff` command entirely and guide users to more appropriate alternatives:
+Remove the `OGD diff` command entirely and guide users to more appropriate alternatives:
 
-1. **For viewing change content**: Use `openspec show <change-name>` which provides:
+1. **For viewing change content**: Use `OGD show <change-name>` which provides:
    - Structured JSON output with `--json` flag
    - Markdown rendering for human-readable format
    - Delta-only views with `--deltas-only` flag
@@ -32,44 +32,44 @@ Remove the `openspec diff` command entirely and guide users to more appropriate 
 - **Reduced complexity**: Removes ~227 lines of code and the jest-diff dependency
 - **Clearer user journey**: Directs users to the canonical `show` command for viewing changes
 - **Lower maintenance**: Fewer commands to maintain and test
-- **Better alignment**: Focuses on the core OpenSpec workflow without redundant features
+- **Better alignment**: Focuses on the core OGD workflow without redundant features
 
 ## Implementation
 
 ### Files to Remove
 - `/src/core/diff.ts` - The entire diff command implementation
-- `/openspec/specs/cli-diff/spec.md` - The diff command specification
+- `/ogd/specs/cli-diff/spec.md` - The diff command specification
 
 ### Files to Update
 - `/src/cli/index.ts` - Remove diff command registration (lines 8, 84-96)
 - `/package.json` - Remove jest-diff dependency
 - `/README.md` - Remove diff command documentation
-- `/openspec/README.md` - Remove diff command references
-- Various documentation files mentioning `openspec diff`
+- `/ogd/README.md` - Remove diff command references
+- Various documentation files mentioning `OGD diff`
 
 ### Migration Guide for Users
 
-Users currently using `openspec diff` should transition to:
+Users currently using `OGD diff` should transition to:
 
 ```bash
 # Before
-openspec diff add-feature
+OGD diff add-feature
 
 # After - view the change proposal
-openspec show add-feature
+OGD show add-feature
 
 # After - view only the deltas
-openspec show add-feature --json --deltas-only
+OGD show add-feature --json --deltas-only
 
 # After - use git for file comparisons
-git diff openspec/specs openspec/changes/add-feature/specs
+git diff ogd/specs ogd/changes/add-feature/specs
 ```
 
 ## Risks
 
 - **User disruption**: Existing users may have workflows depending on the diff command
   - Mitigation: Provide clear migration guide and deprecation period
-  
+
 - **Loss of visual diff**: The colored, unified diff format will no longer be available
   - Mitigation: Users can use git diff or other tools for visual comparisons
 

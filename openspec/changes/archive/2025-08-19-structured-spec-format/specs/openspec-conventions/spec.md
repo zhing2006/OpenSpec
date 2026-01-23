@@ -1,4 +1,4 @@
-# OpenSpec Conventions Specification
+# OGD Conventions Specification
 
 ## ADDED Requirements
 
@@ -14,7 +14,7 @@ Behavioral specifications SHALL adopt the structured format with `### Requiremen
 
 ## Purpose
 
-OpenSpec conventions SHALL define how system capabilities are documented, how changes are proposed and tracked, and how specifications evolve over time. This meta-specification serves as the source of truth for OpenSpec's own conventions.
+OGD conventions SHALL define how system capabilities are documented, how changes are proposed and tracked, and how specifications evolve over time. This meta-specification serves as the source of truth for OGD's own conventions.
 
 ## Core Principles
 
@@ -26,10 +26,10 @@ The system SHALL follow these principles:
 
 ## Directory Structure
 
-WHEN an OpenSpec project is initialized
+WHEN an OGD project is initialized
 THEN it SHALL have this structure:
 ```
-openspec/
+ogd/
 ├── project.md              # Project-specific context
 ├── README.md               # AI assistant instructions
 ├── specs/                  # Current deployed capabilities

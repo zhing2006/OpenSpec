@@ -24,38 +24,38 @@ describe('PowerShellGenerator', () => {
 			const commands: CommandDefinition[] = [
 				{
 					name: 'init',
-					description: 'Initialize OpenSpec',
+					description: 'Initialize OGD',
 					flags: [],
 				},
 			];
 
 			const script = generator.generate(commands);
 
-			expect(script).toContain('# PowerShell completion script for OpenSpec CLI');
-			expect(script).toContain('$openspecCompleter = {');
+			expect(script).toContain('# PowerShell completion script for OGD CLI');
+			expect(script).toContain('$ogdCompleter = {');
 			expect(script).toContain('Register-ArgumentCompleter');
 		});
 
-		it('should register argument completer for openspec command', () => {
+		it('should register argument completer for OGD command', () => {
 			const commands: CommandDefinition[] = [
 				{
 					name: 'init',
-					description: 'Initialize OpenSpec',
+					description: 'Initialize OGD',
 					flags: [],
 				},
 			];
 
 			const script = generator.generate(commands);
 
-			expect(script).toContain('Register-ArgumentCompleter -CommandName openspec');
-			expect(script).toContain('-ScriptBlock $openspecCompleter');
+			expect(script).toContain('Register-ArgumentCompleter -CommandName ogd');
+			expect(script).toContain('-ScriptBlock $ogdCompleter');
 		});
 
 		it('should include all commands with descriptions', () => {
 			const commands: CommandDefinition[] = [
 				{
 					name: 'init',
-					description: 'Initialize OpenSpec',
+					description: 'Initialize OGD',
 					flags: [],
 				},
 				{
@@ -73,7 +73,7 @@ describe('PowerShellGenerator', () => {
 			const script = generator.generate(commands);
 
 			expect(script).toContain('"init"');
-			expect(script).toContain('Initialize OpenSpec');
+			expect(script).toContain('Initialize OGD');
 			expect(script).toContain('"validate"');
 			expect(script).toContain('Validate specs');
 			expect(script).toContain('"show"');
@@ -84,7 +84,7 @@ describe('PowerShellGenerator', () => {
 			const commands: CommandDefinition[] = [
 				{
 					name: 'init',
-					description: 'Initialize OpenSpec',
+					description: 'Initialize OGD',
 					flags: [],
 				},
 			];
@@ -281,7 +281,7 @@ describe('PowerShellGenerator', () => {
 
 			const script = generator.generate(commands);
 
-			expect(script).toContain('Get-OpenSpecChanges');
+			expect(script).toContain('Get-OGDChanges');
 		});
 
 		it('should handle positional arguments for spec-id', () => {
@@ -297,7 +297,7 @@ describe('PowerShellGenerator', () => {
 
 			const script = generator.generate(commands);
 
-			expect(script).toContain('Get-OpenSpecSpecs');
+			expect(script).toContain('Get-OGDSpecs');
 		});
 
 		it('should handle positional arguments for change-or-spec-id', () => {
@@ -313,8 +313,8 @@ describe('PowerShellGenerator', () => {
 
 			const script = generator.generate(commands);
 
-			expect(script).toContain('Get-OpenSpecChanges');
-			expect(script).toContain('Get-OpenSpecSpecs');
+			expect(script).toContain('Get-OGDChanges');
+			expect(script).toContain('Get-OGDSpecs');
 		});
 
 		it('should handle positional arguments for shell with inline values', () => {
@@ -340,7 +340,7 @@ describe('PowerShellGenerator', () => {
 			const commands: CommandDefinition[] = [
 				{
 					name: 'init',
-					description: 'Initialize OpenSpec',
+					description: 'Initialize OGD',
 					acceptsPositional: true,
 					positionalType: 'path',
 					flags: [],
@@ -366,8 +366,8 @@ describe('PowerShellGenerator', () => {
 
 			const script = generator.generate(commands);
 
-			expect(script).toContain('function Get-OpenSpecChanges');
-			expect(script).toContain('openspec __complete changes 2>$null');
+			expect(script).toContain('function Get-OGDChanges');
+			expect(script).toContain('ogd __complete changes 2>$null');
 			expect(script).toContain('-split');
 		});
 
@@ -384,8 +384,8 @@ describe('PowerShellGenerator', () => {
 
 			const script = generator.generate(commands);
 
-			expect(script).toContain('function Get-OpenSpecSpecs');
-			expect(script).toContain('openspec __complete specs 2>$null');
+			expect(script).toContain('function Get-OGDSpecs');
+			expect(script).toContain('ogd __complete specs 2>$null');
 		});
 
 		it('should escape double quotes in descriptions', () => {
@@ -441,7 +441,7 @@ describe('PowerShellGenerator', () => {
 			expect(script).toContain('"validate"');
 			expect(script).toContain('--strict');
 			expect(script).toContain('--json');
-			expect(script).toContain('Get-OpenSpecSpecs');
+			expect(script).toContain('Get-OGDSpecs');
 		});
 
 		it('should not emit trailing commas in @() arrays', () => {
@@ -478,7 +478,7 @@ describe('PowerShellGenerator', () => {
 			const script = generator.generate(commands);
 
 			expect(script).toContain('# PowerShell completion script');
-			expect(script).toContain('$openspecCompleter = {');
+			expect(script).toContain('$ogdCompleter = {');
 			expect(script).toContain('Register-ArgumentCompleter');
 		});
 
@@ -510,7 +510,7 @@ describe('PowerShellGenerator', () => {
 
 			const script = generator.generate(commands);
 
-			expect(script).toContain('function Get-OpenSpecChanges');
+			expect(script).toContain('function Get-OGDChanges');
 			// PowerShell uses -split with \\t for tab character
 			expect(script).toContain('-split');
 			expect(script).toContain('[0]');

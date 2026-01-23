@@ -1,19 +1,19 @@
 ## Why
 
-Users need a way to view and modify their global OpenSpec settings without manually editing JSON files. The `global-config` spec provides the foundation, but there's no user-facing interface to interact with the config. A dedicated `openspec config` command provides discoverability and ease of use.
+Users need a way to view and modify their global OGD settings without manually editing JSON files. The `global-config` spec provides the foundation, but there's no user-facing interface to interact with the config. A dedicated `OGD config` command provides discoverability and ease of use.
 
 ## What Changes
 
-Add `openspec config` subcommand with the following operations:
+Add `OGD config` subcommand with the following operations:
 
 ```bash
-openspec config path                          # Show config file location
-openspec config list [--json]                 # Show all current settings
-openspec config get <key>                     # Get a specific value (raw, scriptable)
-openspec config set <key> <value> [--string]  # Set a value (auto-coerce types)
-openspec config unset <key>                   # Remove a key (revert to default)
-openspec config reset --all [-y]              # Reset everything to defaults
-openspec config edit                          # Open config in $EDITOR
+OGD config path                          # Show config file location
+OGD config list [--json]                 # Show all current settings
+OGD config get <key>                     # Get a specific value (raw, scriptable)
+OGD config set <key> <value> [--string]  # Set a value (auto-coerce types)
+OGD config unset <key>                   # Remove a key (revert to default)
+OGD config reset --all [-y]              # Reset everything to defaults
+OGD config edit                          # Open config in $EDITOR
 ```
 
 **Key design decisions:**
@@ -26,27 +26,27 @@ openspec config edit                          # Open config in $EDITOR
 
 **Example usage:**
 ```bash
-$ openspec config path
-/Users/me/.config/openspec/config.json
+$ OGD config path
+/Users/me/.config/ogd/config.json
 
-$ openspec config list
+$ OGD config list
 featureFlags: {}
 
-$ openspec config set featureFlags.enableTelemetry false
+$ OGD config set featureFlags.enableTelemetry false
 Set featureFlags.enableTelemetry = false
 
-$ openspec config get featureFlags.enableTelemetry
+$ OGD config get featureFlags.enableTelemetry
 false
 
-$ openspec config list --json
+$ OGD config list --json
 {
   "featureFlags": {}
 }
 
-$ openspec config unset featureFlags.enableTelemetry
+$ OGD config unset featureFlags.enableTelemetry
 Unset featureFlags.enableTelemetry (reverted to default)
 
-$ openspec config edit
+$ OGD config edit
 # Opens $EDITOR with config.json
 ```
 

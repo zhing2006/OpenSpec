@@ -9,13 +9,13 @@ Before moving the change to archive, the command SHALL apply delta changes to ma
 #### Scenario: Applying delta changes
 
 - **WHEN** archiving a change with delta-based specs
-- **THEN** parse and apply delta changes as defined in openspec-conventions
+- **THEN** parse and apply delta changes as defined in OGD-conventions
 - **AND** validate all operations before applying
 
 #### Scenario: Validating delta changes
 
 - **WHEN** processing delta changes
-- **THEN** perform validations as specified in openspec-conventions
+- **THEN** perform validations as specified in OGD-conventions
 - **AND** if validation fails, show specific errors and abort
 
 #### Scenario: Conflict detection
@@ -38,7 +38,7 @@ The command SHALL provide clear feedback about delta operations.
   - Number of requirements modified
   - Number of requirements removed
   - Number of requirements renamed
-- **AND** use standard output symbols (+ ~ - →) as defined in openspec-conventions:
+- **AND** use standard output symbols (+ ~ - →) as defined in OGD-conventions:
   ```
   Applying changes to specs/user-auth/spec.md:
     + 2 added

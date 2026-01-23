@@ -1,11 +1,11 @@
 # CLI Archive Command Specification
 
 ## Purpose
-The archive command moves completed changes from the active changes directory to the archive folder with date-based naming, following OpenSpec conventions.
+The archive command moves completed changes from the active changes directory to the archive folder with date-based naming, following OGD conventions.
 
 ## Command Syntax
 ```bash
-openspec archive [change-name] [--yes|-y] [--skip-specs]
+ogd archive [change-name] [--yes|-y] [--skip-specs]
 ```
 
 Options:
@@ -90,7 +90,7 @@ Before moving the change to archive, the command SHALL update main specs to refl
   2. Display a summary of spec updates to the user (see Confirmation Behavior below)
   3. Prompt for confirmation unless `--yes` flag is provided
   4. If confirmed, for each capability spec in the change directory:
-     - Copy the spec from `changes/[name]/specs/[capability]/spec.md` to `openspec/specs/[capability]/spec.md`
+     - Copy the spec from `changes/[name]/specs/[capability]/spec.md` to `ogd/specs/[capability]/spec.md`
      - Create the target directory structure if it doesn't exist
      - Overwrite existing spec files (specs represent current reality, change specs are the new reality)
      - Track which specs were updated for the success message
@@ -115,13 +115,13 @@ The spec update confirmation SHALL provide clear visibility into changes before 
 - **AND** format the confirmation prompt as:
   ```
   The following specs will be updated:
-  
+
   NEW specs to be created:
     - cli-archive (from changes/add-archive-command/specs/cli-archive/spec.md)
-  
+
   EXISTING specs to be updated:
     - cli-init (from changes/update-init-command/specs/cli-init/spec.md)
-  
+
   Update 2 specs and archive 'add-archive-command'? [y/N]:
   ```
 #### Scenario: Handling confirmation response
@@ -149,7 +149,7 @@ The command SHALL handle various error conditions gracefully.
 
 - **WHEN** errors occur
 - **THEN** handle the following conditions:
-  - Missing openspec/changes/ directory
+  - Missing ogd/changes/ directory
   - Change not found
   - Archive target already exists
   - File system permissions issues
@@ -174,7 +174,7 @@ The archive command SHALL support a `--skip-specs` flag that skips all spec upda
 
 #### Scenario: Skipping spec updates with flag
 
-- **WHEN** executing `openspec archive <change> --skip-specs`
+- **WHEN** executing `ogd archive <change> --skip-specs`
 - **THEN** skip spec discovery and update confirmation
 - **AND** proceed directly to moving the change to archive
 - **AND** display a message indicating specs were skipped

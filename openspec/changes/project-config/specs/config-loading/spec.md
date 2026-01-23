@@ -2,24 +2,24 @@
 
 ## ADDED Requirements
 
-### Requirement: Load project config from openspec/config.yaml
+### Requirement: Load project config from ogd/config.yaml
 
-The system SHALL read and parse the project configuration file located at `openspec/config.yaml` relative to the project root.
+The system SHALL read and parse the project configuration file located at `ogd/config.yaml` relative to the project root.
 
 #### Scenario: Valid config file exists
-- **WHEN** `openspec/config.yaml` exists with valid YAML content
+- **WHEN** `ogd/config.yaml` exists with valid YAML content
 - **THEN** system parses the file and returns a ProjectConfig object
 
 #### Scenario: Config file does not exist
-- **WHEN** `openspec/config.yaml` does not exist
+- **WHEN** `ogd/config.yaml` does not exist
 - **THEN** system returns null without error
 
 #### Scenario: Config file has invalid YAML syntax
-- **WHEN** `openspec/config.yaml` contains malformed YAML
+- **WHEN** `ogd/config.yaml` contains malformed YAML
 - **THEN** system logs a warning message and returns null
 
 #### Scenario: Config file has valid YAML but invalid schema
-- **WHEN** `openspec/config.yaml` contains valid YAML that fails Zod schema validation
+- **WHEN** `ogd/config.yaml` contains valid YAML that fails Zod schema validation
 - **THEN** system logs a warning message with validation details and returns null
 
 ### Requirement: Support .yml file extension alias
@@ -27,12 +27,12 @@ The system SHALL read and parse the project configuration file located at `opens
 The system SHALL accept both `.yaml` and `.yml` file extensions for the config file.
 
 #### Scenario: Config file uses .yml extension
-- **WHEN** `openspec/config.yml` exists and `openspec/config.yaml` does not exist
-- **THEN** system reads from `openspec/config.yml`
+- **WHEN** `ogd/config.yml` exists and `ogd/config.yaml` does not exist
+- **THEN** system reads from `ogd/config.yml`
 
 #### Scenario: Both .yaml and .yml exist
-- **WHEN** both `openspec/config.yaml` and `openspec/config.yml` exist
-- **THEN** system prefers `openspec/config.yaml`
+- **WHEN** both `ogd/config.yaml` and `ogd/config.yml` exist
+- **THEN** system prefers `ogd/config.yaml`
 
 ### Requirement: Use resilient field-by-field parsing
 
@@ -111,7 +111,7 @@ The system SHALL NOT validate artifact IDs in rules during config load time. Val
 The system SHALL continue operation with default values when config loading or parsing fails.
 
 #### Scenario: Config parse failure during command execution
-- **WHEN** config file has syntax errors and user runs `openspec new change`
+- **WHEN** config file has syntax errors and user runs `OGD new change`
 - **THEN** command executes using default schema "spec-driven"
 
 #### Scenario: Warning is visible to user

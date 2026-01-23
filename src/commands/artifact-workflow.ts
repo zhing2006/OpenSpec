@@ -115,7 +115,7 @@ async function validateChangeExists(
   changeName: string | undefined,
   projectRoot: string
 ): Promise<string> {
-  const changesPath = path.join(projectRoot, 'openspec', 'changes');
+  const changesPath = path.join(projectRoot, 'ogd', 'changes');
 
   // Get all change directories (not just those with proposal.md)
   const getAvailableChanges = async (): Promise<string[]> => {
@@ -132,7 +132,7 @@ async function validateChangeExists(
   if (!changeName) {
     const available = await getAvailableChanges();
     if (available.length === 0) {
-      throw new Error('No changes found. Create one with: openspec new change <name>');
+      throw new Error('No changes found. Create one with: ogd new change <name>');
     }
     throw new Error(
       `Missing required option --change. Available changes:\n  ${available.join('\n  ')}`
@@ -153,11 +153,11 @@ async function validateChangeExists(
     const available = await getAvailableChanges();
     if (available.length === 0) {
       throw new Error(
-        `Change '${changeName}' not found. No changes exist. Create one with: openspec new change <name>`
+        `变更 '${changeName}' 未找到。没有任何变更存在。使用 ogd new change <name> 创建一个。`
       );
     }
     throw new Error(
-      `Change '${changeName}' not found. Available changes:\n  ${available.join('\n  ')}`
+      `变更 '${changeName}' 未找到。可用变更:\n  ${available.join('\n  ')}`
     );
   }
 
@@ -534,7 +534,7 @@ async function generateApplyInstructions(
 ): Promise<ApplyInstructions> {
   // loadChangeContext will auto-detect schema from metadata if not provided
   const context = loadChangeContext(projectRoot, changeName, schemaName);
-  const changeDir = path.join(projectRoot, 'openspec', 'changes', changeName);
+  const changeDir = path.join(projectRoot, 'ogd', 'changes', changeName);
 
   // Get the full schema to access the apply phase configuration
   const schema = resolveSchema(context.schemaName);
@@ -586,17 +586,17 @@ async function generateApplyInstructions(
 
   if (missingArtifacts.length > 0) {
     state = 'blocked';
-    instruction = `Cannot apply this change yet. Missing artifacts: ${missingArtifacts.join(', ')}.\nUse the openspec-continue-change skill to create the missing artifacts first.`;
+    instruction = `Cannot apply this change yet. Missing artifacts: ${missingArtifacts.join(', ')}.\nUse the ogd-continue-change skill to create the missing artifacts first.`;
   } else if (tracksFile && !tracksFileExists) {
     // Tracking file configured but doesn't exist yet
     const tracksFilename = path.basename(tracksFile);
     state = 'blocked';
-    instruction = `The ${tracksFilename} file is missing and must be created.\nUse openspec-continue-change to generate the tracking file.`;
+    instruction = `The ${tracksFilename} file is missing and must be created.\nUse ogd-continue-change to generate the tracking file.`;
   } else if (tracksFile && tracksFileExists && total === 0) {
     // Tracking file exists but contains no tasks
     const tracksFilename = path.basename(tracksFile);
     state = 'blocked';
-    instruction = `The ${tracksFilename} file exists but contains no tasks.\nAdd tasks to ${tracksFilename} or regenerate it with openspec-continue-change.`;
+    instruction = `The ${tracksFilename} file exists but contains no tasks.\nAdd tasks to ${tracksFilename} or regenerate it with ogd-continue-change.`;
   } else if (tracksFile && remaining === 0 && total > 0) {
     state = 'all_done';
     instruction = 'All tasks are complete! This change is ready to be archived.\nConsider running tests and reviewing the changes before archiving.';
@@ -663,7 +663,7 @@ function printApplyInstructionsText(instructions: ApplyInstructions): void {
     console.log('### ⚠️ Blocked');
     console.log();
     console.log(`Missing artifacts: ${missingArtifacts.join(', ')}`);
-    console.log('Use the openspec-continue-change skill to create these first.');
+    console.log('Use the ogd-continue-change skill to create these first.');
     console.log();
   }
 
@@ -811,12 +811,12 @@ async function newChangeCommand(name: string | undefined, options: NewChangeOpti
     // If description provided, create README.md with description
     if (options.description) {
       const { promises: fs } = await import('fs');
-      const changeDir = path.join(projectRoot, 'openspec', 'changes', name);
+      const changeDir = path.join(projectRoot, 'ogd', 'changes', name);
       const readmePath = path.join(changeDir, 'README.md');
       await fs.writeFile(readmePath, `# ${name}\n\n${options.description}\n`, 'utf-8');
     }
 
-    spinner.succeed(`Created change '${name}' at openspec/changes/${name}/ (schema: ${result.schema})`);
+    spinner.succeed(`Created change '${name}' at ogd/changes/${name}/ (schema: ${result.schema})`);
   } catch (error) {
     spinner.fail(`Failed to create change '${name}'`);
     throw error;
@@ -926,15 +926,15 @@ async function artifactExperimentalSetupCommand(options: ArtifactExperimentalSet
   const verifyChangeSkill = getVerifyChangeSkillTemplate();
 
   const skillTemplates = [
-    { template: exploreSkill, dirName: 'openspec-explore' },
-    { template: newChangeSkill, dirName: 'openspec-new-change' },
-    { template: continueChangeSkill, dirName: 'openspec-continue-change' },
-    { template: applyChangeSkill, dirName: 'openspec-apply-change' },
-    { template: ffChangeSkill, dirName: 'openspec-ff-change' },
-    { template: syncSpecsSkill, dirName: 'openspec-sync-specs' },
-    { template: archiveChangeSkill, dirName: 'openspec-archive-change' },
-    { template: bulkArchiveChangeSkill, dirName: 'openspec-bulk-archive-change' },
-    { template: verifyChangeSkill, dirName: 'openspec-verify-change' },
+    { template: exploreSkill, dirName: 'ogd-explore' },
+    { template: newChangeSkill, dirName: 'ogd-new-change' },
+    { template: continueChangeSkill, dirName: 'ogd-continue-change' },
+    { template: applyChangeSkill, dirName: 'ogd-apply-change' },
+    { template: ffChangeSkill, dirName: 'ogd-ff-change' },
+    { template: syncSpecsSkill, dirName: 'ogd-sync-specs' },
+    { template: archiveChangeSkill, dirName: 'ogd-archive-change' },
+    { template: bulkArchiveChangeSkill, dirName: 'ogd-bulk-archive-change' },
+    { template: verifyChangeSkill, dirName: 'ogd-verify-change' },
   ];
 
   const commandTemplates = [
@@ -1052,27 +1052,27 @@ ${template.instructions}
   console.log();
   console.log(chalk.bold('📋 Project Configuration (Optional)'));
   console.log();
-  console.log('Configure project defaults for OpenSpec workflows.');
+  console.log('Configure project defaults for OGD workflows.');
   console.log();
 
   // Check if config already exists
-  const configPath = path.join(projectRoot, 'openspec', 'config.yaml');
-  const configYmlPath = path.join(projectRoot, 'openspec', 'config.yml');
+  const configPath = path.join(projectRoot, 'ogd', 'config.yaml');
+  const configYmlPath = path.join(projectRoot, 'ogd', 'config.yml');
   const configExists = fs.existsSync(configPath) || fs.existsSync(configYmlPath);
 
   if (configExists) {
     // Config already exists, skip creation
-    console.log(chalk.blue('ℹ️  openspec/config.yaml already exists. Skipping config creation.'));
+    console.log(chalk.blue('ℹ️  ogd/config.yaml already exists. Skipping config creation.'));
     console.log();
-    console.log('   To update config, edit openspec/config.yaml manually or:');
-    console.log('   1. Delete openspec/config.yaml');
-    console.log('   2. Run openspec artifact-experimental-setup again');
+    console.log('   To update config, edit ogd/config.yaml manually or:');
+    console.log('   1. Delete ogd/config.yaml');
+    console.log('   2. Run ogd artifact-experimental-setup again');
     console.log();
   } else if (!isInteractive(options)) {
     // Non-interactive mode (CI, automation, piped input, or --no-interactive flag)
     console.log(chalk.blue('ℹ️  Skipping config prompts (non-interactive mode)'));
     console.log();
-    console.log('   To create config manually, add openspec/config.yaml with:');
+    console.log('   To create config manually, add ogd/config.yaml with:');
     console.log(chalk.dim('   schema: spec-driven'));
     console.log();
   } else {
@@ -1083,7 +1083,7 @@ ${template.instructions}
       await FileSystemUtils.writeFile(configPath, yamlContent);
 
       console.log();
-      console.log(chalk.green('✓ Created openspec/config.yaml'));
+      console.log(chalk.green('✓ Created ogd/config.yaml'));
       console.log();
       console.log(`   Default schema: ${chalk.cyan(DEFAULT_SCHEMA)}`);
       console.log();
@@ -1093,17 +1093,17 @@ ${template.instructions}
       // Git commit suggestion with all tool directories
       const toolDirs = validatedTools.map(t => t.skillsDir + '/').join(' ');
       console.log(chalk.bold('To share with team:'));
-      console.log(chalk.dim(`  git add openspec/config.yaml ${toolDirs}`));
-      console.log(chalk.dim('  git commit -m "Setup OpenSpec experimental workflow"'));
+      console.log(chalk.dim(`  git add ogd/config.yaml ${toolDirs}`));
+      console.log(chalk.dim('  git commit -m "Setup OGD experimental workflow"'));
       console.log();
     } catch (writeError) {
       // Handle file write errors
       console.error();
-      console.error(chalk.red('✗ Failed to write openspec/config.yaml'));
+      console.error(chalk.red('✗ Failed to write ogd/config.yaml'));
       console.error(chalk.dim(`  ${(writeError as Error).message}`));
       console.error();
       console.error('Fallback: Create config manually:');
-      console.error(chalk.dim('  1. Create openspec/config.yaml'));
+      console.error(chalk.dim('  1. Create ogd/config.yaml'));
       console.error(chalk.dim('  2. Copy the following content:'));
       console.error();
       console.error(chalk.dim(yamlContent));
@@ -1121,7 +1121,7 @@ ${template.instructions}
   }
   console.log();
   console.log('  Ask naturally:');
-  console.log('  • "I want to start a new OpenSpec change to add <feature>"');
+  console.log('  • "I want to start a new ogd change to add <feature>"');
   console.log('  • "Continue working on this change"');
   console.log('  • "Implement the tasks for this change"');
   console.log();
@@ -1148,7 +1148,7 @@ ${template.instructions}
   }
 
   console.log(chalk.yellow('💡 This is an experimental feature.'));
-  console.log('   Feedback welcome at: https://github.com/Fission-AI/OpenSpec/issues');
+  console.log('   Feedback welcome at: https://github.com/zhing2006/OpenGameDesign/issues');
   console.log();
 }
 
@@ -1200,7 +1200,7 @@ export function registerArtifactWorkflowCommands(program: Command): void {
     .command('status')
     .description('[Experimental] Display artifact completion status for a change')
     .option('--change <id>', 'Change name to show status for')
-    .option('--schema <name>', 'Schema override (auto-detected from .openspec.yaml)')
+    .option('--schema <name>', 'Schema override (auto-detected from .ogd.yaml)')
     .option('--json', 'Output as JSON')
     .action(async (options: StatusOptions) => {
       try {
@@ -1217,7 +1217,7 @@ export function registerArtifactWorkflowCommands(program: Command): void {
     .command('instructions [artifact]')
     .description('[Experimental] Output enriched instructions for creating an artifact or applying tasks')
     .option('--change <id>', 'Change name')
-    .option('--schema <name>', 'Schema override (auto-detected from .openspec.yaml)')
+    .option('--schema <name>', 'Schema override (auto-detected from .ogd.yaml)')
     .option('--json', 'Output as JSON')
     .action(async (artifactId: string | undefined, options: InstructionsOptions) => {
       try {

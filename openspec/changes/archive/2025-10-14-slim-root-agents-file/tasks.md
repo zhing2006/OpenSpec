@@ -12,4 +12,4 @@
 
 ## 4. Tests & Docs
 - [x] 4.1 Adjust CLI/init tests to match the new root content.
-- [x] 4.2 Document the stub message in `openspec/specs/cli-init` and `openspec/specs/cli-update` (and any relevant README snippets).
+- [x] 4.2 Document the stub message in `ogd/specs/cli-init` and `ogd/specs/cli-update` (and any relevant README snippets).

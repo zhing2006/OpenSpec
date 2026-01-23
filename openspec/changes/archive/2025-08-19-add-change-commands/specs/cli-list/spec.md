@@ -9,4 +9,4 @@ The current `list` command behavior SHALL be preserved but marked as deprecated.
 - **WHEN** using the legacy `list` command
 - **THEN** continue to work as before
 - **AND** display deprecation notice
-- **AND** suggest using `openspec change list` instead
+- **AND** suggest using `ogd change list` instead

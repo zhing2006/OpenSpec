@@ -14,12 +14,12 @@ describe('UpdateCommand', () => {
 
   beforeEach(async () => {
     // Create a temporary test directory
-    testDir = path.join(os.tmpdir(), `openspec-test-${randomUUID()}`);
+    testDir = path.join(os.tmpdir(), `OGD-test-${randomUUID()}`);
     await fs.mkdir(testDir, { recursive: true });
 
-    // Create openspec directory
-    const openspecDir = path.join(testDir, 'openspec');
-    await fs.mkdir(openspecDir, { recursive: true });
+    // Create OGD directory
+    const OGDDir = path.join(testDir, 'ogd');
+    await fs.mkdir(OGDDir, { recursive: true });
 
     updateCommand = new UpdateCommand();
 
@@ -42,9 +42,9 @@ describe('UpdateCommand', () => {
 
 Some existing content here.
 
-<!-- OPENSPEC:START -->
-Old OpenSpec content
-<!-- OPENSPEC:END -->
+<!-- OGD:START -->
+Old OGD content
+<!-- OGD:END -->
 
 More content after.`;
     await fs.writeFile(claudePath, initialContent);
@@ -56,17 +56,17 @@ More content after.`;
 
     // Check that CLAUDE.md was updated
     const updatedContent = await fs.readFile(claudePath, 'utf-8');
-    expect(updatedContent).toContain('<!-- OPENSPEC:START -->');
-    expect(updatedContent).toContain('<!-- OPENSPEC:END -->');
-    expect(updatedContent).toContain("@/openspec/AGENTS.md");
-    expect(updatedContent).toContain('openspec update');
+    expect(updatedContent).toContain('<!-- OGD:START -->');
+    expect(updatedContent).toContain('<!-- OGD:END -->');
+    expect(updatedContent).toContain("@/ogd/AGENTS.md");
+    expect(updatedContent).toContain('ogd update');
     expect(updatedContent).toContain('Some existing content here');
     expect(updatedContent).toContain('More content after');
 
     // Check console output
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated OpenSpec instructions (openspec/AGENTS.md'
+      'Updated OGD instructions (ogd/AGENTS.md'
     );
     expect(logMessage).toContain('AGENTS.md (created)');
     expect(logMessage).toContain('Updated AI tool files: CLAUDE.md');
@@ -79,9 +79,9 @@ More content after.`;
 
 Some existing content.
 
-<!-- OPENSPEC:START -->
-Old OpenSpec content
-<!-- OPENSPEC:END -->
+<!-- OGD:START -->
+Old OGD content
+<!-- OGD:END -->
 
 More notes here.`;
     await fs.writeFile(qwenPath, initialContent);
@@ -91,16 +91,16 @@ More notes here.`;
     await updateCommand.execute(testDir);
 
     const updatedContent = await fs.readFile(qwenPath, 'utf-8');
-    expect(updatedContent).toContain('<!-- OPENSPEC:START -->');
-    expect(updatedContent).toContain('<!-- OPENSPEC:END -->');
-    expect(updatedContent).toContain("@/openspec/AGENTS.md");
-    expect(updatedContent).toContain('openspec update');
+    expect(updatedContent).toContain('<!-- OGD:START -->');
+    expect(updatedContent).toContain('<!-- OGD:END -->');
+    expect(updatedContent).toContain("@/ogd/AGENTS.md");
+    expect(updatedContent).toContain('ogd update');
     expect(updatedContent).toContain('Some existing content.');
     expect(updatedContent).toContain('More notes here.');
 
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated OpenSpec instructions (openspec/AGENTS.md'
+      'Updated OGD instructions (ogd/AGENTS.md'
     );
     expect(logMessage).toContain('AGENTS.md (created)');
     expect(logMessage).toContain('Updated AI tool files: QWEN.md');
@@ -111,18 +111,18 @@ More notes here.`;
   it('should refresh existing Claude slash command files', async () => {
     const proposalPath = path.join(
       testDir,
-      '.claude/commands/openspec/proposal.md'
+      '.claude/commands/ogd/proposal.md'
     );
     await fs.mkdir(path.dirname(proposalPath), { recursive: true });
     const initialContent = `---
-name: OpenSpec - Proposal
+name: OGD - Proposal
 description: Old description
-category: OpenSpec
-tags: [openspec, change]
+category: OGD
+tags: [OGD, change]
 ---
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old slash content
-<!-- OPENSPEC:END -->`;
+<!-- OGD:END -->`;
     await fs.writeFile(proposalPath, initialContent);
 
     const consoleSpy = vi.spyOn(console, 'log');
@@ -130,20 +130,20 @@ Old slash content
     await updateCommand.execute(testDir);
 
     const updated = await fs.readFile(proposalPath, 'utf-8');
-    expect(updated).toContain('name: OpenSpec - Proposal');
+    expect(updated).toContain('name: OGD - Proposal');
     expect(updated).toContain('**Guardrails**');
     expect(updated).toContain(
-      'Validate with `openspec validate <id> --strict --no-interactive`'
+      'Validate with `ogd validate <id> --strict --no-interactive`'
     );
     expect(updated).not.toContain('Old slash content');
 
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated OpenSpec instructions (openspec/AGENTS.md'
+      'Updated OGD instructions (ogd/AGENTS.md'
     );
     expect(logMessage).toContain('AGENTS.md (created)');
     expect(logMessage).toContain(
-      'Updated slash commands: .claude/commands/openspec/proposal.md'
+      'Updated slash commands: .claude/commands/ogd/proposal.md'
     );
 
     consoleSpy.mockRestore();
@@ -152,15 +152,15 @@ Old slash content
   it('should refresh existing Qwen slash command files', async () => {
     const applyPath = path.join(
       testDir,
-      '.qwen/commands/openspec-apply.toml'
+      '.qwen/commands/ogd-apply.toml'
     );
     await fs.mkdir(path.dirname(applyPath), { recursive: true });
-    const initialContent = `description = "Implement an approved OpenSpec change and keep tasks in sync."
+    const initialContent = `description = "Implement an approved ogd change and keep tasks in sync."
 
 prompt = """
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old body
-<!-- OPENSPEC:END -->
+<!-- OGD:END -->
 """
 `;
     await fs.writeFile(applyPath, initialContent);
@@ -170,19 +170,19 @@ Old body
     await updateCommand.execute(testDir);
 
     const updated = await fs.readFile(applyPath, 'utf-8');
-    expect(updated).toContain('description = "Implement an approved OpenSpec change and keep tasks in sync."');
+    expect(updated).toContain('description = "Implement an approved ogd change and keep tasks in sync."');
     expect(updated).toContain('prompt = """');
-    expect(updated).toContain('<!-- OPENSPEC:START -->');
+    expect(updated).toContain('<!-- OGD:START -->');
     expect(updated).toContain('Work through tasks sequentially');
     expect(updated).not.toContain('Old body');
 
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated OpenSpec instructions (openspec/AGENTS.md'
+      'Updated OGD instructions (ogd/AGENTS.md'
     );
     expect(logMessage).toContain('AGENTS.md (created)');
     expect(logMessage).toContain(
-      'Updated slash commands: .qwen/commands/openspec-apply.toml'
+      'Updated slash commands: .qwen/commands/ogd-apply.toml'
     );
 
     consoleSpy.mockRestore();
@@ -191,7 +191,7 @@ Old body
   it('should not create missing Qwen slash command files on update', async () => {
     const applyPath = path.join(
       testDir,
-      '.qwen/commands/openspec-apply.toml'
+      '.qwen/commands/ogd-apply.toml'
     );
 
     await fs.mkdir(path.dirname(applyPath), { recursive: true });
@@ -200,9 +200,9 @@ Old body
       `description = "Old description"
 
 prompt = """
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old content
-<!-- OPENSPEC:END -->
+<!-- OGD:END -->
 """
 `
     );
@@ -215,11 +215,11 @@ Old content
 
     const proposalPath = path.join(
       testDir,
-      '.qwen/commands/openspec-proposal.toml'
+      '.qwen/commands/ogd-proposal.toml'
     );
     const archivePath = path.join(
       testDir,
-      '.qwen/commands/openspec-archive.toml'
+      '.qwen/commands/ogd-archive.toml'
     );
 
     await expect(FileSystemUtils.fileExists(proposalPath)).resolves.toBe(false);
@@ -251,9 +251,9 @@ Old content
 
 Some existing Cline rules here.
 
-<!-- OPENSPEC:START -->
-Old OpenSpec content
-<!-- OPENSPEC:END -->
+<!-- OGD:START -->
+Old OGD content
+<!-- OGD:END -->
 
 More rules after.`;
     await fs.writeFile(clinePath, initialContent);
@@ -265,17 +265,17 @@ More rules after.`;
 
     // Check that CLINE.md was updated
     const updatedContent = await fs.readFile(clinePath, 'utf-8');
-    expect(updatedContent).toContain('<!-- OPENSPEC:START -->');
-    expect(updatedContent).toContain('<!-- OPENSPEC:END -->');
-    expect(updatedContent).toContain("@/openspec/AGENTS.md");
-    expect(updatedContent).toContain('openspec update');
+    expect(updatedContent).toContain('<!-- OGD:START -->');
+    expect(updatedContent).toContain('<!-- OGD:END -->');
+    expect(updatedContent).toContain("@/ogd/AGENTS.md");
+    expect(updatedContent).toContain('ogd update');
     expect(updatedContent).toContain('Some existing Cline rules here');
     expect(updatedContent).toContain('More rules after');
 
     // Check console output
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated OpenSpec instructions (openspec/AGENTS.md'
+      'Updated OGD instructions (ogd/AGENTS.md'
     );
     expect(logMessage).toContain('AGENTS.md (created)');
     expect(logMessage).toContain('Updated AI tool files: CLINE.md');
@@ -297,16 +297,16 @@ More rules after.`;
   it('should refresh existing Cline workflow files', async () => {
     const proposalPath = path.join(
       testDir,
-      '.clinerules/workflows/openspec-proposal.md'
+      '.clinerules/workflows/ogd-proposal.md'
     );
     await fs.mkdir(path.dirname(proposalPath), { recursive: true });
-    const initialContent = `# OpenSpec: Proposal
+    const initialContent = `# OGD: Proposal
 
-Scaffold a new OpenSpec change and validate strictly.
+Scaffold a new ogd change and validate strictly.
 
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old slash content
-<!-- OPENSPEC:END -->`;
+<!-- OGD:END -->`;
     await fs.writeFile(proposalPath, initialContent);
 
     const consoleSpy = vi.spyOn(console, 'log');
@@ -314,37 +314,37 @@ Old slash content
     await updateCommand.execute(testDir);
 
     const updated = await fs.readFile(proposalPath, 'utf-8');
-    expect(updated).toContain('# OpenSpec: Proposal');
+    expect(updated).toContain('# OGD: Proposal');
     expect(updated).toContain('**Guardrails**');
     expect(updated).toContain(
-      'Validate with `openspec validate <id> --strict --no-interactive`'
+      'Validate with `ogd validate <id> --strict --no-interactive`'
     );
     expect(updated).not.toContain('Old slash content');
 
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated OpenSpec instructions (openspec/AGENTS.md'
+      'Updated OGD instructions (ogd/AGENTS.md'
     );
     expect(logMessage).toContain('AGENTS.md (created)');
     expect(logMessage).toContain(
-      'Updated slash commands: .clinerules/workflows/openspec-proposal.md'
+      'Updated slash commands: .clinerules/workflows/ogd-proposal.md'
     );
 
     consoleSpy.mockRestore();
   });
 
   it('should refresh existing Cursor slash command files', async () => {
-    const cursorPath = path.join(testDir, '.cursor/commands/openspec-apply.md');
+    const cursorPath = path.join(testDir, '.cursor/commands/ogd-apply.md');
     await fs.mkdir(path.dirname(cursorPath), { recursive: true });
     const initialContent = `---
-name: /openspec-apply
-id: openspec-apply
-category: OpenSpec
+name: /ogd-apply
+id: ogd-apply
+category: OGD
 description: Old description
 ---
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old body
-<!-- OPENSPEC:END -->`;
+<!-- OGD:END -->`;
     await fs.writeFile(cursorPath, initialContent);
 
     const consoleSpy = vi.spyOn(console, 'log');
@@ -352,17 +352,17 @@ Old body
     await updateCommand.execute(testDir);
 
     const updated = await fs.readFile(cursorPath, 'utf-8');
-    expect(updated).toContain('id: openspec-apply');
+    expect(updated).toContain('id: ogd-apply');
     expect(updated).toContain('Work through tasks sequentially');
     expect(updated).not.toContain('Old body');
 
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated OpenSpec instructions (openspec/AGENTS.md'
+      'Updated OGD instructions (ogd/AGENTS.md'
     );
     expect(logMessage).toContain('AGENTS.md (created)');
     expect(logMessage).toContain(
-      'Updated slash commands: .cursor/commands/openspec-apply.md'
+      'Updated slash commands: .cursor/commands/ogd-apply.md'
     );
 
     consoleSpy.mockRestore();
@@ -371,17 +371,17 @@ Old body
   it('should refresh existing Continue prompt files', async () => {
     const continuePath = path.join(
       testDir,
-      '.continue/prompts/openspec-apply.prompt'
+      '.continue/prompts/ogd-apply.prompt'
     );
     await fs.mkdir(path.dirname(continuePath), { recursive: true });
     const initialContent = `---
-name: openspec-apply
+name: ogd-apply
 description: Old description
 invokable: true
 ---
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old body
-<!-- OPENSPEC:END -->`;
+<!-- OGD:END -->`;
     await fs.writeFile(continuePath, initialContent);
 
     const consoleSpy = vi.spyOn(console, 'log');
@@ -389,18 +389,18 @@ Old body
     await updateCommand.execute(testDir);
 
     const updated = await fs.readFile(continuePath, 'utf-8');
-    expect(updated).toContain('name: openspec-apply');
+    expect(updated).toContain('name: ogd-apply');
     expect(updated).toContain('invokable: true');
     expect(updated).toContain('Work through tasks sequentially');
     expect(updated).not.toContain('Old body');
 
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated OpenSpec instructions (openspec/AGENTS.md'
+      'Updated OGD instructions (ogd/AGENTS.md'
     );
     expect(logMessage).toContain('AGENTS.md (created)');
     expect(logMessage).toContain(
-      'Updated slash commands: .continue/prompts/openspec-apply.prompt'
+      'Updated slash commands: .continue/prompts/ogd-apply.prompt'
     );
 
     consoleSpy.mockRestore();
@@ -409,7 +409,7 @@ Old body
   it('should not create missing Continue prompt files on update', async () => {
     const continueApply = path.join(
       testDir,
-      '.continue/prompts/openspec-apply.prompt'
+      '.continue/prompts/ogd-apply.prompt'
     );
 
     // Only create apply; leave proposal and archive missing
@@ -417,24 +417,24 @@ Old body
     await fs.writeFile(
       continueApply,
       `---
-name: openspec-apply
+name: ogd-apply
 description: Old description
 invokable: true
 ---
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old body
-<!-- OPENSPEC:END -->`
+<!-- OGD:END -->`
     );
 
     await updateCommand.execute(testDir);
 
     const continueProposal = path.join(
       testDir,
-      '.continue/prompts/openspec-proposal.prompt'
+      '.continue/prompts/ogd-proposal.prompt'
     );
     const continueArchive = path.join(
       testDir,
-      '.continue/prompts/openspec-archive.prompt'
+      '.continue/prompts/ogd-archive.prompt'
     );
 
     // Confirm they weren't created by update
@@ -445,18 +445,18 @@ Old body
   it('should refresh existing OpenCode slash command files', async () => {
     const openCodePath = path.join(
       testDir,
-      '.opencode/command/openspec-apply.md'
+      '.opencode/command/ogd-apply.md'
     );
     await fs.mkdir(path.dirname(openCodePath), { recursive: true });
     const initialContent = `---
-name: /openspec-apply
-id: openspec-apply
-category: OpenSpec
+name: /ogd-apply
+id: ogd-apply
+category: OGD
 description: Old description
 ---
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old body
-<!-- OPENSPEC:END -->`;
+<!-- OGD:END -->`;
     await fs.writeFile(openCodePath, initialContent);
 
     const consoleSpy = vi.spyOn(console, 'log');
@@ -464,17 +464,17 @@ Old body
     await updateCommand.execute(testDir);
 
     const updated = await fs.readFile(openCodePath, 'utf-8');
-    expect(updated).toContain('id: openspec-apply');
+    expect(updated).toContain('id: ogd-apply');
     expect(updated).toContain('Work through tasks sequentially');
     expect(updated).not.toContain('Old body');
 
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated OpenSpec instructions (openspec/AGENTS.md'
+      'Updated OGD instructions (ogd/AGENTS.md'
     );
     expect(logMessage).toContain('AGENTS.md (created)');
     expect(logMessage).toContain(
-      'Updated slash commands: .opencode/command/openspec-apply.md'
+      'Updated slash commands: .opencode/command/ogd-apply.md'
     );
 
     consoleSpy.mockRestore();
@@ -483,12 +483,12 @@ Old body
   it('should refresh existing Kilo Code workflows', async () => {
     const kilocodePath = path.join(
       testDir,
-      '.kilocode/workflows/openspec-apply.md'
+      '.kilocode/workflows/ogd-apply.md'
     );
     await fs.mkdir(path.dirname(kilocodePath), { recursive: true });
-    const initialContent = `<!-- OPENSPEC:START -->
+    const initialContent = `<!-- OGD:START -->
 Old body
-<!-- OPENSPEC:END -->`;
+<!-- OGD:END -->`;
     await fs.writeFile(kilocodePath, initialContent);
 
     const consoleSpy = vi.spyOn(console, 'log');
@@ -498,11 +498,11 @@ Old body
     const updated = await fs.readFile(kilocodePath, 'utf-8');
     expect(updated).toContain('Work through tasks sequentially');
     expect(updated).not.toContain('Old body');
-    expect(updated.startsWith('<!-- OPENSPEC:START -->')).toBe(true);
+    expect(updated.startsWith('<!-- OGD:START -->')).toBe(true);
 
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated slash commands: .kilocode/workflows/openspec-apply.md'
+      'Updated slash commands: .kilocode/workflows/ogd-apply.md'
     );
 
     consoleSpy.mockRestore();
@@ -511,14 +511,14 @@ Old body
   it('should refresh existing Windsurf workflows', async () => {
     const wsPath = path.join(
       testDir,
-      '.windsurf/workflows/openspec-apply.md'
+      '.windsurf/workflows/ogd-apply.md'
     );
     await fs.mkdir(path.dirname(wsPath), { recursive: true });
-    const initialContent = `## OpenSpec: Apply (Windsurf)
+    const initialContent = `## OGD: Apply (Windsurf)
 Intro
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old body
-<!-- OPENSPEC:END -->`;
+<!-- OGD:END -->`;
     await fs.writeFile(wsPath, initialContent);
 
     const consoleSpy = vi.spyOn(console, 'log');
@@ -528,11 +528,11 @@ Old body
     const updated = await fs.readFile(wsPath, 'utf-8');
     expect(updated).toContain('Work through tasks sequentially');
     expect(updated).not.toContain('Old body');
-    expect(updated).toContain('## OpenSpec: Apply (Windsurf)');
+    expect(updated).toContain('## OGD: Apply (Windsurf)');
 
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated slash commands: .windsurf/workflows/openspec-apply.md'
+      'Updated slash commands: .windsurf/workflows/ogd-apply.md'
     );
     consoleSpy.mockRestore();
   });
@@ -540,16 +540,16 @@ Old body
   it('should refresh existing Antigravity workflows', async () => {
     const agPath = path.join(
       testDir,
-      '.agent/workflows/openspec-apply.md'
+      '.agent/workflows/ogd-apply.md'
     );
     await fs.mkdir(path.dirname(agPath), { recursive: true });
     const initialContent = `---
-description: Implement an approved OpenSpec change and keep tasks in sync.
+description: Implement an approved ogd change and keep tasks in sync.
 ---
 
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old body
-<!-- OPENSPEC:END -->`;
+<!-- OGD:END -->`;
     await fs.writeFile(agPath, initialContent);
 
     const consoleSpy = vi.spyOn(console, 'log');
@@ -559,12 +559,12 @@ Old body
     const updated = await fs.readFile(agPath, 'utf-8');
     expect(updated).toContain('Work through tasks sequentially');
     expect(updated).not.toContain('Old body');
-    expect(updated).toContain('description: Implement an approved OpenSpec change and keep tasks in sync.');
+    expect(updated).toContain('description: Implement an approved ogd change and keep tasks in sync.');
     expect(updated).not.toContain('auto_execution_mode: 3');
 
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated slash commands: .agent/workflows/openspec-apply.md'
+      'Updated slash commands: .agent/workflows/ogd-apply.md'
     );
     consoleSpy.mockRestore();
   });
@@ -572,10 +572,10 @@ Old body
   it('should refresh existing Codex prompts', async () => {
     const codexPath = path.join(
       testDir,
-      '.codex/prompts/openspec-apply.md'
+      '.codex/prompts/ogd-apply.md'
     );
     await fs.mkdir(path.dirname(codexPath), { recursive: true });
-    const initialContent = `---\ndescription: Old description\nargument-hint: old-hint\n---\n\n$ARGUMENTS\n<!-- OPENSPEC:START -->\nOld body\n<!-- OPENSPEC:END -->`;
+    const initialContent = `---\ndescription: Old description\nargument-hint: old-hint\n---\n\n$ARGUMENTS\n<!-- OGD:START -->\nOld body\n<!-- OGD:END -->`;
     await fs.writeFile(codexPath, initialContent);
 
     const consoleSpy = vi.spyOn(console, 'log');
@@ -583,7 +583,7 @@ Old body
     await updateCommand.execute(testDir);
 
     const updated = await fs.readFile(codexPath, 'utf-8');
-    expect(updated).toContain('description: Implement an approved OpenSpec change and keep tasks in sync.');
+    expect(updated).toContain('description: Implement an approved ogd change and keep tasks in sync.');
     expect(updated).toContain('argument-hint: change-id');
     expect(updated).toContain('$ARGUMENTS');
     expect(updated).toContain('Work through tasks sequentially');
@@ -592,7 +592,7 @@ Old body
 
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated slash commands: .codex/prompts/openspec-apply.md'
+      'Updated slash commands: .codex/prompts/ogd-apply.md'
     );
 
     consoleSpy.mockRestore();
@@ -601,25 +601,25 @@ Old body
   it('should not create missing Codex prompts on update', async () => {
     const codexApply = path.join(
       testDir,
-      '.codex/prompts/openspec-apply.md'
+      '.codex/prompts/ogd-apply.md'
     );
 
     // Only create apply; leave proposal and archive missing
     await fs.mkdir(path.dirname(codexApply), { recursive: true });
     await fs.writeFile(
       codexApply,
-      '---\ndescription: Old\nargument-hint: old\n---\n\n$ARGUMENTS\n<!-- OPENSPEC:START -->\nOld\n<!-- OPENSPEC:END -->'
+      '---\ndescription: Old\nargument-hint: old\n---\n\n$ARGUMENTS\n<!-- OGD:START -->\nOld\n<!-- OGD:END -->'
     );
 
     await updateCommand.execute(testDir);
 
     const codexProposal = path.join(
       testDir,
-      '.codex/prompts/openspec-proposal.md'
+      '.codex/prompts/ogd-proposal.md'
     );
     const codexArchive = path.join(
       testDir,
-      '.codex/prompts/openspec-archive.md'
+      '.codex/prompts/ogd-archive.md'
     );
 
     // Confirm they weren't created by update
@@ -630,17 +630,17 @@ Old body
   it('should refresh existing GitHub Copilot prompts', async () => {
     const ghPath = path.join(
       testDir,
-      '.github/prompts/openspec-apply.prompt.md'
+      '.github/prompts/ogd-apply.prompt.md'
     );
     await fs.mkdir(path.dirname(ghPath), { recursive: true });
     const initialContent = `---
-description: Implement an approved OpenSpec change and keep tasks in sync.
+description: Implement an approved ogd change and keep tasks in sync.
 ---
 
 $ARGUMENTS
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old body
-<!-- OPENSPEC:END -->`;
+<!-- OGD:END -->`;
     await fs.writeFile(ghPath, initialContent);
 
     const consoleSpy = vi.spyOn(console, 'log');
@@ -648,14 +648,14 @@ Old body
     await updateCommand.execute(testDir);
 
     const updated = await fs.readFile(ghPath, 'utf-8');
-    expect(updated).toContain('description: Implement an approved OpenSpec change and keep tasks in sync.');
+    expect(updated).toContain('description: Implement an approved ogd change and keep tasks in sync.');
     expect(updated).toContain('$ARGUMENTS');
     expect(updated).toContain('Work through tasks sequentially');
     expect(updated).not.toContain('Old body');
 
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated slash commands: .github/prompts/openspec-apply.prompt.md'
+      'Updated slash commands: .github/prompts/ogd-apply.prompt.md'
     );
 
     consoleSpy.mockRestore();
@@ -664,25 +664,25 @@ Old body
   it('should not create missing GitHub Copilot prompts on update', async () => {
     const ghApply = path.join(
       testDir,
-      '.github/prompts/openspec-apply.prompt.md'
+      '.github/prompts/ogd-apply.prompt.md'
     );
 
     // Only create apply; leave proposal and archive missing
     await fs.mkdir(path.dirname(ghApply), { recursive: true });
     await fs.writeFile(
       ghApply,
-      '---\ndescription: Old\n---\n\n$ARGUMENTS\n<!-- OPENSPEC:START -->\nOld\n<!-- OPENSPEC:END -->'
+      '---\ndescription: Old\n---\n\n$ARGUMENTS\n<!-- OGD:START -->\nOld\n<!-- OGD:END -->'
     );
 
     await updateCommand.execute(testDir);
 
     const ghProposal = path.join(
       testDir,
-      '.github/prompts/openspec-proposal.prompt.md'
+      '.github/prompts/ogd-proposal.prompt.md'
     );
     const ghArchive = path.join(
       testDir,
-      '.github/prompts/openspec-archive.prompt.md'
+      '.github/prompts/ogd-archive.prompt.md'
     );
 
     // Confirm they weren't created by update
@@ -693,15 +693,15 @@ Old body
   it('should refresh existing Gemini CLI TOML files without creating new ones', async () => {
     const geminiProposal = path.join(
       testDir,
-      '.gemini/commands/openspec/proposal.toml'
+      '.gemini/commands/ogd/proposal.toml'
     );
     await fs.mkdir(path.dirname(geminiProposal), { recursive: true });
-    const initialContent = `description = "Scaffold a new OpenSpec change and validate strictly."
+    const initialContent = `description = "Scaffold a new ogd change and validate strictly."
 
 prompt = """
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old Gemini body
-<!-- OPENSPEC:END -->
+<!-- OGD:END -->
 """
 `;
     await fs.writeFile(geminiProposal, initialContent);
@@ -711,20 +711,20 @@ Old Gemini body
     await updateCommand.execute(testDir);
 
     const updated = await fs.readFile(geminiProposal, 'utf-8');
-    expect(updated).toContain('description = "Scaffold a new OpenSpec change and validate strictly."');
+    expect(updated).toContain('description = "Scaffold a new ogd change and validate strictly."');
     expect(updated).toContain('prompt = """');
-    expect(updated).toContain('<!-- OPENSPEC:START -->');
+    expect(updated).toContain('<!-- OGD:START -->');
     expect(updated).toContain('**Guardrails**');
-    expect(updated).toContain('<!-- OPENSPEC:END -->');
+    expect(updated).toContain('<!-- OGD:END -->');
     expect(updated).not.toContain('Old Gemini body');
 
     const geminiApply = path.join(
       testDir,
-      '.gemini/commands/openspec/apply.toml'
+      '.gemini/commands/ogd/apply.toml'
     );
     const geminiArchive = path.join(
       testDir,
-      '.gemini/commands/openspec/archive.toml'
+      '.gemini/commands/ogd/archive.toml'
     );
 
     await expect(FileSystemUtils.fileExists(geminiApply)).resolves.toBe(false);
@@ -732,24 +732,24 @@ Old Gemini body
 
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated slash commands: .gemini/commands/openspec/proposal.toml'
+      'Updated slash commands: .gemini/commands/ogd/proposal.toml'
     );
 
     consoleSpy.mockRestore();
   });
-  
+
   it('should refresh existing IFLOW slash commands', async () => {
     const iflowProposal = path.join(
       testDir,
-      '.iflow/commands/openspec-proposal.md'
+      '.iflow/commands/ogd-proposal.md'
     );
     await fs.mkdir(path.dirname(iflowProposal), { recursive: true });
-    const initialContent = `description: Scaffold a new OpenSpec change and validate strictly."
+    const initialContent = `description: Scaffold a new ogd change and validate strictly."
 
 prompt = """
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old IFlow body
-<!-- OPENSPEC:END -->
+<!-- OGD:END -->
 """
 `;
     await fs.writeFile(iflowProposal, initialContent);
@@ -759,19 +759,19 @@ Old IFlow body
     await updateCommand.execute(testDir);
 
     const updated = await fs.readFile(iflowProposal, 'utf-8');
-    expect(updated).toContain('description: Scaffold a new OpenSpec change and validate strictly.');
-    expect(updated).toContain('<!-- OPENSPEC:START -->');
+    expect(updated).toContain('description: Scaffold a new ogd change and validate strictly.');
+    expect(updated).toContain('<!-- OGD:START -->');
     expect(updated).toContain('**Guardrails**');
-    expect(updated).toContain('<!-- OPENSPEC:END -->');
+    expect(updated).toContain('<!-- OGD:END -->');
     expect(updated).not.toContain('Old IFlow body');
 
     const iflowApply = path.join(
       testDir,
-      '.iflow/commands/openspec-apply.md'
+      '.iflow/commands/ogd-apply.md'
     );
     const iflowArchive = path.join(
       testDir,
-      '.iflow/commands/openspec-archive.md'
+      '.iflow/commands/ogd-archive.md'
     );
 
     await expect(FileSystemUtils.fileExists(iflowApply)).resolves.toBe(false);
@@ -779,7 +779,7 @@ Old IFlow body
 
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated slash commands: .iflow/commands/openspec-proposal.md'
+      'Updated slash commands: .iflow/commands/ogd-proposal.md'
     );
 
     consoleSpy.mockRestore();
@@ -788,17 +788,17 @@ Old IFlow body
   it('should refresh existing Factory slash commands', async () => {
     const factoryPath = path.join(
       testDir,
-      '.factory/commands/openspec-proposal.md'
+      '.factory/commands/ogd-proposal.md'
     );
     await fs.mkdir(path.dirname(factoryPath), { recursive: true });
     const initialContent = `---
-description: Scaffold a new OpenSpec change and validate strictly.
+description: Scaffold a new ogd change and validate strictly.
 argument-hint: request or feature description
 ---
 
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old body
-<!-- OPENSPEC:END -->`;
+<!-- OGD:END -->`;
     await fs.writeFile(factoryPath, initialContent);
 
     const consoleSpy = vi.spyOn(console, 'log');
@@ -806,16 +806,16 @@ Old body
     await updateCommand.execute(testDir);
 
     const updated = await fs.readFile(factoryPath, 'utf-8');
-    expect(updated).toContain('description: Scaffold a new OpenSpec change and validate strictly.');
+    expect(updated).toContain('description: Scaffold a new ogd change and validate strictly.');
     expect(updated).toContain('argument-hint: request or feature description');
     expect(
-      /<!-- OPENSPEC:START -->([\s\S]*?)<!-- OPENSPEC:END -->/u.exec(updated)?.[1]
+      /<!-- OGD:START -->([\s\S]*?)<!-- OGD:END -->/u.exec(updated)?.[1]
     ).toContain('$ARGUMENTS');
     expect(updated).toContain('**Guardrails**');
     expect(updated).not.toContain('Old body');
 
     expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining('.factory/commands/openspec-proposal.md')
+      expect.stringContaining('.factory/commands/ogd-proposal.md')
     );
 
     consoleSpy.mockRestore();
@@ -824,7 +824,7 @@ Old body
   it('should not create missing Factory slash command files on update', async () => {
     const factoryApply = path.join(
       testDir,
-      '.factory/commands/openspec-apply.md'
+      '.factory/commands/ogd-apply.md'
     );
 
     await fs.mkdir(path.dirname(factoryApply), { recursive: true });
@@ -835,20 +835,20 @@ description: Old
 argument-hint: old
 ---
 
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old body
-<!-- OPENSPEC:END -->`
+<!-- OGD:END -->`
     );
 
     await updateCommand.execute(testDir);
 
     const factoryProposal = path.join(
       testDir,
-      '.factory/commands/openspec-proposal.md'
+      '.factory/commands/ogd-proposal.md'
     );
     const factoryArchive = path.join(
       testDir,
-      '.factory/commands/openspec-archive.md'
+      '.factory/commands/ogd-archive.md'
     );
 
     await expect(FileSystemUtils.fileExists(factoryProposal)).resolves.toBe(false);
@@ -858,21 +858,21 @@ Old body
   it('should refresh existing Amazon Q Developer prompts', async () => {
     const aqPath = path.join(
       testDir,
-      '.amazonq/prompts/openspec-apply.md'
+      '.amazonq/prompts/ogd-apply.md'
     );
     await fs.mkdir(path.dirname(aqPath), { recursive: true });
     const initialContent = `---
-description: Implement an approved OpenSpec change and keep tasks in sync.
+description: Implement an approved ogd change and keep tasks in sync.
 ---
 
-The user wants to apply the following change. Use the openspec instructions to implement the approved change.
+The user wants to apply the following change. Use the OGD instructions to implement the approved change.
 
 <ChangeId>
   $ARGUMENTS
 </ChangeId>
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old body
-<!-- OPENSPEC:END -->`;
+<!-- OGD:END -->`;
     await fs.writeFile(aqPath, initialContent);
 
     const consoleSpy = vi.spyOn(console, 'log');
@@ -881,12 +881,12 @@ Old body
 
     const updatedContent = await fs.readFile(aqPath, 'utf-8');
     expect(updatedContent).toContain('**Guardrails**');
-    expect(updatedContent).toContain('<!-- OPENSPEC:START -->');
-    expect(updatedContent).toContain('<!-- OPENSPEC:END -->');
+    expect(updatedContent).toContain('<!-- OGD:START -->');
+    expect(updatedContent).toContain('<!-- OGD:END -->');
     expect(updatedContent).not.toContain('Old body');
 
     expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining('.amazonq/prompts/openspec-apply.md')
+      expect.stringContaining('.amazonq/prompts/ogd-apply.md')
     );
 
     consoleSpy.mockRestore();
@@ -895,25 +895,25 @@ Old body
   it('should not create missing Amazon Q Developer prompts on update', async () => {
     const aqApply = path.join(
       testDir,
-      '.amazonq/prompts/openspec-apply.md'
+      '.amazonq/prompts/ogd-apply.md'
     );
 
     // Only create apply; leave proposal and archive missing
     await fs.mkdir(path.dirname(aqApply), { recursive: true });
     await fs.writeFile(
       aqApply,
-      '---\ndescription: Old\n---\n\nThe user wants to apply the following change.\n\n<ChangeId>\n  $ARGUMENTS\n</ChangeId>\n<!-- OPENSPEC:START -->\nOld\n<!-- OPENSPEC:END -->'
+      '---\ndescription: Old\n---\n\nThe user wants to apply the following change.\n\n<ChangeId>\n  $ARGUMENTS\n</ChangeId>\n<!-- OGD:START -->\nOld\n<!-- OGD:END -->'
     );
 
     await updateCommand.execute(testDir);
 
     const aqProposal = path.join(
       testDir,
-      '.amazonq/prompts/openspec-proposal.md'
+      '.amazonq/prompts/ogd-proposal.md'
     );
     const aqArchive = path.join(
       testDir,
-      '.amazonq/prompts/openspec-archive.md'
+      '.amazonq/prompts/ogd-archive.md'
     );
 
     // Confirm they weren't created by update
@@ -924,16 +924,16 @@ Old body
   it('should refresh existing Auggie slash command files', async () => {
     const auggiePath = path.join(
       testDir,
-      '.augment/commands/openspec-apply.md'
+      '.augment/commands/ogd-apply.md'
     );
     await fs.mkdir(path.dirname(auggiePath), { recursive: true });
     const initialContent = `---
-description: Implement an approved OpenSpec change and keep tasks in sync.
+description: Implement an approved ogd change and keep tasks in sync.
 argument-hint: change-id
 ---
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old body
-<!-- OPENSPEC:END -->`;
+<!-- OGD:END -->`;
     await fs.writeFile(auggiePath, initialContent);
 
     const consoleSpy = vi.spyOn(console, 'log');
@@ -942,12 +942,12 @@ Old body
 
     const updatedContent = await fs.readFile(auggiePath, 'utf-8');
     expect(updatedContent).toContain('**Guardrails**');
-    expect(updatedContent).toContain('<!-- OPENSPEC:START -->');
-    expect(updatedContent).toContain('<!-- OPENSPEC:END -->');
+    expect(updatedContent).toContain('<!-- OGD:START -->');
+    expect(updatedContent).toContain('<!-- OGD:END -->');
     expect(updatedContent).not.toContain('Old body');
 
     expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining('.augment/commands/openspec-apply.md')
+      expect.stringContaining('.augment/commands/ogd-apply.md')
     );
 
     consoleSpy.mockRestore();
@@ -956,25 +956,25 @@ Old body
   it('should not create missing Auggie slash command files on update', async () => {
     const auggieApply = path.join(
       testDir,
-      '.augment/commands/openspec-apply.md'
+      '.augment/commands/ogd-apply.md'
     );
 
     // Only create apply; leave proposal and archive missing
     await fs.mkdir(path.dirname(auggieApply), { recursive: true });
     await fs.writeFile(
       auggieApply,
-      '---\ndescription: Old\nargument-hint: old\n---\n<!-- OPENSPEC:START -->\nOld\n<!-- OPENSPEC:END -->'
+      '---\ndescription: Old\nargument-hint: old\n---\n<!-- OGD:START -->\nOld\n<!-- OGD:END -->'
     );
 
     await updateCommand.execute(testDir);
 
     const auggieProposal = path.join(
       testDir,
-      '.augment/commands/openspec-proposal.md'
+      '.augment/commands/ogd-proposal.md'
     );
     const auggieArchive = path.join(
       testDir,
-      '.augment/commands/openspec-archive.md'
+      '.augment/commands/ogd-archive.md'
     );
 
     // Confirm they weren't created by update
@@ -985,18 +985,18 @@ Old body
   it('should refresh existing CodeBuddy slash command files', async () => {
     const codeBuddyPath = path.join(
       testDir,
-      '.codebuddy/commands/openspec/proposal.md'
+      '.codebuddy/commands/ogd/proposal.md'
     );
     await fs.mkdir(path.dirname(codeBuddyPath), { recursive: true });
     const initialContent = `---
-name: OpenSpec - Proposal
+name: OGD - Proposal
 description: Old description
-category: OpenSpec
-tags: [openspec, change]
+category: OGD
+tags: [OGD, change]
 ---
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old slash content
-<!-- OPENSPEC:END -->`;
+<!-- OGD:END -->`;
     await fs.writeFile(codeBuddyPath, initialContent);
 
     const consoleSpy = vi.spyOn(console, 'log');
@@ -1004,20 +1004,20 @@ Old slash content
     await updateCommand.execute(testDir);
 
     const updated = await fs.readFile(codeBuddyPath, 'utf-8');
-    expect(updated).toContain('name: OpenSpec - Proposal');
+    expect(updated).toContain('name: OGD - Proposal');
     expect(updated).toContain('**Guardrails**');
     expect(updated).toContain(
-      'Validate with `openspec validate <id> --strict --no-interactive`'
+      'Validate with `ogd validate <id> --strict --no-interactive`'
     );
     expect(updated).not.toContain('Old slash content');
 
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated OpenSpec instructions (openspec/AGENTS.md'
+      'Updated OGD instructions (ogd/AGENTS.md'
     );
     expect(logMessage).toContain('AGENTS.md (created)');
     expect(logMessage).toContain(
-      'Updated slash commands: .codebuddy/commands/openspec/proposal.md'
+      'Updated slash commands: .codebuddy/commands/ogd/proposal.md'
     );
 
     consoleSpy.mockRestore();
@@ -1026,7 +1026,7 @@ Old slash content
   it('should not create missing CodeBuddy slash command files on update', async () => {
     const codeBuddyApply = path.join(
       testDir,
-      '.codebuddy/commands/openspec/apply.md'
+      '.codebuddy/commands/ogd/apply.md'
     );
 
     // Only create apply; leave proposal and archive missing
@@ -1034,25 +1034,25 @@ Old slash content
     await fs.writeFile(
       codeBuddyApply,
       `---
-name: OpenSpec - Apply
+name: OGD - Apply
 description: Old description
-category: OpenSpec
-tags: [openspec, apply]
+category: OGD
+tags: [OGD, apply]
 ---
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old body
-<!-- OPENSPEC:END -->`
+<!-- OGD:END -->`
     );
 
     await updateCommand.execute(testDir);
 
     const codeBuddyProposal = path.join(
       testDir,
-      '.codebuddy/commands/openspec/proposal.md'
+      '.codebuddy/commands/ogd/proposal.md'
     );
     const codeBuddyArchive = path.join(
       testDir,
-      '.codebuddy/commands/openspec/archive.md'
+      '.codebuddy/commands/ogd/archive.md'
     );
 
     // Confirm they weren't created by update
@@ -1063,18 +1063,18 @@ Old body
   it('should refresh existing Crush slash command files', async () => {
     const crushPath = path.join(
       testDir,
-      '.crush/commands/openspec/proposal.md'
+      '.crush/commands/ogd/proposal.md'
     );
     await fs.mkdir(path.dirname(crushPath), { recursive: true });
     const initialContent = `---
-name: OpenSpec - Proposal
+name: OGD - Proposal
 description: Old description
-category: OpenSpec
-tags: [openspec, change]
+category: OGD
+tags: [OGD, change]
 ---
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old slash content
-<!-- OPENSPEC:END -->`;
+<!-- OGD:END -->`;
     await fs.writeFile(crushPath, initialContent);
 
     const consoleSpy = vi.spyOn(console, 'log');
@@ -1082,20 +1082,20 @@ Old slash content
     await updateCommand.execute(testDir);
 
     const updated = await fs.readFile(crushPath, 'utf-8');
-    expect(updated).toContain('name: OpenSpec - Proposal');
+    expect(updated).toContain('name: OGD - Proposal');
     expect(updated).toContain('**Guardrails**');
     expect(updated).toContain(
-      'Validate with `openspec validate <id> --strict --no-interactive`'
+      'Validate with `ogd validate <id> --strict --no-interactive`'
     );
     expect(updated).not.toContain('Old slash content');
 
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated OpenSpec instructions (openspec/AGENTS.md'
+      'Updated OGD instructions (ogd/AGENTS.md'
     );
     expect(logMessage).toContain('AGENTS.md (created)');
     expect(logMessage).toContain(
-      'Updated slash commands: .crush/commands/openspec/proposal.md'
+      'Updated slash commands: .crush/commands/ogd/proposal.md'
     );
 
     consoleSpy.mockRestore();
@@ -1104,7 +1104,7 @@ Old slash content
   it('should not create missing Crush slash command files on update', async () => {
     const crushApply = path.join(
       testDir,
-      '.crush/commands/openspec-apply.md'
+      '.crush/commands/ogd-apply.md'
     );
 
     // Only create apply; leave proposal and archive missing
@@ -1112,25 +1112,25 @@ Old slash content
     await fs.writeFile(
       crushApply,
       `---
-name: OpenSpec - Apply
+name: OGD - Apply
 description: Old description
-category: OpenSpec
-tags: [openspec, apply]
+category: OGD
+tags: [OGD, apply]
 ---
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old body
-<!-- OPENSPEC:END -->`
+<!-- OGD:END -->`
     );
 
     await updateCommand.execute(testDir);
 
     const crushProposal = path.join(
       testDir,
-      '.crush/commands/openspec-proposal.md'
+      '.crush/commands/ogd-proposal.md'
     );
     const crushArchive = path.join(
       testDir,
-      '.crush/commands/openspec-archive.md'
+      '.crush/commands/ogd-archive.md'
     );
 
     // Confirm they weren't created by update
@@ -1141,16 +1141,16 @@ Old body
   it('should refresh existing CoStrict slash command files', async () => {
     const costrictPath = path.join(
       testDir,
-      '.cospec/openspec/commands/openspec-proposal.md'
+      '.cospec/ogd/commands/ogd-proposal.md'
     );
     await fs.mkdir(path.dirname(costrictPath), { recursive: true });
     const initialContent = `---
 description: "Old description"
 argument-hint: old-hint
 ---
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old body
-<!-- OPENSPEC:END -->`;
+<!-- OGD:END -->`;
     await fs.writeFile(costrictPath, initialContent);
 
     const consoleSpy = vi.spyOn(console, 'log');
@@ -1158,22 +1158,22 @@ Old body
     await updateCommand.execute(testDir);
 
     const updated = await fs.readFile(costrictPath, 'utf-8');
-    // For slash commands, only the content between OpenSpec markers is updated
+    // For slash commands, only the content between OGD markers is updated
     expect(updated).toContain('description: "Old description"');
     expect(updated).toContain('argument-hint: old-hint');
     expect(updated).toContain('**Guardrails**');
     expect(updated).toContain(
-      'Validate with `openspec validate <id> --strict --no-interactive`'
+      'Validate with `ogd validate <id> --strict --no-interactive`'
     );
     expect(updated).not.toContain('Old body');
 
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated OpenSpec instructions (openspec/AGENTS.md'
+      'Updated OGD instructions (ogd/AGENTS.md'
     );
     expect(logMessage).toContain('AGENTS.md (created)');
     expect(logMessage).toContain(
-      'Updated slash commands: .cospec/openspec/commands/openspec-proposal.md'
+      'Updated slash commands: .cospec/ogd/commands/ogd-proposal.md'
     );
 
     consoleSpy.mockRestore();
@@ -1182,18 +1182,18 @@ Old body
   it('should refresh existing Qoder slash command files', async () => {
     const qoderPath = path.join(
       testDir,
-      '.qoder/commands/openspec/proposal.md'
+      '.qoder/commands/ogd/proposal.md'
     );
     await fs.mkdir(path.dirname(qoderPath), { recursive: true });
     const initialContent = `---
-name: OpenSpec - Proposal
+name: OGD - Proposal
 description: Old description
-category: OpenSpec
-tags: [openspec, change]
+category: OGD
+tags: [OGD, change]
 ---
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old slash content
-<!-- OPENSPEC:END -->`;
+<!-- OGD:END -->`;
     await fs.writeFile(qoderPath, initialContent);
 
     const consoleSpy = vi.spyOn(console, 'log');
@@ -1201,20 +1201,20 @@ Old slash content
     await updateCommand.execute(testDir);
 
     const updated = await fs.readFile(qoderPath, 'utf-8');
-    expect(updated).toContain('name: OpenSpec - Proposal');
+    expect(updated).toContain('name: OGD - Proposal');
     expect(updated).toContain('**Guardrails**');
     expect(updated).toContain(
-      'Validate with `openspec validate <id> --strict --no-interactive`'
+      'Validate with `ogd validate <id> --strict --no-interactive`'
     );
     expect(updated).not.toContain('Old slash content');
 
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated OpenSpec instructions (openspec/AGENTS.md'
+      'Updated OGD instructions (ogd/AGENTS.md'
     );
     expect(logMessage).toContain('AGENTS.md (created)');
     expect(logMessage).toContain(
-      'Updated slash commands: .qoder/commands/openspec/proposal.md'
+      'Updated slash commands: .qoder/commands/ogd/proposal.md'
     );
 
     consoleSpy.mockRestore();
@@ -1223,16 +1223,16 @@ Old slash content
   it('should refresh existing RooCode slash command files', async () => {
     const rooPath = path.join(
       testDir,
-      '.roo/commands/openspec-proposal.md'
+      '.roo/commands/ogd-proposal.md'
     );
     await fs.mkdir(path.dirname(rooPath), { recursive: true });
-    const initialContent = `# OpenSpec: Proposal
+    const initialContent = `# OGD: Proposal
 
 Old description
 
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old body
-<!-- OPENSPEC:END -->`;
+<!-- OGD:END -->`;
     await fs.writeFile(rooPath, initialContent);
 
     const consoleSpy = vi.spyOn(console, 'log');
@@ -1241,20 +1241,20 @@ Old body
 
     const updated = await fs.readFile(rooPath, 'utf-8');
     // For RooCode, the header is Markdown, preserve it and update only managed block
-    expect(updated).toContain('# OpenSpec: Proposal');
+    expect(updated).toContain('# OGD: Proposal');
     expect(updated).toContain('**Guardrails**');
     expect(updated).toContain(
-      'Validate with `openspec validate <id> --strict --no-interactive`'
+      'Validate with `ogd validate <id> --strict --no-interactive`'
     );
     expect(updated).not.toContain('Old body');
 
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated OpenSpec instructions (openspec/AGENTS.md'
+      'Updated OGD instructions (ogd/AGENTS.md'
     );
     expect(logMessage).toContain('AGENTS.md (created)');
     expect(logMessage).toContain(
-      'Updated slash commands: .roo/commands/openspec-proposal.md'
+      'Updated slash commands: .roo/commands/ogd-proposal.md'
     );
 
     consoleSpy.mockRestore();
@@ -1263,29 +1263,29 @@ Old body
   it('should not create missing RooCode slash command files on update', async () => {
     const rooApply = path.join(
       testDir,
-      '.roo/commands/openspec-apply.md'
+      '.roo/commands/ogd-apply.md'
     );
 
     // Only create apply; leave proposal and archive missing
     await fs.mkdir(path.dirname(rooApply), { recursive: true });
     await fs.writeFile(
       rooApply,
-      `# OpenSpec: Apply
+      `# OGD: Apply
 
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old body
-<!-- OPENSPEC:END -->`
+<!-- OGD:END -->`
     );
 
     await updateCommand.execute(testDir);
 
     const rooProposal = path.join(
       testDir,
-      '.roo/commands/openspec-proposal.md'
+      '.roo/commands/ogd-proposal.md'
     );
     const rooArchive = path.join(
       testDir,
-      '.roo/commands/openspec-archive.md'
+      '.roo/commands/ogd-archive.md'
     );
 
     // Confirm they weren't created by update
@@ -1296,7 +1296,7 @@ Old body
   it('should not create missing CoStrict slash command files on update', async () => {
     const costrictApply = path.join(
       testDir,
-      '.cospec/openspec/commands/openspec-apply.md'
+      '.cospec/ogd/commands/ogd-apply.md'
     );
 
     // Only create apply; leave proposal and archive missing
@@ -1307,20 +1307,20 @@ Old body
 description: "Old"
 argument-hint: old
 ---
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old
-<!-- OPENSPEC:END -->`
+<!-- OGD:END -->`
     );
 
     await updateCommand.execute(testDir);
 
     const costrictProposal = path.join(
       testDir,
-      '.cospec/openspec/commands/openspec-proposal.md'
+      '.cospec/ogd/commands/ogd-proposal.md'
     );
     const costrictArchive = path.join(
       testDir,
-      '.cospec/openspec/commands/openspec-archive.md'
+      '.cospec/ogd/commands/ogd-archive.md'
     );
 
     // Confirm they weren't created by update
@@ -1331,7 +1331,7 @@ Old
   it('should not create missing Qoder slash command files on update', async () => {
     const qoderApply = path.join(
       testDir,
-      '.qoder/commands/openspec/apply.md'
+      '.qoder/commands/ogd/apply.md'
     );
 
     // Only create apply; leave proposal and archive missing
@@ -1339,25 +1339,25 @@ Old
     await fs.writeFile(
       qoderApply,
       `---
-name: OpenSpec - Apply
+name: OGD - Apply
 description: Old description
-category: OpenSpec
-tags: [openspec, apply]
+category: OGD
+tags: [OGD, apply]
 ---
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old body
-<!-- OPENSPEC:END -->`
+<!-- OGD:END -->`
     );
 
     await updateCommand.execute(testDir);
 
     const qoderProposal = path.join(
       testDir,
-      '.qoder/commands/openspec/proposal.md'
+      '.qoder/commands/ogd/proposal.md'
     );
     const qoderArchive = path.join(
       testDir,
-      '.qoder/commands/openspec/archive.md'
+      '.qoder/commands/ogd/archive.md'
     );
 
     // Confirm they weren't created by update
@@ -1372,9 +1372,9 @@ Old body
 
 Some existing CoStrict instructions here.
 
-<!-- OPENSPEC:START -->
-Old OpenSpec content
-<!-- OPENSPEC:END -->
+<!-- OGD:START -->
+Old OGD content
+<!-- OGD:END -->
 
 More instructions after.`;
     await fs.writeFile(costrictPath, initialContent);
@@ -1386,17 +1386,17 @@ More instructions after.`;
 
     // Check that COSTRICT.md was updated
     const updatedContent = await fs.readFile(costrictPath, 'utf-8');
-    expect(updatedContent).toContain('<!-- OPENSPEC:START -->');
-    expect(updatedContent).toContain('<!-- OPENSPEC:END -->');
-    expect(updatedContent).toContain("@/openspec/AGENTS.md");
-    expect(updatedContent).toContain('openspec update');
+    expect(updatedContent).toContain('<!-- OGD:START -->');
+    expect(updatedContent).toContain('<!-- OGD:END -->');
+    expect(updatedContent).toContain("@/ogd/AGENTS.md");
+    expect(updatedContent).toContain('ogd update');
     expect(updatedContent).toContain('Some existing CoStrict instructions here');
     expect(updatedContent).toContain('More instructions after');
 
     // Check console output
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated OpenSpec instructions (openspec/AGENTS.md'
+      'Updated OGD instructions (ogd/AGENTS.md'
     );
     expect(logMessage).toContain('AGENTS.md (created)');
     expect(logMessage).toContain('Updated AI tool files: COSTRICT.md');
@@ -1419,10 +1419,10 @@ More instructions after.`;
   it('should preserve CoStrict content outside markers during update', async () => {
     const costrictPath = path.join(
       testDir,
-      '.cospec/openspec/commands/openspec-proposal.md'
+      '.cospec/ogd/commands/ogd-proposal.md'
     );
     await fs.mkdir(path.dirname(costrictPath), { recursive: true });
-    const initialContent = `## Custom Intro Title\nSome intro text\n<!-- OPENSPEC:START -->\nOld body\n<!-- OPENSPEC:END -->\n\nFooter stays`;
+    const initialContent = `## Custom Intro Title\nSome intro text\n<!-- OGD:START -->\nOld body\n<!-- OGD:END -->\n\nFooter stays`;
     await fs.writeFile(costrictPath, initialContent);
 
     await updateCommand.execute(testDir);
@@ -1431,7 +1431,7 @@ More instructions after.`;
     expect(updated).toContain('## Custom Intro Title');
     expect(updated).toContain('Footer stays');
     expect(updated).not.toContain('Old body');
-    expect(updated).toContain('Validate with `openspec validate <id> --strict --no-interactive`');
+    expect(updated).toContain('Validate with `ogd validate <id> --strict --no-interactive`');
   });
 
   it('should handle configurator errors gracefully for CoStrict', async () => {
@@ -1439,7 +1439,7 @@ More instructions after.`;
     const costrictPath = path.join(testDir, 'COSTRICT.md');
     await fs.writeFile(
       costrictPath,
-      '<!-- OPENSPEC:START -->\nOld\n<!-- OPENSPEC:END -->'
+      '<!-- OGD:START -->\nOld\n<!-- OGD:END -->'
     );
 
     const consoleSpy = vi.spyOn(console, 'log');
@@ -1462,7 +1462,7 @@ More instructions after.`;
     expect(errorSpy).toHaveBeenCalled();
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated OpenSpec instructions (openspec/AGENTS.md'
+      'Updated OGD instructions (ogd/AGENTS.md'
     );
     expect(logMessage).toContain('AGENTS.md (created)');
     expect(logMessage).toContain('Failed to update: COSTRICT.md');
@@ -1475,10 +1475,10 @@ More instructions after.`;
   it('should preserve Windsurf content outside markers during update', async () => {
     const wsPath = path.join(
       testDir,
-      '.windsurf/workflows/openspec-proposal.md'
+      '.windsurf/workflows/ogd-proposal.md'
     );
     await fs.mkdir(path.dirname(wsPath), { recursive: true });
-    const initialContent = `## Custom Intro Title\nSome intro text\n<!-- OPENSPEC:START -->\nOld body\n<!-- OPENSPEC:END -->\n\nFooter stays`;
+    const initialContent = `## Custom Intro Title\nSome intro text\n<!-- OGD:START -->\nOld body\n<!-- OGD:END -->\n\nFooter stays`;
     await fs.writeFile(wsPath, initialContent);
 
     await updateCommand.execute(testDir);
@@ -1487,30 +1487,30 @@ More instructions after.`;
     expect(updated).toContain('## Custom Intro Title');
     expect(updated).toContain('Footer stays');
     expect(updated).not.toContain('Old body');
-    expect(updated).toContain('Validate with `openspec validate <id> --strict --no-interactive`');
+    expect(updated).toContain('Validate with `ogd validate <id> --strict --no-interactive`');
   });
 
   it('should not create missing Windsurf workflows on update', async () => {
     const wsApply = path.join(
       testDir,
-      '.windsurf/workflows/openspec-apply.md'
+      '.windsurf/workflows/ogd-apply.md'
     );
     // Only create apply; leave proposal and archive missing
     await fs.mkdir(path.dirname(wsApply), { recursive: true });
     await fs.writeFile(
       wsApply,
-      '<!-- OPENSPEC:START -->\nOld\n<!-- OPENSPEC:END -->'
+      '<!-- OGD:START -->\nOld\n<!-- OGD:END -->'
     );
 
     await updateCommand.execute(testDir);
 
     const wsProposal = path.join(
       testDir,
-      '.windsurf/workflows/openspec-proposal.md'
+      '.windsurf/workflows/ogd-proposal.md'
     );
     const wsArchive = path.join(
       testDir,
-      '.windsurf/workflows/openspec-archive.md'
+      '.windsurf/workflows/ogd-archive.md'
     );
 
     // Confirm they weren't created by update
@@ -1523,10 +1523,10 @@ More instructions after.`;
     const consoleSpy = vi.spyOn(console, 'log');
     await updateCommand.execute(testDir);
 
-    // Should only update OpenSpec instructions
+    // Should only update OGD instructions
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated OpenSpec instructions (openspec/AGENTS.md'
+      'Updated OGD instructions (ogd/AGENTS.md'
     );
     expect(logMessage).toContain('AGENTS.md (created)');
     consoleSpy.mockRestore();
@@ -1541,7 +1541,7 @@ More instructions after.`;
     await fs.mkdir(path.dirname(claudePath), { recursive: true });
     await fs.writeFile(
       claudePath,
-      '<!-- OPENSPEC:START -->\nOld\n<!-- OPENSPEC:END -->'
+      '<!-- OGD:START -->\nOld\n<!-- OGD:END -->'
     );
 
     const consoleSpy = vi.spyOn(console, 'log');
@@ -1550,7 +1550,7 @@ More instructions after.`;
     // Should report updating with new format
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated OpenSpec instructions (openspec/AGENTS.md'
+      'Updated OGD instructions (ogd/AGENTS.md'
     );
     expect(logMessage).toContain('AGENTS.md (created)');
     expect(logMessage).toContain('Updated AI tool files: CLAUDE.md');
@@ -1560,29 +1560,29 @@ More instructions after.`;
   it('should skip creating missing slash commands during update', async () => {
     const proposalPath = path.join(
       testDir,
-      '.claude/commands/openspec/proposal.md'
+      '.claude/commands/ogd/proposal.md'
     );
     await fs.mkdir(path.dirname(proposalPath), { recursive: true });
     await fs.writeFile(
       proposalPath,
       `---
-name: OpenSpec - Proposal
+name: OGD - Proposal
 description: Existing file
-category: OpenSpec
-tags: [openspec, change]
+category: OGD
+tags: [OGD, change]
 ---
-<!-- OPENSPEC:START -->
+<!-- OGD:START -->
 Old content
-<!-- OPENSPEC:END -->`
+<!-- OGD:END -->`
     );
 
     await updateCommand.execute(testDir);
 
     const applyExists = await FileSystemUtils.fileExists(
-      path.join(testDir, '.claude/commands/openspec/apply.md')
+      path.join(testDir, '.claude/commands/ogd/apply.md')
     );
     const archiveExists = await FileSystemUtils.fileExists(
-      path.join(testDir, '.claude/commands/openspec/archive.md')
+      path.join(testDir, '.claude/commands/ogd/archive.md')
     );
 
     expect(applyExists).toBe(false);
@@ -1608,17 +1608,17 @@ Old content
     }
   });
 
-  it('should update AGENTS.md in openspec directory', async () => {
+  it('should update AGENTS.md in OGD directory', async () => {
     // Execute update command
     await updateCommand.execute(testDir);
 
     // Check that AGENTS.md was created/updated
-    const agentsPath = path.join(testDir, 'openspec', 'AGENTS.md');
+    const agentsPath = path.join(testDir, 'ogd', 'AGENTS.md');
     const fileExists = await FileSystemUtils.fileExists(agentsPath);
     expect(fileExists).toBe(true);
 
     const content = await fs.readFile(agentsPath, 'utf-8');
-    expect(content).toContain('# OpenSpec Instructions');
+    expect(content).toContain('# OGD (OpenGameDesign) Instructions');
   });
 
   it('should create root AGENTS.md with managed block when missing', async () => {
@@ -1629,15 +1629,15 @@ Old content
     expect(exists).toBe(true);
 
     const content = await fs.readFile(rootAgentsPath, 'utf-8');
-    expect(content).toContain('<!-- OPENSPEC:START -->');
-    expect(content).toContain("@/openspec/AGENTS.md");
-    expect(content).toContain('openspec update');
-    expect(content).toContain('<!-- OPENSPEC:END -->');
+    expect(content).toContain('<!-- OGD:START -->');
+    expect(content).toContain("@/ogd/AGENTS.md");
+    expect(content).toContain('ogd update');
+    expect(content).toContain('<!-- OGD:END -->');
   });
 
   it('should refresh root AGENTS.md while preserving surrounding content', async () => {
     const rootAgentsPath = path.join(testDir, 'AGENTS.md');
-    const original = `# Custom intro\n\n<!-- OPENSPEC:START -->\nOld content\n<!-- OPENSPEC:END -->\n\n# Footnotes`;
+    const original = `# Custom intro\n\n<!-- OGD:START -->\nOld content\n<!-- OGD:END -->\n\n# Footnotes`;
     await fs.writeFile(rootAgentsPath, original);
 
     const consoleSpy = vi.spyOn(console, 'log');
@@ -1647,29 +1647,29 @@ Old content
     const updated = await fs.readFile(rootAgentsPath, 'utf-8');
     expect(updated).toContain('# Custom intro');
     expect(updated).toContain('# Footnotes');
-    expect(updated).toContain("@/openspec/AGENTS.md");
-    expect(updated).toContain('openspec update');
+    expect(updated).toContain("@/ogd/AGENTS.md");
+    expect(updated).toContain('ogd update');
     expect(updated).not.toContain('Old content');
 
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated OpenSpec instructions (openspec/AGENTS.md, AGENTS.md)'
+      'Updated OGD instructions (ogd/AGENTS.md, AGENTS.md)'
     );
     expect(logMessage).not.toContain('AGENTS.md (created)');
 
     consoleSpy.mockRestore();
   });
 
-  it('should throw error if openspec directory does not exist', async () => {
-    // Remove openspec directory
-    await fs.rm(path.join(testDir, 'openspec'), {
+  it('should throw error if OGD directory does not exist', async () => {
+    // Remove OGD directory
+    await fs.rm(path.join(testDir, 'ogd'), {
       recursive: true,
       force: true,
     });
 
     // Execute update command and expect error
     await expect(updateCommand.execute(testDir)).rejects.toThrow(
-      "No OpenSpec directory found. Run 'openspec init' first."
+      "No OGD directory found. Run 'ogd init' first."
     );
   });
 
@@ -1678,7 +1678,7 @@ Old content
     const claudePath = path.join(testDir, 'CLAUDE.md');
     await fs.writeFile(
       claudePath,
-      '<!-- OPENSPEC:START -->\nOld\n<!-- OPENSPEC:END -->'
+      '<!-- OGD:START -->\nOld\n<!-- OGD:END -->'
     );
     await fs.chmod(claudePath, 0o444); // Read-only
 
@@ -1702,7 +1702,7 @@ Old content
     expect(errorSpy).toHaveBeenCalled();
     const [logMessage] = consoleSpy.mock.calls[0];
     expect(logMessage).toContain(
-      'Updated OpenSpec instructions (openspec/AGENTS.md'
+      'Updated OGD instructions (ogd/AGENTS.md'
     );
     expect(logMessage).toContain('AGENTS.md (created)');
     expect(logMessage).toContain('Failed to update: CLAUDE.md');

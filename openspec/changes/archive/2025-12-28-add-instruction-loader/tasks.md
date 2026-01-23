@@ -2,7 +2,7 @@
 
 ## Implementation Tasks
 
-- [x] Create `instruction-loader` spec in `openspec/specs/instruction-loader/spec.md`
+- [x] Create `instruction-loader` spec in `ogd/specs/instruction-loader/spec.md`
 - [x] Implement `loadTemplate` function to load templates from schema directories
 - [x] Implement `loadChangeContext` function to combine graph and completion state
 - [x] Implement `generateInstructions` function to enrich templates with change context

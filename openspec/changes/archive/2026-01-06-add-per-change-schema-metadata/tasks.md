@@ -11,12 +11,12 @@
 
 ## 3. Auto-Detection in Instruction Loader
 
-- [x] 3.1 Modify `loadChangeContext()` to read schema from `.openspec.yaml`
+- [x] 3.1 Modify `loadChangeContext()` to read schema from `.OGD.yaml`
 - [x] 3.2 Make `schemaName` parameter optional (fall back to metadata, then default)
 
 ## 4. CLI Updates
 
-- [x] 4.1 Add `--schema <name>` option to `openspec new change` command
+- [x] 4.1 Add `--schema <name>` option to `OGD new change` command
 - [x] 4.2 Verify existing commands (`status`, `instructions`) work with auto-detection
 
 ## 5. Tests

@@ -3,7 +3,7 @@
 ## Problem
 
 Some unit tests (e.g., ChangeCommand.show/validate) read the live repository
-state via `process.cwd()` and `openspec/changes`. This makes outcomes depend on
+state via `process.cwd()` and `ogd/changes`. This makes outcomes depend on
 whatever directories happen to exist and the order returned by `fs.readdir`,
 causing flaky success/failure across environments.
 
@@ -27,8 +27,8 @@ Symptoms observed:
 
 1) Test-local fixture root
 - Each suite that touches filesystem discovery creates a temporary directory:
-  - `openspec/changes/sample-change/proposal.md`
-  - `openspec/changes/sample-change/specs/sample/spec.md`
+  - `ogd/changes/sample-change/proposal.md`
+  - `ogd/changes/sample-change/specs/sample/spec.md`
 - `beforeAll`: `process.chdir(tmpRoot)`; `afterAll`: restore original cwd.
 - Use a constant `changeName = 'sample-change'`; remove reliance on
   `readdir` order.
@@ -63,7 +63,7 @@ Symptoms observed:
 
 - Tests that previously depended on repo state now:
   - Create and use a temp fixture root.
-  - Do not read real `openspec/changes` during execution.
+  - Do not read real `ogd/changes` during execution.
   - Pass consistently regardless of directory order or stray folders.
 - No change to CLI behavior for end users (paths still default to cwd).
 

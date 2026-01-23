@@ -5,14 +5,14 @@ The system SHALL provide a function to create new change directories programmati
 
 #### Scenario: Create change
 - **WHEN** `createChange(projectRoot, 'add-auth')` is called
-- **THEN** the system creates `openspec/changes/add-auth/` directory
+- **THEN** the system creates `ogd/changes/add-auth/` directory
 
 #### Scenario: Duplicate change rejected
-- **WHEN** `createChange(projectRoot, 'add-auth')` is called and `openspec/changes/add-auth/` already exists
+- **WHEN** `createChange(projectRoot, 'add-auth')` is called and `ogd/changes/add-auth/` already exists
 - **THEN** the system throws an error indicating the change already exists
 
 #### Scenario: Creates parent directories if needed
-- **WHEN** `createChange(projectRoot, 'add-auth')` is called and `openspec/changes/` does not exist
+- **WHEN** `createChange(projectRoot, 'add-auth')` is called and `ogd/changes/` does not exist
 - **THEN** the system creates the full path including parent directories
 
 #### Scenario: Invalid change name rejected

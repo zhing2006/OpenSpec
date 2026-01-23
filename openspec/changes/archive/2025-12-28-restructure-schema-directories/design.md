@@ -55,7 +55,7 @@ Each schema is a directory containing `schema.yaml` and `templates/`:
 ### 2. Resolution order (2 levels)
 
 ```
-1. ${XDG_DATA_HOME}/openspec/schemas/<name>/schema.yaml   # User override
+1. ${XDG_DATA_HOME}/ogd/schemas/<name>/schema.yaml   # User override
 2. <package>/schemas/<name>/schema.yaml                    # Built-in
 3. Error (not found)
 ```

@@ -6,7 +6,7 @@ This blocks the experimental workflow from supporting multiple schemas properly.
 
 ## What Changes
 
-**Scope: Experimental artifact workflow** (`openspec instructions apply`)
+**Scope: Experimental artifact workflow** (`OGD instructions apply`)
 
 **Depends on:** `add-per-change-schema-metadata` (to know which schema a change uses)
 
@@ -89,7 +89,7 @@ Add a top-level `apply` field to schema definitions:
 ```yaml
 name: spec-driven
 version: 1
-description: Default OpenSpec workflow
+description: Default OGD workflow
 
 artifacts:
   # ... existing artifacts ...

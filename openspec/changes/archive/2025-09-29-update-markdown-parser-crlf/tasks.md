@@ -1,6 +1,6 @@
 ## 1. Guard the regression
 - [x] 1.1 Add a unit test that feeds a CRLF change document into `MarkdownParser.parseChange` and asserts `Why`/`What Changes` are detected.
-- [x] 1.2 Add a CLI spawn/e2e test that writes a CRLF change, runs `openspec validate`, and expects success.
+- [x] 1.2 Add a CLI spawn/e2e test that writes a CRLF change, runs `ogd validate`, and expects success.
 
 ## 2. Normalize parsing
 - [x] 2.1 Normalize line endings when constructing `MarkdownParser` so headers and content comparisons ignore `\r`.

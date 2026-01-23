@@ -79,13 +79,13 @@ export class ListCommand {
     const { sort = 'recent', json = false } = options;
 
     if (mode === 'changes') {
-      const changesDir = path.join(targetPath, 'openspec', 'changes');
+      const changesDir = path.join(targetPath, 'ogd', 'changes');
 
       // Check if changes directory exists
       try {
         await fs.access(changesDir);
       } catch {
-        throw new Error("No OpenSpec changes directory found. Run 'openspec init' first.");
+        throw new Error("未找到 OGD 变更目录。请先运行 'ogd init'。");
       }
 
       // Get all directories in changes (excluding archive)
@@ -98,7 +98,7 @@ export class ListCommand {
         if (json) {
           console.log(JSON.stringify({ changes: [] }));
         } else {
-          console.log('No active changes found.');
+          console.log('没有活跃的变更。');
         }
         return;
       }
@@ -139,7 +139,7 @@ export class ListCommand {
       }
 
       // Display results
-      console.log('Changes:');
+      console.log('变更:');
       const padding = '  ';
       const nameWidth = Math.max(...changes.map(c => c.name.length));
       for (const change of changes) {
@@ -152,18 +152,18 @@ export class ListCommand {
     }
 
     // specs mode
-    const specsDir = path.join(targetPath, 'openspec', 'specs');
+    const specsDir = path.join(targetPath, 'ogd', 'specs');
     try {
       await fs.access(specsDir);
     } catch {
-      console.log('No specs found.');
+      console.log('未找到规范。');
       return;
     }
 
     const entries = await fs.readdir(specsDir, { withFileTypes: true });
     const specDirs = entries.filter(e => e.isDirectory()).map(e => e.name);
     if (specDirs.length === 0) {
-      console.log('No specs found.');
+      console.log('未找到规范。');
       return;
     }
 
@@ -183,12 +183,12 @@ export class ListCommand {
     }
 
     specs.sort((a, b) => a.id.localeCompare(b.id));
-    console.log('Specs:');
+    console.log('规范:');
     const padding = '  ';
     const nameWidth = Math.max(...specs.map(s => s.id.length));
     for (const spec of specs) {
       const padded = spec.id.padEnd(nameWidth);
-      console.log(`${padding}${padded}     requirements ${spec.requirementCount}`);
+      console.log(`${padding}${padded}     需求数 ${spec.requirementCount}`);
     }
   }
 }

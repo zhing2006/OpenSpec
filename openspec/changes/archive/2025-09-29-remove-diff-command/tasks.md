@@ -6,7 +6,7 @@
 - [x] Remove diff command registration from CLI
 
 ## 2. Remove Specifications
-- [x] Delete `/openspec/specs/cli-diff/spec.md`
+- [x] Delete `/ogd/specs/cli-diff/spec.md`
 - [x] Archive the spec for historical reference if needed
 
 ## 3. Update Dependencies
@@ -15,12 +15,12 @@
 
 ## 4. Update Documentation
 - [x] Update main README.md to remove diff command references
-- [x] Update openspec/README.md to remove diff command from command list
+- [x] Update ogd/README.md to remove diff command from command list
 - [x] Update CLAUDE.md template if it mentions diff command
 - [x] Update any example workflows that use diff command
 
 ## 5. Update Related Files
-- [x] Search and update any remaining references to "openspec diff" in:
+- [x] Search and update any remaining references to "OGD diff" in:
   - Template files
   - Test files (if any exist for diff command)
   - Archive documentation
@@ -32,6 +32,6 @@
 - [x] Test that show command provides adequate replacement functionality
 
 ## 8. Documentation of Alternative Workflows
-- [x] Document how to use `openspec show` for viewing changes
+- [x] Document how to use `OGD show` for viewing changes
 - [x] Document how to use git diff for file comparisons
 - [x] Add migration guide to help text or documentation

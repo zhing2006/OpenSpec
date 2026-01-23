@@ -16,7 +16,7 @@
 
 - [x] 2.1 Implement `createChange(projectRoot, name)`
 - [x] 2.2 Validate name before creating
-- [x] 2.3 Create parent directories if needed (`openspec/changes/`)
+- [x] 2.3 Create parent directories if needed (`ogd/changes/`)
 - [x] 2.4 Throw if change already exists
 - [x] 2.5 Add test: creates directory
 - [x] 2.6 Add test: duplicate change throws error

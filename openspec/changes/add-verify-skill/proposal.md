@@ -42,7 +42,7 @@ Produces a prioritized report with:
 - Affected code:
   - `src/core/templates/skill-templates.ts` - Added 2 new template functions
   - `src/commands/artifact-workflow.ts` - Integrated verify into experimental setup
-- Generated artifacts: When users run `openspec artifact-experimental-setup`:
-  - Creates `.claude/skills/openspec-verify-change/SKILL.md`
+- Generated artifacts: When users run `OGD artifact-experimental-setup`:
+  - Creates `.claude/skills/OGD-verify-change/SKILL.md`
   - Creates `.claude/commands/opsx/verify.md`
 - Related skills: Works alongside `/opsx:apply` and before `/opsx:archive`

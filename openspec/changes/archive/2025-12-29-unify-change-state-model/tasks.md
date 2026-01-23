@@ -4,9 +4,9 @@
 
 - [x] Update `validateChangeExists()` in `artifact-workflow.ts` to check directory existence instead of using `getActiveChangeIds()`
 - [x] Update error message to list all change directories (not just those with proposal.md)
-- [x] Add test for `openspec status --change <scaffolded-change>`
-- [x] Add test for `openspec next --change <scaffolded-change>`
-- [x] Add test for `openspec instructions proposal --change <scaffolded-change>`
+- [x] Add test for `OGD status --change <scaffolded-change>`
+- [x] Add test for `OGD next --change <scaffolded-change>`
+- [x] Add test for `OGD instructions proposal --change <scaffolded-change>`
 
 ## Phase 2: Fix View Command
 
@@ -20,6 +20,6 @@
 
 - [x] Clean up test changes (`test-workflow`, `test-workflow-2`)
 - [x] Run full test suite
-- [x] Manual test: `openspec new change foo && openspec status --change foo`
-- [x] Manual test: `openspec new change foo && openspec view` shows foo in Draft
-- [x] Validate with `openspec validate unify-change-state-model --strict`
+- [x] Manual test: `OGD new change foo && OGD status --change foo`
+- [x] Manual test: `OGD new change foo && ogd view` shows foo in Draft
+- [x] Validate with `ogd validate unify-change-state-model --strict`

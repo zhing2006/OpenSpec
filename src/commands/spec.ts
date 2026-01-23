@@ -7,7 +7,7 @@ import type { Spec } from '../core/schemas/index.js';
 import { isInteractive } from '../utils/interactive.js';
 import { getSpecIds } from '../utils/item-discovery.js';
 
-const SPECS_DIR = 'openspec/specs';
+const SPECS_DIR = 'ogd/specs';
 
 interface ShowOptions {
   json?: boolean;
@@ -45,7 +45,7 @@ function filterSpec(spec: Spec, options: ShowOptions): Spec {
     scenarios: includeScenarios ? req.scenarios : [],
   }));
 
-  const metadata = spec.metadata ?? { version: '1.0.0', format: 'openspec' as const };
+  const metadata = spec.metadata ?? { version: '1.0.0', format: 'ogd' as const };
 
   return {
     name: spec.name,
@@ -65,7 +65,7 @@ function printSpecTextRaw(specPath: string): void {
 }
 
 export class SpecCommand {
-  private SPECS_DIR = 'openspec/specs';
+  private SPECS_DIR = 'ogd/specs';
 
   async show(specId?: string, options: ShowOptions = {}): Promise<void> {
     if (!specId) {
@@ -84,7 +84,7 @@ export class SpecCommand {
 
     const specPath = join(this.SPECS_DIR, specId, 'spec.md');
     if (!existsSync(specPath)) {
-      throw new Error(`Spec '${specId}' not found at openspec/specs/${specId}/spec.md`);
+      throw new Error(`Spec '${specId}' not found at ogd/specs/${specId}/spec.md`);
     }
 
     if (options.json) {
@@ -99,7 +99,7 @@ export class SpecCommand {
         overview: parsed.overview,
         requirementCount: filtered.requirements.length,
         requirements: filtered.requirements,
-        metadata: parsed.metadata ?? { version: '1.0.0', format: 'openspec' as const },
+        metadata: parsed.metadata ?? { version: '1.0.0', format: 'ogd' as const },
       };
       console.log(JSON.stringify(output, null, 2));
       return;
@@ -111,16 +111,16 @@ export class SpecCommand {
 export function registerSpecCommand(rootProgram: typeof program) {
   const specCommand = rootProgram
     .command('spec')
-    .description('Manage and view OpenSpec specifications');
+    .description('管理和查看 OGD 规范');
 
   // Deprecation notice for noun-based commands
   specCommand.hook('preAction', () => {
-    console.error('Warning: The "openspec spec ..." commands are deprecated. Prefer verb-first commands (e.g., "openspec show", "openspec validate --specs").');
+    console.error('Warning: The "ogd spec ..." commands are deprecated. Prefer verb-first commands (e.g., "ogd show", "ogd validate --specs").');
   });
 
   specCommand
     .command('show [spec-id]')
-    .description('Display a specific specification')
+    .description('显示指定的规范')
     .option('--json', 'Output as JSON')
     .option('--requirements', 'JSON only: Show only requirements (exclude scenarios)')
     .option('--no-scenarios', 'JSON only: Exclude scenario content')
@@ -138,7 +138,7 @@ export function registerSpecCommand(rootProgram: typeof program) {
 
   specCommand
     .command('list')
-    .description('List all available specifications')
+    .description('列出所有可用的规范')
     .option('--json', 'Output as JSON')
     .option('--long', 'Show id and title with counts')
     .action((options: { json?: boolean; long?: boolean }) => {
@@ -197,7 +197,7 @@ export function registerSpecCommand(rootProgram: typeof program) {
 
   specCommand
     .command('validate [spec-id]')
-    .description('Validate a specification structure')
+    .description('验证规范结构')
     .option('--strict', 'Enable strict validation mode')
     .option('--json', 'Output validation report as JSON')
     .option('--no-interactive', 'Disable interactive prompts')
@@ -220,7 +220,7 @@ export function registerSpecCommand(rootProgram: typeof program) {
         const specPath = join(SPECS_DIR, specId, 'spec.md');
         
         if (!existsSync(specPath)) {
-          throw new Error(`Spec '${specId}' not found at openspec/specs/${specId}/spec.md`);
+          throw new Error(`Spec '${specId}' not found at ogd/specs/${specId}/spec.md`);
         }
 
         const validator = new Validator(options.strict);

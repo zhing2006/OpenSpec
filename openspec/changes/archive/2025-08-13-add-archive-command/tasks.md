@@ -22,7 +22,7 @@
   - [ ] 2.1.4 Add proper error handling
 
 ## 3. Error Handling
-- [ ] 3.1 Handle missing openspec/changes/ directory
+- [ ] 3.1 Handle missing ogd/changes/ directory
 - [ ] 3.2 Handle change not found
 - [ ] 3.3 Handle archive target already exists
 - [ ] 3.4 Handle user cancellation

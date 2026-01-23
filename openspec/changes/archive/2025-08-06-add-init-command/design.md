@@ -19,7 +19,7 @@ File System Utils (src/utils/file-system.ts)
 ### 1. Template Management
 
 **Decision**: Store templates as TypeScript modules rather than separate files
-**Rationale**: 
+**Rationale**:
 - Ensures templates are bundled with the compiled code
 - Allows for dynamic content insertion
 - Type-safe template handling
@@ -81,10 +81,10 @@ interface ProjectContext {
 ### CLI Command Structure
 
 ```bash
-openspec init [path]           # Initialize in specified path (default: current directory)
+ogd init [path]           # Initialize in specified path (default: current directory)
   --yes                       # Accept all defaults
   --no-input                  # Skip all prompts
-  --force                     # Overwrite existing OpenSpec directory
+  --force                     # Overwrite existing OGD directory
   --dry-run                   # Show what would be created
 ```
 

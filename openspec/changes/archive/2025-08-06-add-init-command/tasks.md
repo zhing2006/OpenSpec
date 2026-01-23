@@ -7,7 +7,7 @@
 - [x] 1.4 Create src/core/config.ts for configuration management
 
 ## 2. Template Files
-- [x] 2.1 Create src/core/templates/readme-template.ts with OpenSpec README content
+- [x] 2.1 Create src/core/templates/readme-template.ts with OGD README content
 - [x] 2.2 Create src/core/templates/project-template.ts with customizable project.md
 - [x] 2.3 Create src/core/templates/claude-template.ts for CLAUDE.md content with markers
 
@@ -20,7 +20,7 @@
 ## 4. Init Command Implementation
 - [x] 4.1 Add init command to src/cli/index.ts using Commander
 - [x] 4.2 Implement AI tool selection with multi-select prompt (Claude Code available, others "coming soon") - requires at least one selection
-- [x] 4.3 Add validation for existing OpenSpec directories with helpful error message
+- [x] 4.3 Add validation for existing OGD directories with helpful error message
 - [x] 4.4 Implement directory structure creation
 - [x] 4.5 Implement file generation with templates and markers
 

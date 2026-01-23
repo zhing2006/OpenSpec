@@ -2,7 +2,7 @@
 
 ## Why
 
-Developers struggle to resolve validation failures because current errors lack actionable guidance. Common issues include: missing deltas, missing required sections, and misformatted scenarios that are silently ignored. Without clear remediation steps, users cannot quickly correct structure or formatting, leading to frustration and rework. Improving error messages with concrete fixes, file/section hints, and suggested commands will significantly reduce time-to-green and make OpenSpec more approachable.
+Developers struggle to resolve validation failures because current errors lack actionable guidance. Common issues include: missing deltas, missing required sections, and misformatted scenarios that are silently ignored. Without clear remediation steps, users cannot quickly correct structure or formatting, leading to frustration and rework. Improving error messages with concrete fixes, file/section hints, and suggested commands will significantly reduce time-to-green and make OGD more approachable.
 
 ## What Changes
 

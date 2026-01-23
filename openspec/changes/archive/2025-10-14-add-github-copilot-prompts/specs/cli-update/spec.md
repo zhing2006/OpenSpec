@@ -4,43 +4,43 @@
 The update command SHALL refresh existing slash command files for configured tools without creating new ones.
 
 #### Scenario: Updating slash commands for Claude Code
-- **WHEN** `.claude/commands/openspec/` contains `proposal.md`, `apply.md`, and `archive.md`
+- **WHEN** `.claude/commands/ogd/` contains `proposal.md`, `apply.md`, and `archive.md`
 - **THEN** refresh each file using shared templates
 - **AND** ensure templates include instructions for the relevant workflow stage
 
 #### Scenario: Updating slash commands for Cursor
-- **WHEN** `.cursor/commands/` contains `openspec-proposal.md`, `openspec-apply.md`, and `openspec-archive.md`
+- **WHEN** `.cursor/commands/` contains `ogd-proposal.md`, `ogd-apply.md`, and `ogd-archive.md`
 - **THEN** refresh each file using shared templates
 - **AND** ensure templates include instructions for the relevant workflow stage
 
 #### Scenario: Updating slash commands for OpenCode
-- **WHEN** `.opencode/command/` contains `openspec-proposal.md`, `openspec-apply.md`, and `openspec-archive.md`
+- **WHEN** `.opencode/command/` contains `ogd-proposal.md`, `ogd-apply.md`, and `ogd-archive.md`
 - **THEN** refresh each file using shared templates
 - **AND** ensure templates include instructions for the relevant workflow stage
 
 #### Scenario: Updating slash commands for Windsurf
-- **WHEN** `.windsurf/workflows/` contains `openspec-proposal.md`, `openspec-apply.md`, and `openspec-archive.md`
-- **THEN** refresh each file using shared templates wrapped in OpenSpec markers
+- **WHEN** `.windsurf/workflows/` contains `ogd-proposal.md`, `ogd-apply.md`, and `ogd-archive.md`
+- **THEN** refresh each file using shared templates wrapped in OGD markers
 - **AND** ensure templates include instructions for the relevant workflow stage
 - **AND** skip creating missing files (the update command only refreshes what already exists)
 
 #### Scenario: Updating slash commands for Kilo Code
-- **WHEN** `.kilocode/workflows/` contains `openspec-proposal.md`, `openspec-apply.md`, and `openspec-archive.md`
-- **THEN** refresh each file using shared templates wrapped in OpenSpec markers
+- **WHEN** `.kilocode/workflows/` contains `ogd-proposal.md`, `ogd-apply.md`, and `ogd-archive.md`
+- **THEN** refresh each file using shared templates wrapped in OGD markers
 - **AND** ensure templates include instructions for the relevant workflow stage
 - **AND** skip creating missing files (the update command only refreshes what already exists)
 
 #### Scenario: Updating slash commands for Codex
-- **GIVEN** the global Codex prompt directory contains `openspec-proposal.md`, `openspec-apply.md`, and `openspec-archive.md`
-- **WHEN** a user runs `openspec update`
+- **GIVEN** the global Codex prompt directory contains `ogd-proposal.md`, `ogd-apply.md`, and `ogd-archive.md`
+- **WHEN** a user runs `ogd update`
 - **THEN** refresh each file using the shared slash-command templates (including placeholder guidance)
-- **AND** preserve any unmanaged content outside the OpenSpec marker block
+- **AND** preserve any unmanaged content outside the OGD marker block
 - **AND** skip creation when a Codex prompt file is missing
 
 #### Scenario: Updating slash commands for GitHub Copilot
-- **WHEN** `.github/prompts/` contains `openspec-proposal.prompt.md`, `openspec-apply.prompt.md`, and `openspec-archive.prompt.md`
+- **WHEN** `.github/prompts/` contains `ogd-proposal.prompt.md`, `ogd-apply.prompt.md`, and `ogd-archive.prompt.md`
 - **THEN** refresh each file using shared templates while preserving the YAML frontmatter
-- **AND** update only the OpenSpec-managed block between markers
+- **AND** update only the OGD-managed block between markers
 - **AND** ensure templates include instructions for the relevant workflow stage
 
 #### Scenario: Missing slash command file

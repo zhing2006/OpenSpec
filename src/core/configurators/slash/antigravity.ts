@@ -2,15 +2,15 @@ import { SlashCommandConfigurator } from './base.js';
 import { SlashCommandId } from '../../templates/index.js';
 
 const FILE_PATHS: Record<SlashCommandId, string> = {
-  proposal: '.agent/workflows/openspec-proposal.md',
-  apply: '.agent/workflows/openspec-apply.md',
-  archive: '.agent/workflows/openspec-archive.md'
+  proposal: '.agent/workflows/ogd-proposal.md',
+  apply: '.agent/workflows/ogd-apply.md',
+  archive: '.agent/workflows/ogd-archive.md'
 };
 
 const DESCRIPTIONS: Record<SlashCommandId, string> = {
-  proposal: 'Scaffold a new OpenSpec change and validate strictly.',
-  apply: 'Implement an approved OpenSpec change and keep tasks in sync.',
-  archive: 'Archive a deployed OpenSpec change and update specs.'
+  proposal: 'Scaffold a new ogd change and validate strictly.',
+  apply: 'Implement an approved ogd change and keep tasks in sync.',
+  archive: 'Archive a deployed ogd change and update specs.'
 };
 
 export class AntigravitySlashCommandConfigurator extends SlashCommandConfigurator {

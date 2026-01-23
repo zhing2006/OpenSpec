@@ -6,8 +6,8 @@ import { execSync } from 'child_process';
 describe('validate command enriched human output', () => {
   const projectRoot = process.cwd();
   const testDir = path.join(projectRoot, 'test-validate-enriched-tmp');
-  const changesDir = path.join(testDir, 'openspec', 'changes');
-  const bin = path.join(projectRoot, 'bin', 'openspec.js');
+  const changesDir = path.join(testDir, 'ogd', 'changes');
+  const bin = path.join(projectRoot, 'bin', 'OGD.js');
 
 
   beforeEach(async () => {
@@ -18,12 +18,12 @@ describe('validate command enriched human output', () => {
     await fs.rm(testDir, { recursive: true, force: true });
   });
 
-  it('prints Next steps footer and guidance on invalid change', () => {
+  it('prints Next steps footer and guidance on invalid change', async () => {
     const changeContent = `# Test Change\n\n## Why\nThis is a sufficiently long explanation to pass the why length requirement for validation purposes.\n\n## What Changes\nThere are changes proposed, but no delta specs provided yet.`;
     const changeId = 'c-next-steps';
     const changePath = path.join(changesDir, changeId);
-    execSync(`mkdir -p ${changePath}`);
-    execSync(`bash -lc "cat > ${path.join(changePath, 'proposal.md')} <<'EOF'\n${changeContent}\nEOF"`);
+    await fs.mkdir(changePath, { recursive: true });
+    await fs.writeFile(path.join(changePath, 'proposal.md'), changeContent, 'utf-8');
 
     const originalCwd = process.cwd();
     try {
@@ -39,7 +39,7 @@ describe('validate command enriched human output', () => {
       expect(code).not.toBe(0);
       expect(stderr).toContain('has issues');
       expect(stderr).toContain('Next steps:');
-      expect(stderr).toContain('openspec change show');
+      expect(stderr).toContain('ogd change show');
     } finally {
       process.chdir(originalCwd);
     }

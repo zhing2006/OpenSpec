@@ -1,12 +1,12 @@
 ## Context
 
-OpenSpec is a TypeScript CLI tool using pnpm for dependency management. The project requires Node.js ≥20.19.0. Nix uses its own build system that needs to understand how to fetch dependencies and build the project reproducibly.
+OGD is a TypeScript CLI tool using pnpm for dependency management. The project requires Node.js ≥20.19.0. Nix uses its own build system that needs to understand how to fetch dependencies and build the project reproducibly.
 
 The Nix ecosystem has specific patterns for packaging Node.js/pnpm projects that differ from the traditional npm ecosystem.
 
 ## Goals
 
-- Enable OpenSpec to be run directly via `nix run github:Fission-AI/OpenSpec`
+- Enable OGD to be run directly via `nix run github:zhing2006/OpenGameDesign`
 - Support all major platforms (Linux x86/ARM, macOS x86/ARM)
 - Use existing pnpm-lock.yaml for reproducible builds
 - Provide development environment for Nix users
@@ -21,7 +21,7 @@ The Nix ecosystem has specific patterns for packaging Node.js/pnpm projects that
 
 ### Use stdenv.mkDerivation instead of buildNpmPackage
 
-**Decision**: Package OpenSpec using `stdenv.mkDerivation` with pnpm hooks.
+**Decision**: Package OGD using `stdenv.mkDerivation` with pnpm hooks.
 
 **Rationale**: The zigbee2mqtt package in nixpkgs demonstrates the current best practice for pnpm projects. Using `buildNpmPackage` with pnpm requires complex configuration, while `mkDerivation` with the right hooks is more straightforward and better supported.
 

@@ -1,7 +1,7 @@
 # Implementation Tasks
 
 ## 1. Extend Init Guard
-- [x] 1.1 Detect existing OpenSpec structures at the start of `openspec init` and enter an extend mode instead of failing.
+- [x] 1.1 Detect existing OGD structures at the start of `ogd init` and enter an extend mode instead of failing.
 - [x] 1.2 Log that core scaffolding will be skipped while still protecting against missing write permissions.
 
 ## 2. Update AI Tool Selection
@@ -13,4 +13,4 @@
 - [x] 3.2 Summarize created, refreshed, and skipped tools before exiting with the appropriate code.
 
 ## 4. Verification
-- [x] 4.1 Add tests covering rerunning `openspec init` to add another tool and the scenario where the user declines to add anything.
+- [x] 4.1 Add tests covering rerunning `ogd init` to add another tool and the scenario where the user declines to add anything.

@@ -2,26 +2,26 @@
 
 ## Purpose
 
-This spec defines how OpenSpec collects anonymous usage telemetry to help improve the tool. It governs the `src/telemetry/` module, which handles PostHog integration, privacy-preserving event design, user opt-out mechanisms, and first-run notice display. The spec ensures telemetry is minimal, transparent, and respects user privacy.
+This spec defines how OGD collects anonymous usage telemetry to help improve the tool. It governs the `src/telemetry/` module, which handles PostHog integration, privacy-preserving event design, user opt-out mechanisms, and first-run notice display. The spec ensures telemetry is minimal, transparent, and respects user privacy.
 
 ## Requirements
 
 ### Requirement: Command execution tracking
-The system SHALL send a `command_executed` event to PostHog when any CLI command executes, including only the command name and OpenSpec version as properties.
+The system SHALL send a `command_executed` event to PostHog when any CLI command executes, including only the command name and OGD version as properties.
 
 #### Scenario: Standard command execution
-- **WHEN** a user runs any openspec command
+- **WHEN** a user runs any OGD command
 - **THEN** the system sends a `command_executed` event with `command` and `version` properties
 
 #### Scenario: Subcommand execution
-- **WHEN** a user runs a nested command like `openspec change apply`
+- **WHEN** a user runs a nested command like `ogd change apply`
 - **THEN** the system sends a `command_executed` event with the full command path (e.g., `change:apply`)
 
 ### Requirement: Privacy-preserving event design
 The system SHALL NOT include command arguments, file paths, project names, spec content, error messages, or IP addresses in telemetry events.
 
 #### Scenario: Command with arguments
-- **WHEN** a user runs `openspec init my-project --force`
+- **WHEN** a user runs `ogd init my-project --force`
 - **THEN** the telemetry event contains only `command: "init"` and `version: "<version>"` without arguments
 
 #### Scenario: IP address exclusion
@@ -29,10 +29,10 @@ The system SHALL NOT include command arguments, file paths, project names, spec 
 - **THEN** the event explicitly sets `$ip: null` to prevent IP tracking
 
 ### Requirement: Environment variable opt-out
-The system SHALL disable telemetry when `OPENSPEC_TELEMETRY=0` or `DO_NOT_TRACK=1` environment variables are set.
+The system SHALL disable telemetry when `OGD_TELEMETRY=0` or `DO_NOT_TRACK=1` environment variables are set.
 
-#### Scenario: OPENSPEC_TELEMETRY opt-out
-- **WHEN** `OPENSPEC_TELEMETRY=0` is set in the environment
+#### Scenario: OGD_TELEMETRY opt-out
+- **WHEN** `OGD_TELEMETRY=0` is set in the environment
 - **THEN** the system sends no telemetry events
 
 #### Scenario: DO_NOT_TRACK opt-out
@@ -41,7 +41,7 @@ The system SHALL disable telemetry when `OPENSPEC_TELEMETRY=0` or `DO_NOT_TRACK=
 
 #### Scenario: Environment variable takes precedence
 - **WHEN** the user has previously used the CLI (config exists)
-- **AND** the user sets `OPENSPEC_TELEMETRY=0`
+- **AND** the user sets `OGD_TELEMETRY=0`
 - **THEN** telemetry is disabled regardless of config state
 
 ### Requirement: CI environment auto-disable
@@ -53,16 +53,16 @@ The system SHALL automatically disable telemetry when `CI=true` environment vari
 
 #### Scenario: CI with explicit enable
 - **WHEN** `CI=true` is set
-- **AND** `OPENSPEC_TELEMETRY=1` is explicitly set
+- **AND** `OGD_TELEMETRY=1` is explicitly set
 - **THEN** telemetry remains disabled (CI takes precedence for privacy)
 
 ### Requirement: First-run telemetry notice
 The system SHALL display a one-line telemetry disclosure notice on the first command execution, before any telemetry is sent.
 
 #### Scenario: First command execution
-- **WHEN** a user runs their first openspec command
+- **WHEN** a user runs their first OGD command
 - **AND** telemetry is enabled
-- **THEN** the system displays: "Note: OpenSpec collects anonymous usage stats. Opt out: OPENSPEC_TELEMETRY=0"
+- **THEN** the system displays: "Note: OGD collects anonymous usage stats. Opt out: OGD_TELEMETRY=0"
 
 #### Scenario: Subsequent command execution
 - **WHEN** a user has already seen the notice (noticeSeen: true in config)

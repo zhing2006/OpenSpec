@@ -2,14 +2,14 @@
 
 ## Purpose
 
-The `openspec list` command SHALL provide developers with a quick overview of all active changes in the project, showing their names and task completion status.
+The `ogd list` command SHALL provide developers with a quick overview of all active changes in the project, showing their names and task completion status.
 
 ## Behavior
 
 ### Command Execution
 
-WHEN `openspec list` is executed
-THEN scan the `openspec/changes/` directory for change directories
+WHEN `ogd list` is executed
+THEN scan the `ogd/changes/` directory for change directories
 AND exclude the `archive/` subdirectory from results
 AND parse each change's `tasks.md` file to count task completion
 
@@ -50,8 +50,8 @@ THEN display: "No active changes found."
 IF a change directory has no `tasks.md` file
 THEN display the change with "No tasks" status
 
-IF `openspec/changes/` directory doesn't exist
-THEN display error: "No OpenSpec changes directory found. Run 'openspec init' first."
+IF `ogd/changes/` directory doesn't exist
+THEN display error: "No ogd changes directory found. Run 'ogd init' first."
 AND exit with code 1
 
 ### Sorting
@@ -66,4 +66,4 @@ Developers need a quick way to:
 - Understand the overall project evolution status
 - Get a bird's-eye view without opening multiple files
 
-This command provides that visibility with minimal effort, following OpenSpec's philosophy of simplicity and clarity.
+This command provides that visibility with minimal effort, following OGD's philosophy of simplicity and clarity.

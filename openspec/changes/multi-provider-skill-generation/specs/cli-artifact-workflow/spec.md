@@ -12,19 +12,19 @@ The `artifact-experimental-setup` command SHALL accept a `--tool <tool-id>` flag
 
 #### Scenario: Specify tool via flag
 
-- **WHEN** user runs `openspec artifact-experimental-setup --tool cursor`
+- **WHEN** user runs `OGD artifact-experimental-setup --tool cursor`
 - **THEN** skill files are generated in `.cursor/skills/`
 - **AND** command files are generated using Cursor's frontmatter format
 
 #### Scenario: Missing tool flag
 
-- **WHEN** user runs `openspec artifact-experimental-setup` without `--tool`
+- **WHEN** user runs `OGD artifact-experimental-setup` without `--tool`
 - **THEN** the system displays an error requiring the `--tool` flag
 - **AND** lists valid tool IDs in the error message
 
 #### Scenario: Unknown tool ID
 
-- **WHEN** user runs `openspec artifact-experimental-setup --tool unknown-tool`
+- **WHEN** user runs `OGD artifact-experimental-setup --tool unknown-tool`
 - **AND** the tool ID is not in `AI_TOOLS`
 - **THEN** the system displays an error listing valid tool IDs
 

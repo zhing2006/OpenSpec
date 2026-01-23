@@ -1,6 +1,6 @@
 ## Why
 
-OpenSpec currently has no visibility into how the tool is being used. Without analytics, we cannot:
+OGD currently has no visibility into how the tool is being used. Without analytics, we cannot:
 - Understand which commands and features are most valuable to users
 - Measure adoption and usage patterns
 - Make data-driven decisions about product development
@@ -13,8 +13,8 @@ Adding PostHog analytics enables product insights while respecting user privacy 
 - Implement telemetry system with environment variable opt-out
 - Track command usage (command name and version only)
 - Show first-run notice informing users about telemetry
-- Store anonymous ID in global config (`~/.config/openspec/config.json`)
-- Respect `DO_NOT_TRACK` and `OPENSPEC_TELEMETRY=0` environment variables
+- Store anonymous ID in global config (`~/.config/ogd/config.json`)
+- Respect `DO_NOT_TRACK` and `OGD_TELEMETRY=0` environment variables
 - Auto-disable in CI environments
 
 ## Capabilities

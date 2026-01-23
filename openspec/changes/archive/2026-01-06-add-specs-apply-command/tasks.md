@@ -10,7 +10,7 @@
 ### Skill Template
 
 - [x] Add `getSyncSpecsSkillTemplate()` function in `src/core/templates/skill-templates.ts`
-  - Skill name: `openspec-sync-specs`
+  - Skill name: `OGD-sync-specs`
   - Description: Sync delta specs to main specs
   - **Agent-driven**: Instructions for agent to read deltas and edit main specs directly
 

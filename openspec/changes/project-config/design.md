@@ -2,14 +2,14 @@
 
 ## Context
 
-OpenSpec currently has a fixed schema resolution order:
+OGD currently has a fixed schema resolution order:
 1. `--schema` CLI flag
-2. `.openspec.yaml` in change directory
+2. `.OGD.yaml` in change directory
 3. Hardcoded default: `"spec-driven"`
 
 This forces users who want project-level customization to fork entire schemas, even for simple additions like injecting tech stack context or adding artifact-specific rules.
 
-The proposal introduces `openspec/config.yaml` as a lightweight customization layer that sits between preset schemas and full forking. It allows teams to:
+The proposal introduces `ogd/config.yaml` as a lightweight customization layer that sits between preset schemas and full forking. It allows teams to:
 - Set a default schema
 - Inject project context into all artifacts
 - Add per-artifact rules
@@ -20,13 +20,13 @@ The proposal introduces `openspec/config.yaml` as a lightweight customization la
 - Config is project-level only (no global/user-level config)
 
 **Key stakeholders:**
-- OpenSpec users who need light customization without forking
+- OGD users who need light customization without forking
 - Teams sharing workflow conventions via committed config
 
 ## Goals / Non-Goals
 
 **Goals:**
-- Load and parse `openspec/config.yaml` using Zod schema
+- Load and parse `ogd/config.yaml` using Zod schema
 - Use config's `schema` field as default in schema resolution
 - Inject `context` into all artifact instructions
 - Inject `rules` into matching artifact instructions only
@@ -36,7 +36,7 @@ The proposal introduces `openspec/config.yaml` as a lightweight customization la
 - Structural changes to schemas (`skip`, `add`, inheritance) - those belong in fork path
 - File references for context (`context: ./file.md`) - start with strings
 - Global user-level config (XDG dirs, etc.)
-- Config management commands (`openspec config init`) - manual creation for now
+- Config management commands (`OGD config init`) - manual creation for now
 - Migration from old setups (no existing config to migrate from)
 
 ## Decisions
@@ -48,25 +48,25 @@ The proposal introduces `openspec/config.yaml` as a lightweight customization la
 **Rationale:**
 - YAML supports multi-line strings naturally (`context: |`)
 - More readable for documentation-heavy content
-- Consistent with `.openspec.yaml` used in changes
+- Consistent with `.OGD.yaml` used in changes
 - Easy to parse with existing `yaml` library
 
 **Alternatives considered:**
 - JSON: More strict, but poor multi-line string UX
 - TOML: Less familiar to most users
 
-### 2. Config Location: Project Root vs openspec/ Directory
+### 2. Config Location: Project Root vs ogd/ Directory
 
-**Decision:** `./openspec/config.yaml` (inside openspec directory)
+**Decision:** `./ogd/config.yaml` (inside OGD directory)
 
 **Rationale:**
-- Co-located with `openspec/schemas/` (project-local-schemas)
+- Co-located with `ogd/schemas/` (project-local-schemas)
 - Keeps project root clean
-- Natural namespace for OpenSpec configuration
+- Natural namespace for OGD configuration
 - Mirrors structure used by other tools (e.g., `.github/`)
 
 **Alternatives considered:**
-- `./openspec.config.yaml` in root: Pollutes root, less clear ownership
+- `./OGD.config.yaml` in root: Pollutes root, less clear ownership
 - XDG config directories: Out of scope, no global config yet
 
 ### 3. Context Injection: XML Tags vs Markdown Sections
@@ -104,8 +104,8 @@ Tech stack: TypeScript, React
 
 **New resolution order:**
 1. `--schema` CLI flag (explicit override)
-2. `.openspec.yaml` in change directory (change-specific binding)
-3. **`openspec/config.yaml` schema field** (NEW - project default)
+2. `.OGD.yaml` in change directory (change-specific binding)
+3. **`ogd/config.yaml` schema field** (NEW - project default)
 4. `"spec-driven"` (hardcoded fallback)
 
 **Rationale:**
@@ -134,13 +134,13 @@ rules:
 **Decision:** Log warning and fall back to defaults (don't halt commands)
 
 **Rationale:**
-- Syntax errors in config shouldn't break all of OpenSpec
+- Syntax errors in config shouldn't break all of OGD
 - User can fix config incrementally
 - Commands remain usable during config development
 
 **Warning message:**
 ```
-⚠️  Failed to parse openspec/config.yaml: [error details]
+⚠️  Failed to parse ogd/config.yaml: [error details]
     Falling back to default schema (spec-driven)
 ```
 
@@ -165,9 +165,9 @@ import { findProjectRoot } from '../utils/path-utils';
  * 3. Runtime validation - uses safeParse() for resilient field-by-field validation
  *
  * Why Zod over manual validation:
- * - Helps understand OpenSpec's data interfaces at a glance
+ * - Helps understand OGD's data interfaces at a glance
  * - Single source of truth for type and validation
- * - Consistent with other OpenSpec schemas
+ * - Consistent with other OGD schemas
  */
 export const ProjectConfigSchema = z.object({
   schema: z.string().min(1).describe('The workflow schema to use (e.g., "spec-driven", "tdd")'),
@@ -183,7 +183,7 @@ export type ProjectConfig = z.infer<typeof ProjectConfigSchema>;
 const MAX_CONTEXT_SIZE = 50 * 1024; // 50KB hard limit
 
 /**
- * Read and parse openspec/config.yaml from project root.
+ * Read and parse ogd/config.yaml from project root.
  * Uses resilient parsing - validates each field independently using Zod safeParse.
  * Returns null if file doesn't exist.
  * Returns partial config if some fields are invalid (with warnings).
@@ -192,9 +192,9 @@ export function readProjectConfig(): ProjectConfig | null {
   const projectRoot = findProjectRoot();
 
   // Try both .yaml and .yml, prefer .yaml
-  let configPath = path.join(projectRoot, 'openspec', 'config.yaml');
+  let configPath = path.join(projectRoot, 'OGD', 'config.yaml');
   if (!existsSync(configPath)) {
-    configPath = path.join(projectRoot, 'openspec', 'config.yml');
+    configPath = path.join(projectRoot, 'OGD', 'config.yml');
     if (!existsSync(configPath)) {
       return null; // No config is OK
     }
@@ -205,7 +205,7 @@ export function readProjectConfig(): ProjectConfig | null {
     const raw = parseYaml(content);
 
     if (!raw || typeof raw !== 'object') {
-      console.warn(`⚠️  openspec/config.yaml is not a valid YAML object`);
+      console.warn(`⚠️  ogd/config.yaml is not a valid YAML object`);
       return null;
     }
 
@@ -283,7 +283,7 @@ export function readProjectConfig(): ProjectConfig | null {
     return Object.keys(config).length > 0 ? (config as ProjectConfig) : null;
 
   } catch (error) {
-    console.warn(`⚠️  Failed to parse openspec/config.yaml:`, error);
+    console.warn(`⚠️  Failed to parse ogd/config.yaml:`, error);
     return null;
   }
 }
@@ -356,7 +356,7 @@ export function suggestSchemas(
   const builtIn = availableSchemas.filter(s => s.isBuiltIn).map(s => s.name);
   const projectLocal = availableSchemas.filter(s => !s.isBuiltIn).map(s => s.name);
 
-  let message = `❌ Schema '${invalidSchemaName}' not found in openspec/config.yaml\n\n`;
+  let message = `❌ Schema '${invalidSchemaName}' not found in ogd/config.yaml\n\n`;
 
   if (suggestions.length > 0) {
     message += `Did you mean one of these?\n`;
@@ -377,7 +377,7 @@ export function suggestSchemas(
     message += `  Project-local: (none found)\n`;
   }
 
-  message += `\nFix: Edit openspec/config.yaml and change 'schema: ${invalidSchemaName}' to a valid schema name`;
+  message += `\nFix: Edit ogd/config.yaml and change 'schema: ${invalidSchemaName}' to a valid schema name`;
 
   return message;
 }
@@ -399,7 +399,7 @@ export function resolveSchemaForChange(
     return cliSchema;
   }
 
-  // 2. Change metadata (.openspec.yaml)
+  // 2. Change metadata (.OGD.yaml)
   const metadata = readChangeMetadata(changeName);
   if (metadata?.schema) {
     return metadata.schema;
@@ -508,7 +508,7 @@ export function loadInstructions(
 **Why config is read multiple times:**
 
 ```typescript
-// Example: "openspec instructions proposal --change my-feature"
+// Example: "OGD instructions proposal --change my-feature"
 
 // 1. Schema resolution (to know which schema to use)
 resolveSchemaForChange('my-feature')
@@ -541,7 +541,7 @@ let cachedConfig: { mtime: number; config: ProjectConfig | null } | null = null;
 
 export function readProjectConfig(): ProjectConfig | null {
   const projectRoot = findProjectRoot();
-  const configPath = path.join(projectRoot, 'openspec', 'config.yaml');
+  const configPath = path.join(projectRoot, 'OGD', 'config.yaml');
 
   if (!existsSync(configPath)) {
     return null;
@@ -575,7 +575,7 @@ export function readProjectConfig(): ProjectConfig | null {
 ```
 ┌──────────────────────────────────────────────────────────────┐
 │                                                              │
-│  User runs: openspec instructions proposal --change foo     │
+│  User runs: OGD instructions proposal --change foo     │
 │                                                              │
 └────────────────────────────┬─────────────────────────────────┘
                              │
@@ -584,8 +584,8 @@ export function readProjectConfig(): ProjectConfig | null {
 │  resolveSchemaForChange("foo")                               │
 │                                                              │
 │  1. Check CLI flag ✗                                         │
-│  2. Check .openspec.yaml ✗                                   │
-│  3. Check openspec/config.yaml ✓ → "spec-driven"             │
+│  2. Check .OGD.yaml ✗                                   │
+│  3. Check ogd/config.yaml ✓ → "spec-driven"             │
 │                                                              │
 └────────────────────────────┬─────────────────────────────────┘
                              │
@@ -594,7 +594,7 @@ export function readProjectConfig(): ProjectConfig | null {
 │  loadInstructions("foo", "proposal")                         │
 │                                                              │
 │  1. Load spec-driven/artifacts/proposal.yaml                 │
-│  2. Read openspec/config.yaml                                │
+│  2. Read ogd/config.yaml                                │
 │  3. Build enriched instruction:                              │
 │     - <context>...</context>                                 │
 │     - <rules>...</rules>  (if rules.proposal exists)         │
@@ -619,7 +619,7 @@ export function readProjectConfig(): ProjectConfig | null {
 **[Risk]** Context grows too large, pollutes all artifact instructions
 → **Mitigation:** Document recommended size (< 500 chars). If this becomes an issue, add per-artifact context override later.
 
-**[Risk]** YAML parsing errors break OpenSpec commands
+**[Risk]** YAML parsing errors break OGD commands
 → **Mitigation:** Catch parse errors, log warning, fall back to defaults. Commands remain functional.
 
 **[Risk]** Config cached incorrectly across commands
@@ -633,7 +633,7 @@ export function readProjectConfig(): ProjectConfig | null {
 **[Trade-off]** Rules use artifact IDs, not human names
 → **Benefit:** Stable identifiers (IDs don't change)
 → **Cost:** User needs to know artifact IDs from schema
-→ **Mitigation:** Document common artifact IDs, show in `openspec status` output
+→ **Mitigation:** Document common artifact IDs, show in `OGD status` output
 
 ## Migration Plan
 

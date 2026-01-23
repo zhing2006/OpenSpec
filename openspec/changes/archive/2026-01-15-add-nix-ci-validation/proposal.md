@@ -2,7 +2,7 @@
 
 ## Why
 
-The project recently added Nix flake support (flake.nix) and an automated update script (scripts/update-flake.sh) to enable Nix users to install OpenSpec. However, there is no CI validation ensuring these Nix artifacts continue to work as the project evolves. This creates risk that breaking changes could be merged without detection.
+The project recently added Nix flake support (flake.nix) and an automated update script (scripts/update-flake.sh) to enable Nix users to install OGD. However, there is no CI validation ensuring these Nix artifacts continue to work as the project evolves. This creates risk that breaking changes could be merged without detection.
 
 ## What Changes
 
