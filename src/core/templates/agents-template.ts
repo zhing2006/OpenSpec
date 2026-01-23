@@ -1,110 +1,346 @@
-export const agentsTemplate = `# OGD (OpenGameDesign) Instructions
+export const agentsTemplate = `# OGD (OpenGameDesign) Game Design Workflow Guide
 
-Instructions for AI coding assistants using OGD for spec-driven game design.
+Instructions for AI assistants using OGD for spec-driven game design.
 
-## TL;DR Quick Checklist
+## Quick Checklist
 
-- Search existing work: \`ogd list --long\`, \`ogd list\` (use \`rg\` only for full-text search)
+- Check existing work: \`ogd list --long\`, \`ogd list --specs\`
 - Decide scope: new capability vs modify existing capability
-- Pick a unique \`change-id\`: kebab-case, verb-led (\`add-\`, \`update-\`, \`remove-\`, \`refactor-\`)
-- Scaffold: \`proposal.md\`, \`tasks.md\`, \`design.md\` (only if needed), and delta specs per affected capability
-- Write deltas: use \`## ADDED|MODIFIED|REMOVED|RENAMED Requirements\`; include at least one \`#### Scenario:\` per requirement
-- Validate: \`ogd validate [change-id] --strict --no-interactive\` and fix issues
+- Pick a unique \`change-id\`: kebab-case, verb-led (\`add-\`, \`update-\`, \`remove-\`)
+- Scaffold: \`proposal.md\`, \`tasks.md\`, \`design.md\` (optional), and delta specs
+- Write deltas: use \`## ADDED|MODIFIED|REMOVED Requirements\`; at least one \`#### Scenario:\` per requirement
+- Validate: \`ogd validate [change-id] --strict --no-interactive\`
 - Request approval: Do not start implementation until proposal is approved
+
+## Game Design Workflow
+
+### Core Principles
+
+1. **Experience over implementation** - Focus on "what players do" and "what players feel", NOT "how to implement"
+2. **Pillar-driven validation** - All design decisions must align with design pillars
+3. **Dual spec types** - Global specs (game-vision) + Feature specs
+4. **Technology-agnostic** - Output design documents, no technical implementation details
+
+### Workflow Order
+
+\`\`\`
+1. Define design pillars (pillars.md)
+   ↓
+2. Create game vision spec (specs/game-vision/spec.md)
+   ↓
+3. Create feature specs (specs/[feature]/spec.md)
+   ↓
+4. Generate design artifacts (docs/)
+\`\`\`
 
 ## Three-Stage Workflow
 
-### Stage 1: Creating Changes
-Create proposal when you need to:
-- Add features or functionality
-- Make breaking changes (API, schema)
-- Change architecture or patterns
-- Optimize performance (changes behavior)
-- Update security patterns
+### Stage 1: Create Change Proposal
 
-Triggers (examples):
-- "Help me create a change proposal"
-- "Help me plan a change"
-- "Help me create a proposal"
-- "I want to create a spec proposal"
-- "I want to create a spec"
-
-Loose matching guidance:
-- Contains one of: \`proposal\`, \`change\`, \`spec\`
-- With one of: \`create\`, \`plan\`, \`make\`, \`start\`, \`help\`
-
-Skip proposal for:
-- Bug fixes (restore intended behavior)
-- Typos, formatting, comments
-- Dependency updates (non-breaking)
-- Configuration changes
-- Tests for existing behavior
+Create a proposal when:
+- Adding new game features or systems
+- Modifying existing feature behavior
+- Adjusting worldbuilding or core settings
+- Changing numerical framework
 
 **Workflow**
-1. Review \`ogd/pillars.md\`, \`ogd list\`, and \`ogd list --specs\` to understand current context.
-2. Choose a unique verb-led \`change-id\` and scaffold \`proposal.md\`, \`tasks.md\`, optional \`design.md\`, and spec deltas under \`ogd/changes/<id>/\`.
-3. Draft spec deltas using \`## ADDED|MODIFIED|REMOVED Requirements\` with at least one \`#### Scenario:\` per requirement.
-4. Run \`ogd validate <id> --strict --no-interactive\` and resolve any issues before sharing the proposal.
+1. Read \`ogd/pillars.md\` to understand design pillars
+2. Run \`ogd list --specs\` to view existing specs
+3. Create \`changes/<change-id>/\` directory
+4. Write \`proposal.md\`, \`tasks.md\`, and delta specs
+5. Run \`ogd validate <id> --strict --no-interactive\` to validate
 
-### Stage 2: Implementing Changes
-Track these steps as TODOs and complete them one by one.
-1. **Read proposal.md** - Understand what's being built
-2. **Read design.md** (if exists) - Review technical decisions
-3. **Read tasks.md** - Get implementation checklist
-4. **Implement tasks sequentially** - Complete in order
-5. **Confirm completion** - Ensure every item in \`tasks.md\` is finished before updating statuses
-6. **Update checklist** - After all work is done, set every task to \`- [x]\` so the list reflects reality
-7. **Approval gate** - Do not start implementation until the proposal is reviewed and approved
+### Stage 2: Implement Design Tasks
 
-### Stage 3: Archiving Changes
-After deployment, create separate PR to:
-- Move \`changes/[name]/\` → \`changes/archive/YYYY-MM-DD-[name]/\`
-- Update \`specs/\` if capabilities changed
-- Use \`ogd archive <change-id> --skip-specs --yes\` for tooling-only changes (always pass the change ID explicitly)
-- Run \`ogd validate --strict --no-interactive\` to confirm the archived change passes checks
+1. **Read proposal.md** - Understand design goals
+2. **Read design.md** (if exists) - Review design decisions
+3. **Read tasks.md** - Get task checklist
+4. **Complete tasks in order** - Generate design artifacts
+5. **Update task status** - Mark \`- [x]\` when done
 
-## Before Any Task
+### Stage 3: Archive Changes
 
-**Context Checklist:**
-- [ ] Read relevant specs in \`specs/[capability]/spec.md\`
-- [ ] Check pending changes in \`changes/\` for conflicts
-- [ ] Read \`ogd/pillars.md\` for conventions
-- [ ] Run \`ogd list\` to see active changes
-- [ ] Run \`ogd list --specs\` to see existing capabilities
+After completion:
+- Run \`ogd archive <change-id> --yes\`
+- Specs will be automatically merged into \`specs/\`
 
-**Before Creating Specs:**
-- Always check if capability already exists
-- Prefer modifying existing specs over creating duplicates
-- Use \`ogd show [spec]\` to review current state
-- If request is ambiguous, ask 1–2 clarifying questions before scaffolding
+## Directory Structure
 
-### Search Guidance
-- Enumerate specs: \`ogd spec list --long\` (or \`--json\` for scripts)
-- Enumerate changes: \`ogd list\` (or \`ogd change list --json\` - deprecated but available)
-- Show details:
-  - Spec: \`ogd show <spec-id> --type spec\` (use \`--json\` for filters)
-  - Change: \`ogd show <change-id> --json --deltas-only\`
-- Full-text search (use ripgrep): \`rg -n "Requirement:|Scenario:" ogd/specs\`
+\`\`\`
+ogd/
+├── pillars.md              # Design pillars (core principles)
+├── specs/                  # Finalized specs
+│   ├── game-vision/        # Global spec (game vision)
+│   │   └── spec.md
+│   └── [feature]/          # Feature specs
+│       └── spec.md
+├── changes/                # Change proposals
+│   ├── [change-name]/
+│   │   ├── proposal.md     # Why the change
+│   │   ├── tasks.md        # Task checklist
+│   │   ├── design.md       # Design decisions (optional)
+│   │   └── specs/          # Delta specs
+│   └── archive/            # Archived changes
+└── AGENTS.md               # This file
 
-## Quick Start
+docs/                       # Design artifact output
+├── [feature]/
+│   ├── gameplay-design.md      # Gameplay design
+│   ├── numerical-framework.md  # Numerical framework
+│   ├── balance-analysis.md     # Balance analysis
+│   └── system-integration.md   # System integration
+\`\`\`
 
-### CLI Commands
+## Design Pillars (pillars.md)
+
+Design pillars are the game's "creative constitution". All features must align with these principles.
+
+**Structure example**:
+\`\`\`markdown
+# Game Design Pillars: [Game Name]
+
+## Core Experience Goal
+[Describe the core emotions players should feel after completing the game]
+
+## Design Pillars
+
+### Pillar 1: [Name]
+[Describe what this pillar represents]
+**Rationale**: [Why this pillar matters]
+
+### Pillar 2: [Name]
+...
+\`\`\`
+
+**Quantity guidelines**:
+- Small games: 1-2 pillars
+- Indie games: 2-4 pillars
+- Large projects: 4-7 pillars
+
+## Spec Types
+
+### Global Spec (game-vision)
+
+Game vision spec defines the overall game experience:
+
+\`\`\`markdown
+# Game Vision Design Spec
+
+**Type**: Global
+
+## Vision
+
+### Game Type and Subtype
+[Describe the game's core type]
+
+### Core Gameplay Loop
+Explore → Combat → Gather Resources → Upgrade Equipment → Explore Deeper
+
+### Emotional Curve
+[Describe emotional changes during gameplay]
+
+### Experience Goal
+[Describe what players should feel after completing the game]
+
+## World
+
+### World Setting
+[Time, place, technology level, core rules]
+
+### Core Conflict
+[Main conflict driving narrative and gameplay]
+
+### Art Style Direction
+[Visual style positioning and reference works]
+
+## ADDED Requirements
+...
+\`\`\`
+
+### Feature Specs
+
+Feature specs MUST depend on game-vision:
+
+\`\`\`markdown
+# [Feature Name] Design Spec
+
+**Type**: Feature
+
+## Spec Dependencies
+
+- **game-vision** - Game vision (required)
+- [Other dependent specs]
+
+## Vision
+
+### Core Goal
+[What experience goal this feature achieves]
+
+### Position in Core Loop
+[This feature's role in the overall gameplay loop]
+
+## World
+
+### World Position
+[This feature's background in the game world]
+
+### Art/Audio Direction
+[Visual and audio style for this feature]
+
+## ADDED Requirements
+
+### Requirement: [Requirement Name]
+The system SHALL [describe specific capability]
+
+#### Scenario: [Scenario Name]
+- **GIVEN** [Initial state]
+- **WHEN** [Player action]
+- **THEN** [Expected result]
+
+## User Stories
+
+### User Story 1 - [Title] (Priority: P1)
+[Describe player experience]
+**Why this priority**: [Explain value]
+\`\`\`
+
+## Design Artifact Types
+
+| Artifact | Filename | Description |
+|----------|----------|-------------|
+| Gameplay Design | gameplay-design.md | Core gameplay, operation flow |
+| Numerical Framework | numerical-framework.md | Formulas, parameters, balance |
+| Balance Analysis | balance-analysis.md | Risk/reward, strategy balance |
+| System Integration | system-integration.md | Interactions with other systems |
+| Narrative Design | narrative-design.md | Story, dialogue, characters |
+| World Setting | world-setting.md | Detailed worldbuilding |
+| Core Loop | core-loop.md | Detailed gameplay loop |
+| Emotional Curve | emotional-curve.md | Experience rhythm design |
+
+## Change Proposal Structure
+
+### proposal.md
+\`\`\`markdown
+# Design Change Proposal: [Change Name]
+
+## Why
+[1-2 sentences describing the problem or opportunity]
+
+## What Changes
+- [Change 1]
+- [Change 2]
+- **BREAKING**: [Breaking changes]
+
+## Capabilities
+
+### New Capabilities
+- \`[capability-name]\`: [Description]
+
+### Modified Capabilities
+- \`[existing-capability]\`: [Change description]
+
+## Impact
+- **Affected systems**: [List]
+- **Dependencies**: [List]
+\`\`\`
+
+### tasks.md
+\`\`\`markdown
+# Design Task Checklist: [Feature Name]
+
+## 1. Preparation
+- [ ] 1.1 Verify design pillar alignment
+- [ ] 1.2 Confirm dependent specs are complete
+
+## 2. Core Design
+- [ ] 2.1 Write gameplay design document
+- [ ] 2.2 Build numerical framework
+
+## 3. User Story - [US1 Title]
+- [ ] 3.1 [Task description]
+- [ ] 3.2 [Task description]
+
+## 4. Balance and Polish
+- [ ] 4.1 Conduct balance analysis
+- [ ] 4.2 Verify consistency with design pillars
+\`\`\`
+
+### design.md (optional)
+Create when:
+- Complex numerical design
+- Multi-system interaction
+- Major design decisions
+
+\`\`\`markdown
+# Design Decisions: [Feature Name]
+
+## Context
+[Current state, constraints]
+
+## Goals / Non-Goals
+- **Goals**: [What to achieve]
+- **Non-Goals**: [What to exclude]
+
+## Decisions
+### Decision 1: [Name]
+**Choice**: [Final choice]
+**Rationale**: [Why]
+
+## Numerical Framework
+### Core Formulas
+\`[Formula content]\`
+
+### Balance Parameters
+| Parameter | Initial Value | Range | Description |
+|-----------|---------------|-------|-------------|
+
+## Risks / Trade-offs
+| Risk | Impact | Mitigation |
+|------|--------|------------|
+\`\`\`
+
+## Spec Format Requirements
+
+### Scenario Formatting (Critical)
+
+**CORRECT** (use #### headers):
+\`\`\`markdown
+#### Scenario: Player login success
+- **GIVEN** Player is registered
+- **WHEN** Enter correct username and password
+- **THEN** Enter game main interface
+\`\`\`
+
+**WRONG**:
+\`\`\`markdown
+- **Scenario: Player login**  ❌
+**Scenario**: Player login     ❌
+### Scenario: Player login      ❌
+\`\`\`
+
+### Requirement Wording
+- Use SHALL/MUST for normative requirements
+- Avoid should/may (unless intentionally non-normative)
+
+### Delta Operations
+- \`## ADDED Requirements\` - New capabilities
+- \`## MODIFIED Requirements\` - Behavior changes (must include complete content)
+- \`## REMOVED Requirements\` - Deprecated features (need reason and migration plan)
+- \`## RENAMED Requirements\` - Name changes only
+
+## CLI Commands
 
 \`\`\`bash
-# Essential commands
+# Basic commands
 ogd list                  # List active changes
-ogd list --specs          # List specifications
-ogd show [item]           # Display change or spec
-ogd validate [item]       # Validate changes or specs
-ogd archive <change-id> [--yes|-y]   # Archive after deployment (add --yes for non-interactive runs)
+ogd list --specs          # List specs
+ogd show [item]           # Show details
+ogd validate [item]       # Validate change or spec
+ogd archive <change-id>   # Archive completed change
 
 # Project management
 ogd init [path]           # Initialize OGD
 ogd update [path]         # Update instruction files
-
-# Interactive mode
-ogd show                  # Prompts for selection
-ogd validate              # Bulk validation mode
 
 # Debugging
 ogd show [change] --json --deltas-only
@@ -112,345 +348,84 @@ ogd validate [change] --strict --no-interactive
 \`\`\`
 
 ### Command Flags
-
 - \`--json\` - Machine-readable output
-- \`--type change|spec\` - Disambiguate items
-- \`--strict\` - Comprehensive validation
+- \`--type change|spec\` - Specify type
+- \`--strict\` - Strict validation
 - \`--no-interactive\` - Disable prompts
-- \`--skip-specs\` - Archive without spec updates
-- \`--yes\`/\`-y\` - Skip confirmation prompts (non-interactive archive)
+- \`--yes\`/\`-y\` - Skip confirmation prompts
 
-## Directory Structure
+## Before Starting Any Task
 
-\`\`\`
-ogd/
-├── pillars.md              # Project conventions
-├── specs/                  # Current truth - what IS built
-│   └── [capability]/       # Single focused capability
-│       ├── spec.md         # Requirements and scenarios
-│       └── design.md       # Technical patterns
-├── changes/                # Proposals - what SHOULD change
-│   ├── [change-name]/
-│   │   ├── proposal.md     # Why, what, impact
-│   │   ├── tasks.md        # Implementation checklist
-│   │   ├── design.md       # Technical decisions (optional; see criteria)
-│   │   └── specs/          # Delta changes
-│   │       └── [capability]/
-│   │           └── spec.md # ADDED/MODIFIED/REMOVED
-│   └── archive/            # Completed changes
-\`\`\`
+**Context Checklist**:
+- [ ] Read \`ogd/pillars.md\` to understand design pillars
+- [ ] Run \`ogd list --specs\` to view existing specs
+- [ ] Check pending changes in \`changes/\`
+- [ ] Confirm dependent specs are complete
 
-## Creating Change Proposals
-
-### Decision Tree
-
-\`\`\`
-New request?
-├─ Bug fix restoring spec behavior? → Fix directly
-├─ Typo/format/comment? → Fix directly
-├─ New feature/capability? → Create proposal
-├─ Breaking change? → Create proposal
-├─ Architecture change? → Create proposal
-└─ Unclear? → Create proposal (safer)
-\`\`\`
-
-### Proposal Structure
-
-1. **Create directory:** \`changes/[change-id]/\` (kebab-case, verb-led, unique)
-
-2. **Write proposal.md:**
-\`\`\`markdown
-# Change: [Brief description of change]
-
-## Why
-[1-2 sentences on problem/opportunity]
-
-## What Changes
-- [Bullet list of changes]
-- [Mark breaking changes with **BREAKING**]
-
-## Impact
-- Affected specs: [list capabilities]
-- Affected code: [key files/systems]
-\`\`\`
-
-3. **Create spec deltas:** \`specs/[capability]/spec.md\`
-\`\`\`markdown
-## ADDED Requirements
-### Requirement: New Feature
-The system SHALL provide...
-
-#### Scenario: Success case
-- **WHEN** user performs action
-- **THEN** expected result
-
-## MODIFIED Requirements
-### Requirement: Existing Feature
-[Complete modified requirement]
-
-## REMOVED Requirements
-### Requirement: Old Feature
-**Reason**: [Why removing]
-**Migration**: [How to handle]
-\`\`\`
-If multiple capabilities are affected, create multiple delta files under \`changes/[change-id]/specs/<capability>/spec.md\`—one per capability.
-
-4. **Create tasks.md:**
-\`\`\`markdown
-## 1. Implementation
-- [ ] 1.1 Create database schema
-- [ ] 1.2 Implement API endpoint
-- [ ] 1.3 Add frontend component
-- [ ] 1.4 Write tests
-\`\`\`
-
-5. **Create design.md when needed:**
-Create \`design.md\` if any of the following apply; otherwise omit it:
-- Cross-cutting change (multiple services/modules) or a new architectural pattern
-- New external dependency or significant data model changes
-- Security, performance, or migration complexity
-- Ambiguity that benefits from technical decisions before coding
-
-Minimal \`design.md\` skeleton:
-\`\`\`markdown
-## Context
-[Background, constraints, stakeholders]
-
-## Goals / Non-Goals
-- Goals: [...]
-- Non-Goals: [...]
-
-## Decisions
-- Decision: [What and why]
-- Alternatives considered: [Options + rationale]
-
-## Risks / Trade-offs
-- [Risk] → Mitigation
-
-## Migration Plan
-[Steps, rollback]
-
-## Open Questions
-- [...]
-\`\`\`
-
-## Spec File Format
-
-### Critical: Scenario Formatting
-
-**CORRECT** (use #### headers):
-\`\`\`markdown
-#### Scenario: User login success
-- **WHEN** valid credentials provided
-- **THEN** return JWT token
-\`\`\`
-
-**WRONG** (don't use bullets or bold):
-\`\`\`markdown
-- **Scenario: User login**  ❌
-**Scenario**: User login     ❌
-### Scenario: User login      ❌
-\`\`\`
-
-Every requirement MUST have at least one scenario.
-
-### Requirement Wording
-- Use SHALL/MUST for normative requirements (avoid should/may unless intentionally non-normative)
-
-### Delta Operations
-
-- \`## ADDED Requirements\` - New capabilities
-- \`## MODIFIED Requirements\` - Changed behavior
-- \`## REMOVED Requirements\` - Deprecated features
-- \`## RENAMED Requirements\` - Name changes
-
-Headers matched with \`trim(header)\` - whitespace ignored.
-
-#### When to use ADDED vs MODIFIED
-- ADDED: Introduces a new capability or sub-capability that can stand alone as a requirement. Prefer ADDED when the change is orthogonal (e.g., adding "Slash Command Configuration") rather than altering the semantics of an existing requirement.
-- MODIFIED: Changes the behavior, scope, or acceptance criteria of an existing requirement. Always paste the full, updated requirement content (header + all scenarios). The archiver will replace the entire requirement with what you provide here; partial deltas will drop previous details.
-- RENAMED: Use when only the name changes. If you also change behavior, use RENAMED (name) plus MODIFIED (content) referencing the new name.
-
-Common pitfall: Using MODIFIED to add a new concern without including the previous text. This causes loss of detail at archive time. If you aren’t explicitly changing the existing requirement, add a new requirement under ADDED instead.
-
-Authoring a MODIFIED requirement correctly:
-1) Locate the existing requirement in \`ogd/specs/<capability>/spec.md\`.
-2) Copy the entire requirement block (from \`### Requirement: ...\` through its scenarios).
-3) Paste it under \`## MODIFIED Requirements\` and edit to reflect the new behavior.
-4) Ensure the header text matches exactly (whitespace-insensitive) and keep at least one \`#### Scenario:\`.
-
-Example for RENAMED:
-\`\`\`markdown
-## RENAMED Requirements
-- FROM: \`### Requirement: Login\`
-- TO: \`### Requirement: User Authentication\`
-\`\`\`
-
-## Troubleshooting
-
-### Common Errors
-
-**"Change must have at least one delta"**
-- Check \`changes/[name]/specs/\` exists with .md files
-- Verify files have operation prefixes (## ADDED Requirements)
-
-**"Requirement must have at least one scenario"**
-- Check scenarios use \`#### Scenario:\` format (4 hashtags)
-- Don't use bullet points or bold for scenario headers
-
-**Silent scenario parsing failures**
-- Exact format required: \`#### Scenario: Name\`
-- Debug with: \`ogd show [change] --json --deltas-only\`
-
-### Validation Tips
-
-\`\`\`bash
-# Always use strict mode for comprehensive checks
-ogd validate [change] --strict --no-interactive
-
-# Debug delta parsing
-ogd show [change] --json | jq '.deltas'
-
-# Check specific requirement
-ogd show [spec] --json -r 1
-\`\`\`
-
-## Happy Path Script
-
-\`\`\`bash
-# 1) Explore current state
-ogd spec list --long
-ogd list
-# Optional full-text search:
-# rg -n "Requirement:|Scenario:" ogd/specs
-# rg -n "^#|Requirement:" ogd/changes
-
-# 2) Choose change id and scaffold
-CHANGE=add-two-factor-auth
-mkdir -p ogd/changes/$CHANGE/{specs/auth}
-printf "## Why\\n...\\n\\n## What Changes\\n- ...\\n\\n## Impact\\n- ...\\n" > ogd/changes/$CHANGE/proposal.md
-printf "## 1. Implementation\\n- [ ] 1.1 ...\\n" > ogd/changes/$CHANGE/tasks.md
-
-# 3) Add deltas (example)
-cat > ogd/changes/$CHANGE/specs/auth/spec.md << 'EOF'
-## ADDED Requirements
-### Requirement: Two-Factor Authentication
-Users MUST provide a second factor during login.
-
-#### Scenario: OTP required
-- **WHEN** valid credentials are provided
-- **THEN** an OTP challenge is required
-EOF
-
-# 4) Validate
-ogd validate $CHANGE --strict --no-interactive
-\`\`\`
-
-## Multi-Capability Example
-
-\`\`\`
-ogd/changes/add-2fa-notify/
-├── proposal.md
-├── tasks.md
-└── specs/
-    ├── auth/
-    │   └── spec.md   # ADDED: Two-Factor Authentication
-    └── notifications/
-        └── spec.md   # ADDED: OTP email notification
-\`\`\`
-
-auth/spec.md
-\`\`\`markdown
-## ADDED Requirements
-### Requirement: Two-Factor Authentication
-...
-\`\`\`
-
-notifications/spec.md
-\`\`\`markdown
-## ADDED Requirements
-### Requirement: OTP Email Notification
-...
-\`\`\`
+**Before Creating Specs**:
+- Always check if capability already exists
+- Prefer modifying existing specs over creating duplicates
+- Use \`ogd show [spec]\` to review current state
+- If ambiguous, ask 1-2 clarifying questions first
 
 ## Best Practices
 
-### Simplicity First
-- Default to <100 lines of new code
-- Single-file implementations until proven insufficient
-- Avoid frameworks without clear justification
-- Choose boring, proven patterns
+### Experience First
+- Describe what players do, what they feel
+- Avoid technical implementation details (no engines, languages, databases)
+- Focus on design intent, not development approach
 
-### Complexity Triggers
-Only add complexity with:
-- Performance data showing current solution too slow
-- Concrete scale requirements (>1000 users, >100MB data)
-- Multiple proven use cases requiring abstraction
-
-### Clear References
-- Use \`file.ts:42\` format for code locations
-- Reference specs as \`specs/auth/spec.md\`
-- Link related changes and PRs
+### Pillar Alignment
+- Verify every feature aligns with pillars
+- When conflicts arise, revisit the design or pillars
+- Run \`ogd validate\` to check alignment
 
 ### Capability Naming
-- Use verb-noun: \`user-auth\`, \`payment-capture\`
-- Single purpose per capability
+- Use kebab-case: \`combat-system\`, \`equipment-enhance\`
+- Single responsibility, one concern per capability
 - 10-minute understandability rule
-- Split if description needs "AND"
+- If description needs "and", consider splitting
 
 ### Change ID Naming
-- Use kebab-case, short and descriptive: \`add-two-factor-auth\`
-- Prefer verb-led prefixes: \`add-\`, \`update-\`, \`remove-\`, \`refactor-\`
-- Ensure uniqueness; if taken, append \`-2\`, \`-3\`, etc.
+- Use verb-led prefixes: \`add-\`, \`update-\`, \`remove-\`
+- Short and descriptive: \`add-combat-system\`
+- Ensure uniqueness
 
-## Tool Selection Guide
+## Common Issues
 
-| Task | Tool | Why |
-|------|------|-----|
-| Find files by pattern | Glob | Fast pattern matching |
-| Search code content | Grep | Optimized regex search |
-| Read specific files | Read | Direct file access |
-| Explore unknown scope | Task | Multi-step investigation |
+### "Change must have at least one delta"
+- Check if \`changes/[name]/specs/\` has .md files
+- Verify files have operation prefixes (## ADDED Requirements)
 
-## Error Recovery
+### "Requirement must have at least one scenario"
+- Check scenarios use \`#### Scenario:\` format (4 hashtags)
+- Don't use bullet points or bold as scenario headers
 
-### Change Conflicts
-1. Run \`ogd list\` to see active changes
-2. Check for overlapping specs
-3. Coordinate with change owners
-4. Consider combining proposals
-
-### Validation Failures
-1. Run with \`--strict\` flag
-2. Check JSON output for details
-3. Verify spec file format
-4. Ensure scenarios properly formatted
-
-### Missing Context
-1. Read pillars.md first
-2. Check related specs
-3. Review recent archives
-4. Ask for clarification
+### Silent scenario parsing failures
+- Must use exact format: \`#### Scenario: Name\`
+- Debug with \`ogd show [change] --json --deltas-only\`
 
 ## Quick Reference
 
 ### Stage Indicators
-- \`changes/\` - Proposed, not yet built
-- \`specs/\` - Built and deployed
-- \`archive/\` - Completed changes
+- \`changes/\` - Proposal stage, not yet finalized
+- \`specs/\` - Finalized, current design truth
+- \`archive/\` - Archived changes
 
 ### File Purposes
-- \`proposal.md\` - Why and what
-- \`tasks.md\` - Implementation steps
-- \`design.md\` - Technical decisions
+- \`pillars.md\` - Design pillars
+- \`proposal.md\` - Why the change
+- \`tasks.md\` - Design tasks
+- \`design.md\` - Design decisions
 - \`spec.md\` - Requirements and behavior
 
 ### CLI Essentials
 \`\`\`bash
-ogd list              # What's in progress?
-ogd show [item]       # View details
-ogd validate --strict --no-interactive  # Is it correct?
-ogd archive <change-id> [--yes|-y]  # Mark complete (add --yes for automation)
+ogd list                  # Changes in progress
+ogd list --specs          # Existing specs
+ogd show [item]           # View details
+ogd validate --strict     # Verify correctness
+ogd archive <id> --yes    # Mark complete
 \`\`\`
 
 Remember: Specs are truth. Changes are proposals. Keep them in sync.
