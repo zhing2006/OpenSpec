@@ -21,6 +21,19 @@ Instructions for AI assistants using OGD for spec-driven game design.
 3. **Dual spec types** - Global specs (game-vision) + Feature specs
 4. **Technology-agnostic** - Output design documents, no technical implementation details
 
+### Key Concept: Spec vs Artifact
+
+**IMPORTANT**: Understand the difference between specs and artifacts:
+
+| Type | Location | Purpose | Content |
+|------|----------|---------|---------|
+| **Spec** | \`ogd/specs/\` | Design requirements & constraints | WHAT to achieve, scenarios, acceptance criteria |
+| **Artifact** | \`docs/\` | Final design documents | HOW the design works, detailed mechanics, numbers |
+
+- **Specs are NOT the final deliverables** - they define requirements and scenarios
+- **Artifacts in \`docs/\` are the final game design documents** - the actual deliverables for development team
+- Workflow: Write specs first → Generate artifacts based on specs
+
 ### Workflow Order
 
 \`\`\`
@@ -84,11 +97,17 @@ ogd/
 └── AGENTS.md               # This file
 
 docs/                       # Design artifact output
-├── [feature]/
-│   ├── gameplay-design.md      # Gameplay design
-│   ├── numerical-framework.md  # Numerical framework
-│   ├── balance-analysis.md     # Balance analysis
-│   └── system-integration.md   # System integration
+├── game-vision/            # Global design artifacts
+│   ├── game-vision.md          # Game vision document
+│   ├── core-loop.md            # Core gameplay loop
+│   ├── world-setting.md        # World setting
+│   └── emotional-curve.md      # Emotional curve design
+└── [feature]/              # Feature design artifacts
+    ├── gameplay-design.md      # Gameplay design
+    ├── numerical-framework.md  # Numerical framework
+    ├── balance-analysis.md     # Balance analysis
+    ├── system-integration.md   # System integration
+    └── narrative-design.md     # Narrative design (if applicable)
 \`\`\`
 
 ## Design Pillars (pillars.md)
