@@ -1,9 +1,9 @@
 {
-  "name": "@game-design/ogd",
+  "name": "@zhing2006/ogd",
   "version": "0.1.0",
   "description": "AI 驱动的游戏设计文档生成工具 - 规范驱动的游戏设计工作流",
   "keywords": [
-    "game-design",
+    "zhing2006",
     "ogd",
     "specs",
     "cli",

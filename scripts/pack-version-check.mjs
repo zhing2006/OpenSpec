@@ -53,7 +53,7 @@ function main() {
   let tgzPath;
 
   try {
-    log(`Packing @game-design/ogd@${expected}...`);
+    log(`Packing @zhing2006/ogd@${expected}...`);
     const filename = npmPack();
     tgzPath = path.resolve(filename);
     log(`Created: ${tgzPath}`);
@@ -80,7 +80,7 @@ function main() {
     run('npm', ['install', tgzPath, '--silent', '--no-audit', '--no-fund'], { cwd: work, env });
 
     // Run the installed CLI via Node to avoid bin resolution/platform issues
-    const binRel = path.join('node_modules', '@game-design', 'ogd', 'bin', 'ogd.js');
+    const binRel = path.join('node_modules', '@zhing2006', 'ogd', 'bin', 'ogd.js');
     const actual = run(process.execPath, [binRel, '--version'], { cwd: work }).trim();
 
     if (actual !== expected) {
