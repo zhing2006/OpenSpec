@@ -808,7 +808,7 @@ describe('InitCommand', () => {
         testDir,
         initCommand,
         'ogd/AGENTS.md',
-        'OGD (OpenGameDesign) Instructions'
+        'OGD (OpenGameDesign) Game Design Workflow Guide'
       );
     });
 
@@ -858,7 +858,7 @@ describe('InitCommand', () => {
       await initCommand.execute(testDir);
 
       const calls = logSpy.mock.calls.flat().join('\n');
-      expect(calls).toContain('Copy these prompts to Claude Code');
+      expect(calls).toContain('将这些提示复制到 Claude Code');
     });
 
     it('should reference AGENTS compatible assistants in success message', async () => {
@@ -869,7 +869,7 @@ describe('InitCommand', () => {
 
       const calls = logSpy.mock.calls.flat().join('\n');
       expect(calls).toContain(
-        'Copy these prompts to your AGENTS.md-compatible assistant'
+        '将这些提示复制到 您的 AGENTS.md 兼容助手'
       );
     });
   });
@@ -883,7 +883,7 @@ describe('InitCommand', () => {
       expect(mockPrompt).toHaveBeenCalledWith(
         expect.objectContaining({
           baseMessage: expect.stringContaining(
-            'Which natively supported AI tools do you use?'
+            '您使用哪些原生支持的 AI 工具？'
           ),
         })
       );
@@ -1583,7 +1583,7 @@ describe('InitCommand', () => {
       const nonInteractiveCommand = new InitCommand({ tools: 'invalid-tool' });
 
       await expect(nonInteractiveCommand.execute(testDir)).rejects.toThrow(
-        /Invalid tool\(s\): invalid-tool\. Available values: /
+        /无效的工具: invalid-tool。可用值: /
       );
     });
 
@@ -1606,7 +1606,7 @@ describe('InitCommand', () => {
       const nonInteractiveCommand = new InitCommand({ tools: 'all,claude' });
 
       await expect(nonInteractiveCommand.execute(testDir)).rejects.toThrow(
-        /Cannot combine reserved values "all" or "none" with specific tool IDs/
+        /不能将保留值 "all" 或 "none" 与特定工具 ID 组合使用/
       );
     });
   });
@@ -1714,7 +1714,7 @@ describe('InitCommand', () => {
 
       queueSelections('claude', DONE);
       await expect(initCommand.execute(readOnlyDir)).rejects.toThrow(
-        /Insufficient permissions/
+        /没有权限写入/
       );
     });
   });
