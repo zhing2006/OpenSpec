@@ -1,5 +1,5 @@
 {
-  "name": "@fission-ai/openspec",
+  "name": "@xd/openspec",
   "version": "1.2.0",
   "description": "AI-native system for spec-driven development",
   "keywords": [

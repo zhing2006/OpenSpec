@@ -135,7 +135,7 @@ The completion command SHALL generate completion scripts for all supported shell
 
 ### Requirement: Dynamic Completions
 
-The completion system SHALL provide context-aware dynamic completions for project-specific values.
+The completion system SHALL provide context-aware dynamic completions for project-specific values. Spec ID completions SHALL use full nested paths.
 
 #### Scenario: Completing change IDs
 
@@ -145,11 +145,11 @@ The completion system SHALL provide context-aware dynamic completions for projec
 - **AND** return change IDs as completion suggestions
 - **AND** only provide suggestions when inside an OpenSpec-enabled project
 
-#### Scenario: Completing spec IDs
+#### Scenario: Completing spec IDs with nested paths
 
 - **WHEN** completing arguments for commands that accept spec names (show, validate)
-- **THEN** discover specs from `openspec/specs/` directory
-- **AND** return spec IDs as completion suggestions
+- **THEN** recursively discover specs from `openspec/specs/` directory
+- **AND** return spec IDs as full nested paths (e.g., `Client/Combat/combat-system`)
 - **AND** only provide suggestions when inside an OpenSpec-enabled project
 
 #### Scenario: Completion caching
@@ -279,6 +279,16 @@ The completion command SHALL remove installed completion scripts and configurati
 
 The completion implementation SHALL follow clean architecture principles with TypeScript best practices, supporting multiple shells through a plugin-based pattern.
 
+#### Scenario: Dynamic completion providers
+
+- **WHEN** implementing dynamic completions
+- **THEN** create a `CompletionProvider` class that encapsulates project discovery logic
+- **AND** implement methods:
+  - `getChangeIds(): Promise<string[]>` - Discovers active change IDs
+  - `getSpecIds(): Promise<string[]>` - Discovers spec IDs as full nested paths
+  - `isOpenSpecProject(): boolean` - Checks if current directory is OpenSpec-enabled
+- **AND** implement caching with 2-second TTL using class properties
+
 #### Scenario: Shell-specific generators
 
 - **WHEN** implementing completion generators
@@ -305,16 +315,6 @@ The completion implementation SHALL follow clean architecture principles with Ty
   - `createInstaller(shell: SupportedShell): CompletionInstaller`
 - **AND** factory uses switch statements with TypeScript exhaustiveness checking
 - **AND** adding new shell requires updating `SupportedShell` type and factory cases
-
-#### Scenario: Dynamic completion providers
-
-- **WHEN** implementing dynamic completions
-- **THEN** create a `CompletionProvider` class that encapsulates project discovery logic
-- **AND** implement methods:
-  - `getChangeIds(): Promise<string[]>` - Discovers active change IDs
-  - `getSpecIds(): Promise<string[]>` - Discovers spec IDs
-  - `isOpenSpecProject(): boolean` - Checks if current directory is OpenSpec-enabled
-- **AND** implement caching with 2-second TTL using class properties
 
 #### Scenario: Command registry
 

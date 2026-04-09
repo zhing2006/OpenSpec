@@ -39,6 +39,26 @@ describe('spec show (interactive behavior)', () => {
       process.env = originalEnv;
     }
   });
+
+  it('shows nested spec by full path in non-interactive mode', async () => {
+    // Create a nested spec
+    const nestedDir = path.join(specsDir, 'Client', 'Combat', 'combat-system');
+    await fs.mkdir(nestedDir, { recursive: true });
+    const content = `## Purpose\nCombat.\n\n## Requirements\n\n### Requirement: Combat\nThe system SHALL fight.`;
+    await fs.writeFile(path.join(nestedDir, 'spec.md'), content, 'utf-8');
+
+    const originalCwd = process.cwd();
+    const originalEnv = { ...process.env };
+    try {
+      process.chdir(testDir);
+      process.env.OPEN_SPEC_INTERACTIVE = '0';
+      const output = execSync(`node ${bin} spec show Client/Combat/combat-system`, { encoding: 'utf-8' });
+      expect(output).toContain('Combat');
+    } finally {
+      process.chdir(originalCwd);
+      process.env = originalEnv;
+    }
+  });
 });
 
 

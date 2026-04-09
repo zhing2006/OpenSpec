@@ -5,7 +5,7 @@ import { MarkdownParser } from '../core/parsers/markdown-parser.js';
 import { Validator } from '../core/validation/validator.js';
 import type { Spec } from '../core/schemas/index.js';
 import { isInteractive } from '../utils/interactive.js';
-import { getSpecIds } from '../utils/item-discovery.js';
+import { getSpecIds, findSpecMatches } from '../utils/item-discovery.js';
 
 const SPECS_DIR = 'openspec/specs';
 
@@ -82,8 +82,22 @@ export class SpecCommand {
       }
     }
 
+    // Resolve leaf name to full path if needed
     const specPath = join(this.SPECS_DIR, specId, 'spec.md');
     if (!existsSync(specPath)) {
+      const allSpecs = await getSpecIds();
+      const matches = findSpecMatches(allSpecs, specId);
+      if (matches.length === 1) {
+        specId = matches[0];
+      } else if (matches.length > 1) {
+        throw new Error(`Ambiguous spec name '${specId}' matches multiple specs:\n${matches.map(m => `  - ${m}`).join('\n')}\nUse the full path to specify which spec.`);
+      } else {
+        throw new Error(`Spec '${specId}' not found at openspec/specs/${specId}/spec.md`);
+      }
+    }
+
+    const resolvedSpecPath = join(this.SPECS_DIR, specId, 'spec.md');
+    if (!existsSync(resolvedSpecPath)) {
       throw new Error(`Spec '${specId}' not found at openspec/specs/${specId}/spec.md`);
     }
 
@@ -91,7 +105,7 @@ export class SpecCommand {
       if (options.requirements && options.requirement) {
         throw new Error('Options --requirements and --requirement cannot be used together');
       }
-      const parsed = parseSpecFromFile(specPath, specId);
+      const parsed = parseSpecFromFile(resolvedSpecPath, specId);
       const filtered = filterSpec(parsed, options);
       const output = {
         id: specId,
@@ -104,7 +118,7 @@ export class SpecCommand {
       console.log(JSON.stringify(output, null, 2));
       return;
     }
-    printSpecTextRaw(specPath);
+    printSpecTextRaw(resolvedSpecPath);
   }
 }
 
@@ -141,38 +155,30 @@ export function registerSpecCommand(rootProgram: typeof program) {
     .description('List all available specifications')
     .option('--json', 'Output as JSON')
     .option('--long', 'Show id and title with counts')
-    .action((options: { json?: boolean; long?: boolean }) => {
+    .action(async (options: { json?: boolean; long?: boolean }) => {
       try {
         if (!existsSync(SPECS_DIR)) {
           console.log('No items found');
           return;
         }
 
-        const specs = readdirSync(SPECS_DIR, { withFileTypes: true })
-          .filter(dirent => dirent.isDirectory())
-          .map(dirent => {
-            const specPath = join(SPECS_DIR, dirent.name, 'spec.md');
-            if (existsSync(specPath)) {
-              try {
-                const spec = parseSpecFromFile(specPath, dirent.name);
-                
-                return {
-                  id: dirent.name,
-                  title: spec.name,
-                  requirementCount: spec.requirements.length
-                };
-              } catch {
-                return {
-                  id: dirent.name,
-                  title: dirent.name,
-                  requirementCount: 0
-                };
-              }
+        const specIds = await getSpecIds();
+        const specs = specIds.map(id => {
+          const specFilePath = join(SPECS_DIR, id, 'spec.md');
+          if (existsSync(specFilePath)) {
+            try {
+              const spec = parseSpecFromFile(specFilePath, id.split('/').pop()!);
+              return {
+                id,
+                title: spec.name,
+                requirementCount: spec.requirements.length
+              };
+            } catch {
+              return { id, title: id, requirementCount: 0 };
             }
-            return null;
-          })
-          .filter((spec): spec is { id: string; title: string; requirementCount: number } => spec !== null)
-          .sort((a, b) => a.id.localeCompare(b.id));
+          }
+          return null;
+        }).filter((spec): spec is { id: string; title: string; requirementCount: number } => spec !== null);
 
         if (options.json) {
           console.log(JSON.stringify(specs, null, 2));
@@ -217,14 +223,23 @@ export function registerSpecCommand(rootProgram: typeof program) {
           }
         }
 
-        const specPath = join(SPECS_DIR, specId, 'spec.md');
-        
-        if (!existsSync(specPath)) {
-          throw new Error(`Spec '${specId}' not found at openspec/specs/${specId}/spec.md`);
+        let resolvedPath = join(SPECS_DIR, specId, 'spec.md');
+
+        if (!existsSync(resolvedPath)) {
+          const allSpecs = await getSpecIds();
+          const matches = findSpecMatches(allSpecs, specId);
+          if (matches.length === 1) {
+            specId = matches[0];
+            resolvedPath = join(SPECS_DIR, specId, 'spec.md');
+          } else if (matches.length > 1) {
+            throw new Error(`Ambiguous spec name '${specId}' matches multiple specs:\n${matches.map(m => `  - ${m}`).join('\n')}\nUse the full path to specify which spec.`);
+          } else {
+            throw new Error(`Spec '${specId}' not found at openspec/specs/${specId}/spec.md`);
+          }
         }
 
         const validator = new Validator(options.strict);
-        const report = await validator.validateSpec(specPath);
+        const report = await validator.validateSpec(resolvedPath);
 
         if (options.json) {
           console.log(JSON.stringify(report, null, 2));

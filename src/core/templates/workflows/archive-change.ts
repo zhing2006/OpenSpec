@@ -53,10 +53,10 @@ export function getArchiveChangeSkillTemplate(): SkillTemplate {
 
 4. **Assess delta spec sync state**
 
-   Check for delta specs at \`openspec/changes/<name>/specs/\`. If none exist, proceed without sync prompt.
+   Check for delta specs by recursively scanning \`openspec/changes/<name>/specs/\` at any nesting depth. If none exist, proceed without sync prompt.
 
    **If delta specs exist:**
-   - Compare each delta spec with its corresponding main spec at \`openspec/specs/<capability>/spec.md\`
+   - Compare each delta spec with its corresponding main spec (the delta spec's relative path within \`specs/\` mirrors the target path in \`openspec/specs/\`)
    - Determine what changes would be applied (adds, modifications, removals, renames)
    - Show a combined summary before prompting
 
@@ -168,10 +168,10 @@ export function getOpsxArchiveCommandTemplate(): CommandTemplate {
 
 4. **Assess delta spec sync state**
 
-   Check for delta specs at \`openspec/changes/<name>/specs/\`. If none exist, proceed without sync prompt.
+   Check for delta specs by recursively scanning \`openspec/changes/<name>/specs/\` at any nesting depth. If none exist, proceed without sync prompt.
 
    **If delta specs exist:**
-   - Compare each delta spec with its corresponding main spec at \`openspec/specs/<capability>/spec.md\`
+   - Compare each delta spec with its corresponding main spec (the delta spec's relative path within \`specs/\` mirrors the target path in \`openspec/specs/\`)
    - Determine what changes would be applied (adds, modifications, removals, renames)
    - Show a combined summary before prompting
 

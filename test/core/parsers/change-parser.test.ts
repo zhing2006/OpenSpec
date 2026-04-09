@@ -49,4 +49,79 @@ describe('ChangeParser', () => {
       expect(change.deltas[0].requirement).toBeDefined();
     });
   });
+
+  it('discovers nested delta specs with full relative paths', async () => {
+    await withTempDir(async (dir) => {
+      const changeDir = dir;
+
+      // Create nested delta specs
+      const nestedSpec1 = path.join(changeDir, 'specs', 'Client', 'Combat', 'combat-system');
+      const nestedSpec2 = path.join(changeDir, 'specs', 'Client', 'UI', 'hud-system');
+      await fs.mkdir(nestedSpec1, { recursive: true });
+      await fs.mkdir(nestedSpec2, { recursive: true });
+
+      const deltaSpec1 = `## ADDED Requirements\n\n### Requirement: Combat Feature\nThe system SHALL provide combat.\n\n#### Scenario: Attack\n- **GIVEN** a player\n- **WHEN** they attack\n- **THEN** damage is dealt`;
+      const deltaSpec2 = `## MODIFIED Requirements\n\n### Requirement: HUD Display\nThe system SHALL display HUD.\n\n#### Scenario: Show health\n- **GIVEN** a player\n- **WHEN** they take damage\n- **THEN** health bar updates`;
+
+      await fs.writeFile(path.join(nestedSpec1, 'spec.md'), deltaSpec1, 'utf8');
+      await fs.writeFile(path.join(nestedSpec2, 'spec.md'), deltaSpec2, 'utf8');
+
+      const content = `# Test Change\n\n## Why\nNested spec test with sufficient length.\n\n## What Changes\n- **combat-system:** Add combat feature`;
+
+      const parser = new ChangeParser(content, changeDir);
+      const change = await parser.parseChangeWithDeltas('nested-test');
+
+      expect(change.deltas.length).toBe(2);
+      const specNames = change.deltas.map(d => d.spec);
+      expect(specNames).toContain('Client/Combat/combat-system');
+      expect(specNames).toContain('Client/UI/hud-system');
+    });
+  });
+
+  it('discovers deeply nested delta specs', async () => {
+    await withTempDir(async (dir) => {
+      const changeDir = dir;
+      const deepSpec = path.join(changeDir, 'specs', 'Server', 'Core', 'Networking', 'protocol');
+      await fs.mkdir(deepSpec, { recursive: true });
+
+      const deltaSpec = `## ADDED Requirements\n\n### Requirement: Protocol\nThe system SHALL implement protocol.\n\n#### Scenario: Connect\n- **GIVEN** a client\n- **WHEN** connecting\n- **THEN** handshake completes`;
+      await fs.writeFile(path.join(deepSpec, 'spec.md'), deltaSpec, 'utf8');
+
+      const content = `# Test Change\n\n## Why\nDeep nesting test with sufficient length.\n\n## What Changes\n- **protocol:** Add protocol`;
+
+      const parser = new ChangeParser(content, changeDir);
+      const change = await parser.parseChangeWithDeltas('deep-test');
+
+      expect(change.deltas.length).toBe(1);
+      expect(change.deltas[0].spec).toBe('Server/Core/Networking/protocol');
+    });
+  });
+
+  it('discovers both flat and nested delta specs together', async () => {
+    await withTempDir(async (dir) => {
+      const changeDir = dir;
+
+      // Flat delta spec
+      const flatSpec = path.join(changeDir, 'specs', 'auth');
+      await fs.mkdir(flatSpec, { recursive: true });
+      const flatDelta = `## ADDED Requirements\n\n### Requirement: Auth\nThe system SHALL authenticate.\n\n#### Scenario: Login\n- **GIVEN** credentials\n- **WHEN** login\n- **THEN** authenticated`;
+      await fs.writeFile(path.join(flatSpec, 'spec.md'), flatDelta, 'utf8');
+
+      // Nested delta spec
+      const nestedSpec = path.join(changeDir, 'specs', 'Client', 'Combat', 'damage');
+      await fs.mkdir(nestedSpec, { recursive: true });
+      const nestedDelta = `## ADDED Requirements\n\n### Requirement: Damage\nThe system SHALL calculate damage.\n\n#### Scenario: Hit\n- **GIVEN** attack\n- **WHEN** hit\n- **THEN** damage applied`;
+      await fs.writeFile(path.join(nestedSpec, 'spec.md'), nestedDelta, 'utf8');
+
+      const content = `# Test Change\n\n## Why\nMixed flat and nested test with enough words.\n\n## What Changes\n- **auth:** Add auth`;
+
+      const parser = new ChangeParser(content, changeDir);
+      const change = await parser.parseChangeWithDeltas('mixed-test');
+
+      expect(change.deltas.length).toBe(2);
+      const specNames = change.deltas.map(d => d.spec);
+      expect(specNames).toContain('auth');
+      expect(specNames).toContain('Client/Combat/damage');
+    });
+  });
 });

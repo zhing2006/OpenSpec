@@ -25,22 +25,47 @@ export async function getActiveChangeIds(root: string = process.cwd()): Promise<
 export async function getSpecIds(root: string = process.cwd()): Promise<string[]> {
   const specsPath = path.join(root, 'openspec', 'specs');
   const result: string[] = [];
-  try {
-    const entries = await fs.readdir(specsPath, { withFileTypes: true });
+
+  async function scan(dir: string, prefix: string) {
+    let entries;
+    try {
+      entries = await fs.readdir(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
     for (const entry of entries) {
       if (!entry.isDirectory() || entry.name.startsWith('.')) continue;
-      const specFile = path.join(specsPath, entry.name, 'spec.md');
+      const relPath = prefix ? `${prefix}/${entry.name}` : entry.name;
+      const specFile = path.join(dir, entry.name, 'spec.md');
       try {
         await fs.access(specFile);
-        result.push(entry.name);
+        result.push(relPath);
       } catch {
-        // ignore
+        // not a spec dir at this level
       }
+      await scan(path.join(dir, entry.name), relPath);
     }
-  } catch {
-    // ignore
   }
+
+  await scan(specsPath, '');
   return result.sort();
+}
+
+/**
+ * Find spec matches by full path or leaf name.
+ * Normalizes Windows backslashes before matching.
+ * Returns matching full paths from the specs array.
+ */
+export function findSpecMatches(specs: string[], itemName: string): string[] {
+  const normalized = itemName.replace(/\\/g, '/');
+  // Exact full-path match
+  if (specs.includes(normalized)) return [normalized];
+  // Leaf-name match
+  const matches = specs.filter(s => {
+    const leaf = s.split('/').pop();
+    return leaf === normalized;
+  });
+  return matches;
 }
 
 export async function getArchivedChangeIds(root: string = process.cwd()): Promise<string[]> {

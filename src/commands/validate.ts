@@ -2,7 +2,7 @@ import ora from 'ora';
 import path from 'path';
 import { Validator } from '../core/validation/validator.js';
 import { isInteractive, resolveNoInteractive } from '../utils/interactive.js';
-import { getActiveChangeIds, getSpecIds } from '../utils/item-discovery.js';
+import { getActiveChangeIds, getSpecIds, findSpecMatches } from '../utils/item-discovery.js';
 import { nearestMatches } from '../utils/match.js';
 
 type ItemType = 'change' | 'spec';
@@ -105,7 +105,18 @@ export class ValidateCommand {
   private async validateDirectItem(itemName: string, opts: { typeOverride?: ItemType; strict: boolean; json: boolean }): Promise<void> {
     const [changes, specs] = await Promise.all([getActiveChangeIds(), getSpecIds()]);
     const isChange = changes.includes(itemName);
-    const isSpec = specs.includes(itemName);
+    const specMatches = findSpecMatches(specs, itemName);
+
+    if (specMatches.length > 1) {
+      console.error(`Ambiguous spec name '${itemName}' matches multiple specs:`);
+      for (const m of specMatches) console.error(`  - ${m}`);
+      console.error('Use the full path to specify which spec.');
+      process.exitCode = 1;
+      return;
+    }
+
+    const isSpec = specMatches.length === 1;
+    const resolvedSpecId = specMatches.length === 1 ? specMatches[0] : undefined;
 
     const type = opts.typeOverride ?? (isChange ? 'change' : isSpec ? 'spec' : undefined);
 
@@ -124,7 +135,7 @@ export class ValidateCommand {
       return;
     }
 
-    await this.validateByType(type, itemName, opts);
+    await this.validateByType(type, resolvedSpecId ?? itemName, opts);
   }
 
   private async validateByType(type: ItemType, id: string, opts: { strict: boolean; json: boolean }): Promise<void> {

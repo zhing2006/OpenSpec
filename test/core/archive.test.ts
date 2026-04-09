@@ -419,16 +419,16 @@ Then expected result happens`;
         message: 'Proceed with spec updates?',
         default: true
       });
-      
+
       // Verify skip message was logged
       expect(console.log).toHaveBeenCalledWith(
         'Skipping spec updates. Proceeding with archive.'
       );
-      
+
       // Verify spec was NOT copied to main specs
       const mainSpecPath = path.join(tempDir, 'openspec', 'specs', 'test-capability', 'spec.md');
       await expect(fs.access(mainSpecPath)).rejects.toThrow();
-      
+
       // Verify change was still archived
       const archiveDir = path.join(tempDir, 'openspec', 'changes', 'archive');
       const archives = await fs.readdir(archiveDir);
@@ -705,6 +705,120 @@ E1 updated`);
       // Verify aggregated totals line was printed
       expect(console.log).toHaveBeenCalledWith(
         expect.stringContaining('Totals: + 1, ~ 1, - 0, → 1')
+      );
+    });
+  });
+
+  describe('nested spec paths', () => {
+    it('should archive a change with nested delta specs', async () => {
+      const changeName = 'nested-spec-feature';
+      const changeDir = path.join(tempDir, 'openspec', 'changes', changeName);
+      const nestedSpecDir = path.join(changeDir, 'specs', 'Client', 'Combat', 'combat-system');
+      await fs.mkdir(nestedSpecDir, { recursive: true });
+
+      const specContent = `# Combat System Spec - Changes
+
+## ADDED Requirements
+
+### Requirement: The system SHALL track player health
+The combat system SHALL maintain accurate health tracking.
+
+#### Scenario: Health reduction
+Given a player with full health
+When an enemy attacks
+Then the player's health decreases`;
+      await fs.writeFile(path.join(nestedSpecDir, 'spec.md'), specContent);
+
+      await archiveCommand.execute(changeName, { yes: true, noValidate: true });
+
+      // Verify spec was created at nested path
+      const mainSpecPath = path.join(tempDir, 'openspec', 'specs', 'Client', 'Combat', 'combat-system', 'spec.md');
+      const updatedContent = await fs.readFile(mainSpecPath, 'utf-8');
+      expect(updatedContent).toContain('### Requirement: The system SHALL track player health');
+
+      // Verify change was archived
+      const archiveDir = path.join(tempDir, 'openspec', 'changes', 'archive');
+      const archives = await fs.readdir(archiveDir);
+      expect(archives.some(a => a.includes(changeName))).toBe(true);
+    });
+
+    it('should handle multiple nested delta specs at different depths', async () => {
+      const changeName = 'multi-nested';
+      const changeDir = path.join(tempDir, 'openspec', 'changes', changeName);
+
+      const nestedSpec1 = path.join(changeDir, 'specs', 'Client', 'Combat', 'damage');
+      const nestedSpec2 = path.join(changeDir, 'specs', 'Client', 'UI', 'hud');
+      const flatSpec = path.join(changeDir, 'specs', 'auth');
+      await fs.mkdir(nestedSpec1, { recursive: true });
+      await fs.mkdir(nestedSpec2, { recursive: true });
+      await fs.mkdir(flatSpec, { recursive: true });
+
+      const delta = `## ADDED Requirements\n\n### Requirement: Feature\nThe system SHALL provide feature.\n\n#### Scenario: Basic\nGiven X\nWhen Y\nThen Z`;
+      await fs.writeFile(path.join(nestedSpec1, 'spec.md'), delta);
+      await fs.writeFile(path.join(nestedSpec2, 'spec.md'), delta);
+      await fs.writeFile(path.join(flatSpec, 'spec.md'), delta);
+
+      await archiveCommand.execute(changeName, { yes: true, noValidate: true });
+
+      // Verify all specs were created at correct paths
+      const damageSpec = path.join(tempDir, 'openspec', 'specs', 'Client', 'Combat', 'damage', 'spec.md');
+      const hudSpec = path.join(tempDir, 'openspec', 'specs', 'Client', 'UI', 'hud', 'spec.md');
+      const authSpec = path.join(tempDir, 'openspec', 'specs', 'auth', 'spec.md');
+
+      await expect(fs.access(damageSpec)).resolves.not.toThrow();
+      await expect(fs.access(hudSpec)).resolves.not.toThrow();
+      await expect(fs.access(authSpec)).resolves.not.toThrow();
+
+      const damageContent = await fs.readFile(damageSpec, 'utf-8');
+      expect(damageContent).toContain('### Requirement: Feature');
+    });
+
+    it('should update existing nested spec', async () => {
+      const changeName = 'update-nested';
+      const changeDir = path.join(tempDir, 'openspec', 'changes', changeName);
+      const nestedDelta = path.join(changeDir, 'specs', 'Client', 'UI', 'hud');
+      await fs.mkdir(nestedDelta, { recursive: true });
+
+      // Create existing main spec at nested path
+      const mainSpecDir = path.join(tempDir, 'openspec', 'specs', 'Client', 'UI', 'hud');
+      await fs.mkdir(mainSpecDir, { recursive: true });
+      await fs.writeFile(path.join(mainSpecDir, 'spec.md'), `# hud Specification
+
+## Purpose
+HUD purpose.
+
+## Requirements
+
+### Requirement: Display Health
+Show health bar.`);
+
+      const deltaContent = `## MODIFIED Requirements
+
+### Requirement: Display Health
+Show health bar with percentage overlay.`;
+      await fs.writeFile(path.join(nestedDelta, 'spec.md'), deltaContent);
+
+      await archiveCommand.execute(changeName, { yes: true, noValidate: true });
+
+      const updated = await fs.readFile(path.join(mainSpecDir, 'spec.md'), 'utf-8');
+      expect(updated).toContain('percentage overlay');
+    });
+
+    it('should show full nested paths in confirmation display', async () => {
+      const changeName = 'confirm-nested';
+      const changeDir = path.join(tempDir, 'openspec', 'changes', changeName);
+
+      const nestedSpec = path.join(changeDir, 'specs', 'Server', 'Core', 'networking');
+      await fs.mkdir(nestedSpec, { recursive: true });
+
+      const delta = `## ADDED Requirements\n\n### Requirement: Network\nThe system SHALL handle network.\n\n#### Scenario: Connect\nGiven client\nWhen connecting\nThen connected`;
+      await fs.writeFile(path.join(nestedSpec, 'spec.md'), delta);
+
+      await archiveCommand.execute(changeName, { yes: true, noValidate: true });
+
+      // Verify full path was displayed
+      expect(console.log).toHaveBeenCalledWith(
+        expect.stringContaining('Server/Core/networking')
       );
     });
   });

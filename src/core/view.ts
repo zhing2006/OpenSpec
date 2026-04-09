@@ -3,6 +3,7 @@ import * as path from 'path';
 import chalk from 'chalk';
 import { getTaskProgressForChange, formatTaskStatus } from '../utils/task-progress.js';
 import { MarkdownParser } from './parsers/markdown-parser.js';
+import { getSpecIds } from '../utils/item-discovery.js';
 
 export class ViewCommand {
   async execute(targetPath: string = '.'): Promise<void> {
@@ -131,29 +132,26 @@ export class ViewCommand {
 
   private async getSpecsData(openspecDir: string): Promise<Array<{ name: string; requirementCount: number }>> {
     const specsDir = path.join(openspecDir, 'specs');
-    
+
     if (!fs.existsSync(specsDir)) {
       return [];
     }
 
+    // Derive project root from openspecDir (parent of 'openspec')
+    const projectRoot = path.dirname(openspecDir);
+    const specIds = await getSpecIds(projectRoot);
     const specs: Array<{ name: string; requirementCount: number }> = [];
-    const entries = fs.readdirSync(specsDir, { withFileTypes: true });
-    
-    for (const entry of entries) {
-      if (entry.isDirectory()) {
-        const specFile = path.join(specsDir, entry.name, 'spec.md');
-        
-        if (fs.existsSync(specFile)) {
-          try {
-            const content = fs.readFileSync(specFile, 'utf-8');
-            const parser = new MarkdownParser(content);
-            const spec = parser.parseSpec(entry.name);
-            const requirementCount = spec.requirements.length;
-            specs.push({ name: entry.name, requirementCount });
-          } catch (error) {
-            // If spec cannot be parsed, include with 0 count
-            specs.push({ name: entry.name, requirementCount: 0 });
-          }
+
+    for (const id of specIds) {
+      const specFile = path.join(specsDir, id, 'spec.md');
+      if (fs.existsSync(specFile)) {
+        try {
+          const content = fs.readFileSync(specFile, 'utf-8');
+          const parser = new MarkdownParser(content);
+          const spec = parser.parseSpec(id.split('/').pop()!);
+          specs.push({ name: id, requirementCount: spec.requirements.length });
+        } catch {
+          specs.push({ name: id, requirementCount: 0 });
         }
       }
     }

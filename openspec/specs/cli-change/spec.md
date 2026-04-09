@@ -2,11 +2,24 @@
 
 ## Purpose
 Define `openspec change` command behavior for showing, listing, and validating change proposals and deltas.
-
 ## Requirements
 ### Requirement: Change Command
 
-The system SHALL provide a `change` command with subcommands for displaying, listing, and validating change proposals.
+The system SHALL provide a `change` command with subcommands for displaying, listing, and validating change proposals. Delta spec discovery within `ChangeParser.parseDeltaSpecs()` SHALL use recursive scanning to discover nested delta specs.
+
+#### Scenario: Show change with nested delta specs as JSON
+
+- **WHEN** executing `openspec change show my-change --json`
+- **AND** the change has delta specs in nested directories (e.g., `specs/Client/Combat/combat-system/spec.md`)
+- **THEN** recursively discover all delta spec files
+- **AND** parse and include all deltas in the JSON output
+
+#### Scenario: Show change with nested deltas-only
+
+- **WHEN** executing `openspec change show my-change --json --deltas-only`
+- **AND** the change has delta specs in nested directories
+- **THEN** recursively discover and display all delta specs
+- **AND** include the full relative path in the `spec` field of each delta
 
 #### Scenario: Show change as JSON
 

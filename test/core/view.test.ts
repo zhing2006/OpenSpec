@@ -125,5 +125,34 @@ describe('ViewCommand', () => {
       'gamma-change'
     ]);
   });
+
+  it('discovers nested specs in dashboard', async () => {
+    const specsDir = path.join(tempDir, 'openspec', 'specs');
+    const changesDir = path.join(tempDir, 'openspec', 'changes');
+    await fs.mkdir(changesDir, { recursive: true });
+
+    // Create nested specs
+    const nestedSpec1 = path.join(specsDir, 'Client', 'Combat', 'combat-system');
+    const nestedSpec2 = path.join(specsDir, 'Client', 'UI', 'hud-system');
+    const flatSpec = path.join(specsDir, 'auth');
+    await fs.mkdir(nestedSpec1, { recursive: true });
+    await fs.mkdir(nestedSpec2, { recursive: true });
+    await fs.mkdir(flatSpec, { recursive: true });
+
+    const specContent = `## Purpose\nTest.\n\n## Requirements\n\n### Requirement: R\nThe system SHALL do X.`;
+    await fs.writeFile(path.join(nestedSpec1, 'spec.md'), specContent);
+    await fs.writeFile(path.join(nestedSpec2, 'spec.md'), specContent);
+    await fs.writeFile(path.join(flatSpec, 'spec.md'), specContent);
+
+    const viewCommand = new ViewCommand();
+    await viewCommand.execute(tempDir);
+
+    const output = logOutput.map(stripAnsi).join('\n');
+
+    // Dashboard should show all specs including nested ones
+    expect(output).toContain('Client/Combat/combat-system');
+    expect(output).toContain('Client/UI/hud-system');
+    expect(output).toContain('auth');
+  });
 });
 

@@ -1,8 +1,5 @@
-# specs-sync-skill Specification
+## MODIFIED Requirements
 
-## Purpose
-Defines the agent skill for syncing delta specs from changes to main specs.
-## Requirements
 ### Requirement: Specs Sync Skill
 
 The system SHALL provide an `/opsx:sync` skill that syncs delta specs from a change to the main specs. Delta spec discovery SHALL support nested directory structures, and target paths SHALL mirror the delta spec's relative path.
@@ -93,4 +90,3 @@ The skill SHALL provide clear feedback on what was applied, using full nested pa
 
 - **WHEN** main specs already match delta specs
 - **THEN** display "Specs already in sync - no changes needed"
-

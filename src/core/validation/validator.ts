@@ -118,21 +118,42 @@ export class Validator {
     const missingHeaderSpecs: string[] = [];
     const emptySectionSpecs: Array<{ path: string; sections: string[] }> = [];
 
-    try {
-      const entries = await fs.readdir(specsDir, { withFileTypes: true });
+    // Recursively discover all spec.md files under the specs/ directory
+    const specFiles: Array<{ filePath: string; entryPath: string }> = [];
+    const self = this;
+
+    async function discoverSpecs(dir: string, prefix: string) {
+      let entries;
+      try {
+        entries = await fs.readdir(dir, { withFileTypes: true });
+      } catch {
+        return;
+      }
       for (const entry of entries) {
         if (!entry.isDirectory()) continue;
-        const specName = entry.name;
-        const specFile = path.join(specsDir, specName, 'spec.md');
+        const relPath = prefix ? `${prefix}/${entry.name}` : entry.name;
+        const specFile = path.join(dir, entry.name, 'spec.md');
+        try {
+          await fs.access(specFile);
+          specFiles.push({ filePath: specFile, entryPath: `${relPath}/spec.md` });
+        } catch {
+          // no spec.md at this level
+        }
+        await discoverSpecs(path.join(dir, entry.name), relPath);
+      }
+    }
+
+    await discoverSpecs(specsDir, '');
+
+    for (const { filePath, entryPath } of specFiles) {
         let content: string | undefined;
         try {
-          content = await fs.readFile(specFile, 'utf-8');
+          content = await fs.readFile(filePath, 'utf-8');
         } catch {
           continue;
         }
 
         const plan = parseDeltaSpec(content);
-        const entryPath = `${specName}/spec.md`;
         const sectionNames: string[] = [];
         if (plan.sectionPresence.added) sectionNames.push('## ADDED Requirements');
         if (plan.sectionPresence.modified) sectionNames.push('## MODIFIED Requirements');
@@ -245,9 +266,6 @@ export class Validator {
             issues.push({ level: 'ERROR', path: entryPath, message: `RENAMED TO collides with ADDED for "${to}"` });
           }
         }
-      }
-    } catch {
-      // If no specs dir, treat as no deltas
     }
 
     for (const { path: specPath, sections } of emptySectionSpecs) {
@@ -362,8 +380,14 @@ export class Validator {
   private extractNameFromPath(filePath: string): string {
     const normalizedPath = FileSystemUtils.toPosixPath(filePath);
     const parts = normalizedPath.split('/');
-    
-    // Look for the directory name after 'specs' or 'changes'
+
+    // For spec.md files, the parent directory is the spec name
+    const specMdIndex = parts.lastIndexOf('spec.md');
+    if (specMdIndex > 0) {
+      return parts[specMdIndex - 1];
+    }
+
+    // Fallback: look for the directory name after 'specs' or 'changes'
     for (let i = parts.length - 1; i >= 0; i--) {
       if (parts[i] === 'specs' || parts[i] === 'changes') {
         if (i < parts.length - 1) {
@@ -371,7 +395,7 @@ export class Validator {
         }
       }
     }
-    
+
     // Fallback to filename without extension if not in expected structure
     const fileName = parts[parts.length - 1] ?? '';
     const dotIndex = fileName.lastIndexOf('.');

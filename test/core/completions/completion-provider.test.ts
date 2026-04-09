@@ -167,6 +167,67 @@ describe('CompletionProvider', () => {
       const secondResult = await shortTTLProvider.getSpecIds();
       expect(secondResult).toEqual(['spec-1', 'spec-2']);
     });
+
+    it('should return full relative paths for nested specs', async () => {
+      const specsDir = path.join(testDir, 'openspec', 'specs');
+      await fs.mkdir(specsDir, { recursive: true });
+
+      // Create flat spec
+      await fs.mkdir(path.join(specsDir, 'flat-spec'), { recursive: true });
+      await fs.writeFile(path.join(specsDir, 'flat-spec', 'spec.md'), '# Flat');
+
+      // Create nested specs
+      await fs.mkdir(path.join(specsDir, 'Client', 'Combat', 'combat-system'), { recursive: true });
+      await fs.writeFile(path.join(specsDir, 'Client', 'Combat', 'combat-system', 'spec.md'), '# Combat');
+
+      await fs.mkdir(path.join(specsDir, 'Client', 'UI', 'hud-system'), { recursive: true });
+      await fs.writeFile(path.join(specsDir, 'Client', 'UI', 'hud-system', 'spec.md'), '# HUD');
+
+      const specIds = await provider.getSpecIds();
+      expect(specIds).toEqual([
+        'Client/Combat/combat-system',
+        'Client/UI/hud-system',
+        'flat-spec',
+      ]);
+    });
+
+    it('should handle deeply nested specs', async () => {
+      const specsDir = path.join(testDir, 'openspec', 'specs');
+      await fs.mkdir(path.join(specsDir, 'a', 'b', 'c', 'deep-spec'), { recursive: true });
+      await fs.writeFile(path.join(specsDir, 'a', 'b', 'c', 'deep-spec', 'spec.md'), '# Deep');
+
+      const specIds = await provider.getSpecIds();
+      expect(specIds).toEqual(['a/b/c/deep-spec']);
+    });
+
+    it('should skip directories without spec.md but continue scanning children', async () => {
+      const specsDir = path.join(testDir, 'openspec', 'specs');
+      await fs.mkdir(specsDir, { recursive: true });
+
+      // Category dir without spec.md, but has a child with spec.md
+      await fs.mkdir(path.join(specsDir, 'Client', 'Combat', 'combat-system'), { recursive: true });
+      await fs.writeFile(path.join(specsDir, 'Client', 'Combat', 'combat-system', 'spec.md'), '# Combat');
+
+      const specIds = await provider.getSpecIds();
+      expect(specIds).toEqual(['Client/Combat/combat-system']);
+    });
+
+    it('should handle identically-named specs under different categories', async () => {
+      const specsDir = path.join(testDir, 'openspec', 'specs');
+      await fs.mkdir(specsDir, { recursive: true });
+
+      await fs.mkdir(path.join(specsDir, 'Client', 'UI', 'damage'), { recursive: true });
+      await fs.writeFile(path.join(specsDir, 'Client', 'UI', 'damage', 'spec.md'), '# UI Damage');
+
+      await fs.mkdir(path.join(specsDir, 'Client', 'Combat', 'damage'), { recursive: true });
+      await fs.writeFile(path.join(specsDir, 'Client', 'Combat', 'damage', 'spec.md'), '# Combat Damage');
+
+      const specIds = await provider.getSpecIds();
+      expect(specIds).toEqual([
+        'Client/Combat/damage',
+        'Client/UI/damage',
+      ]);
+    });
   });
 
   describe('getAllIds', () => {

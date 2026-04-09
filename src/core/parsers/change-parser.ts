@@ -54,30 +54,30 @@ export class ChangeParser extends MarkdownParser {
 
   private async parseDeltaSpecs(specsDir: string): Promise<Delta[]> {
     const deltas: Delta[] = [];
-    
-    try {
-      const specDirs = await fs.readdir(specsDir, { withFileTypes: true });
-      
-      for (const dir of specDirs) {
-        if (!dir.isDirectory()) continue;
-        
-        const specName = dir.name;
-        const specFile = path.join(specsDir, specName, 'spec.md');
-        
+
+    const scan = async (dir: string, prefix: string) => {
+      let entries;
+      try {
+        entries = await fs.readdir(dir, { withFileTypes: true });
+      } catch {
+        return;
+      }
+      for (const entry of entries) {
+        if (!entry.isDirectory()) continue;
+        const relPath = prefix ? `${prefix}/${entry.name}` : entry.name;
+        const specFile = path.join(dir, entry.name, 'spec.md');
         try {
           const content = await fs.readFile(specFile, 'utf-8');
-          const specDeltas = this.parseSpecDeltas(specName, content);
+          const specDeltas = this.parseSpecDeltas(relPath, content);
           deltas.push(...specDeltas);
-        } catch (error) {
+        } catch {
           // Spec file might not exist, which is okay
-          continue;
         }
+        await scan(path.join(dir, entry.name), relPath);
       }
-    } catch (error) {
-      // Specs directory might not exist, which is okay
-      return [];
-    }
-    
+    };
+
+    await scan(specsDir, '');
     return deltas;
   }
 

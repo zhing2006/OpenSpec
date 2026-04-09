@@ -57,40 +57,37 @@ export async function findSpecUpdates(changeDir: string, mainSpecsDir: string): 
   const updates: SpecUpdate[] = [];
   const changeSpecsDir = path.join(changeDir, 'specs');
 
-  try {
-    const entries = await fs.readdir(changeSpecsDir, { withFileTypes: true });
-
-    for (const entry of entries) {
-      if (entry.isDirectory()) {
-        const specFile = path.join(changeSpecsDir, entry.name, 'spec.md');
-        const targetFile = path.join(mainSpecsDir, entry.name, 'spec.md');
-
-        try {
-          await fs.access(specFile);
-
-          // Check if target exists
-          let exists = false;
-          try {
-            await fs.access(targetFile);
-            exists = true;
-          } catch {
-            exists = false;
-          }
-
-          updates.push({
-            source: specFile,
-            target: targetFile,
-            exists,
-          });
-        } catch {
-          // Source spec doesn't exist, skip
-        }
-      }
+  async function scan(dir: string, prefix: string) {
+    let entries;
+    try {
+      entries = await fs.readdir(dir, { withFileTypes: true });
+    } catch {
+      return;
     }
-  } catch {
-    // No specs directory in change
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      const relPath = prefix ? path.join(prefix, entry.name) : entry.name;
+      const specFile = path.join(dir, entry.name, 'spec.md');
+      const targetFile = path.join(mainSpecsDir, relPath, 'spec.md');
+
+      try {
+        await fs.access(specFile);
+        let exists = false;
+        try {
+          await fs.access(targetFile);
+          exists = true;
+        } catch {
+          exists = false;
+        }
+        updates.push({ source: specFile, target: targetFile, exists });
+      } catch {
+        // no spec.md at this level
+      }
+      await scan(path.join(dir, entry.name), relPath);
+    }
   }
 
+  await scan(changeSpecsDir, '');
   return updates;
 }
 
@@ -349,8 +346,14 @@ export async function writeUpdatedSpec(
   await fs.mkdir(targetDir, { recursive: true });
   await fs.writeFile(update.target, rebuilt);
 
-  const specName = path.basename(path.dirname(update.target));
-  console.log(`Applying changes to openspec/specs/${specName}/spec.md:`);
+  // Derive the relative path from the main specs directory for display
+  const specsMarker = path.join('openspec', 'specs');
+  const normalizedTarget = update.target.replace(/\\/g, '/');
+  const markerIdx = normalizedTarget.indexOf('openspec/specs/');
+  const relDisplay = markerIdx >= 0
+    ? normalizedTarget.slice(markerIdx + 'openspec/specs/'.length)
+    : path.basename(path.dirname(update.target)) + '/spec.md';
+  console.log(`Applying changes to openspec/specs/${relDisplay}:`);
   if (counts.added) console.log(`  + ${counts.added} added`);
   if (counts.modified) console.log(`  ~ ${counts.modified} modified`);
   if (counts.removed) console.log(`  - ${counts.removed} removed`);

@@ -101,6 +101,44 @@ describe('top-level show command', () => {
     }
   });
 
+  it('auto-detects nested spec by full path', async () => {
+    // Create a nested spec
+    const nestedSpecDir = path.join(specsDir, 'Client', 'Combat', 'combat-system');
+    await fs.mkdir(nestedSpecDir, { recursive: true });
+    const specContent = `## Purpose\nCombat spec.\n\n## Requirements\n\n### Requirement: Combat System\nThe system SHALL provide combat.\n`;
+    await fs.writeFile(path.join(nestedSpecDir, 'spec.md'), specContent, 'utf-8');
+
+    const originalCwd = process.cwd();
+    try {
+      process.chdir(testDir);
+      const output = execSync(`node ${openspecBin} show Client/Combat/combat-system --json`, { encoding: 'utf-8' });
+      const json = JSON.parse(output);
+      expect(json.id).toBe('Client/Combat/combat-system');
+      expect(Array.isArray(json.requirements)).toBe(true);
+    } finally {
+      process.chdir(originalCwd);
+    }
+  });
+
+  it('auto-detects nested spec by unique leaf name', async () => {
+    // Create a nested spec with a unique leaf name
+    const nestedSpecDir = path.join(specsDir, 'Server', 'Core', 'networking');
+    await fs.mkdir(nestedSpecDir, { recursive: true });
+    const specContent = `## Purpose\nNetworking spec.\n\n## Requirements\n\n### Requirement: Network Layer\nThe system SHALL handle networking.\n`;
+    await fs.writeFile(path.join(nestedSpecDir, 'spec.md'), specContent, 'utf-8');
+
+    const originalCwd = process.cwd();
+    try {
+      process.chdir(testDir);
+      const output = execSync(`node ${openspecBin} show networking --json`, { encoding: 'utf-8' });
+      const json = JSON.parse(output);
+      expect(json.id).toBe('Server/Core/networking');
+      expect(Array.isArray(json.requirements)).toBe(true);
+    } finally {
+      process.chdir(originalCwd);
+    }
+  });
+
   it('prints nearest matches when not found', () => {
     const originalCwd = process.cwd();
     try {

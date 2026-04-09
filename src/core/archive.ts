@@ -111,24 +111,33 @@ export class ArchiveCommand {
       }
 
       // Validate delta-formatted spec files under the change directory if present
+      // Recursively scan for delta specs at any nesting depth
       const changeSpecsDir = path.join(changeDir, 'specs');
       let hasDeltaSpecs = false;
-      try {
-        const candidates = await fs.readdir(changeSpecsDir, { withFileTypes: true });
-        for (const c of candidates) {
-          if (c.isDirectory()) {
-            try {
-              const candidatePath = path.join(changeSpecsDir, c.name, 'spec.md');
-              await fs.access(candidatePath);
-              const content = await fs.readFile(candidatePath, 'utf-8');
-              if (/^##\s+(ADDED|MODIFIED|REMOVED|RENAMED)\s+Requirements/m.test(content)) {
-                hasDeltaSpecs = true;
-                break;
-              }
-            } catch {}
-          }
+
+      async function detectDeltaSpecs(dir: string): Promise<boolean> {
+        let entries;
+        try {
+          entries = await fs.readdir(dir, { withFileTypes: true });
+        } catch {
+          return false;
         }
-      } catch {}
+        for (const entry of entries) {
+          if (!entry.isDirectory()) continue;
+          const candidatePath = path.join(dir, entry.name, 'spec.md');
+          try {
+            await fs.access(candidatePath);
+            const content = await fs.readFile(candidatePath, 'utf-8');
+            if (/^##\s+(ADDED|MODIFIED|REMOVED|RENAMED)\s+Requirements/m.test(content)) {
+              return true;
+            }
+          } catch {}
+          if (await detectDeltaSpecs(path.join(dir, entry.name))) return true;
+        }
+        return false;
+      }
+
+      hasDeltaSpecs = await detectDeltaSpecs(changeSpecsDir);
       if (hasDeltaSpecs) {
         const deltaReport = await validator.validateChangeDeltaSpecs(changeDir);
         if (!deltaReport.valid) {
@@ -201,11 +210,40 @@ export class ArchiveCommand {
       const specUpdates = await findSpecUpdates(changeDir, mainSpecsDir);
       
       if (specUpdates.length > 0) {
-        console.log('\nSpecs to update:');
-        for (const update of specUpdates) {
-          const status = update.exists ? 'update' : 'create';
-          const capability = path.basename(path.dirname(update.target));
-          console.log(`  ${capability}: ${status}`);
+        // Derive full relative paths for display
+        const getRelPath = (targetPath: string) => {
+          const normalized = targetPath.replace(/\\/g, '/');
+          const marker = 'openspec/specs/';
+          const idx = normalized.indexOf(marker);
+          if (idx >= 0) {
+            const rel = normalized.slice(idx + marker.length);
+            // Remove trailing /spec.md
+            return rel.replace(/\/spec\.md$/, '');
+          }
+          return path.basename(path.dirname(targetPath));
+        };
+        const getSourceRelPath = (sourcePath: string) => {
+          const normalized = sourcePath.replace(/\\/g, '/');
+          const marker = 'openspec/changes/';
+          const idx = normalized.indexOf(marker);
+          return idx >= 0 ? normalized.slice(idx) : sourcePath;
+        };
+
+        const newSpecs = specUpdates.filter(u => !u.exists);
+        const existingSpecs = specUpdates.filter(u => u.exists);
+
+        console.log('\nThe following specs will be updated:\n');
+        if (newSpecs.length > 0) {
+          console.log('NEW specs to be created:');
+          for (const update of newSpecs) {
+            console.log(`  - ${getRelPath(update.target)} (from ${getSourceRelPath(update.source)})`);
+          }
+        }
+        if (existingSpecs.length > 0) {
+          console.log('EXISTING specs to be updated:');
+          for (const update of existingSpecs) {
+            console.log(`  - ${getRelPath(update.target)} (from ${getSourceRelPath(update.source)})`);
+          }
         }
 
         let shouldUpdateSpecs = true;

@@ -1,6 +1,6 @@
 import path from 'path';
 import { isInteractive } from '../utils/interactive.js';
-import { getActiveChangeIds, getSpecIds } from '../utils/item-discovery.js';
+import { getActiveChangeIds, getSpecIds, findSpecMatches } from '../utils/item-discovery.js';
 import { ChangeCommand } from './change.js';
 import { SpecCommand } from './spec.js';
 import { nearestMatches } from '../utils/match.js';
@@ -72,7 +72,7 @@ export class ShowCommand {
   private async showDirect(itemName: string, params: { typeOverride?: ItemType; options: { json?: boolean; [k: string]: any } }): Promise<void> {
     // Optimize lookups when type is pre-specified
     let isChange = false;
-    let isSpec = false;
+    let specMatches: string[] = [];
     let changes: string[] = [];
     let specs: string[] = [];
     if (params.typeOverride === 'change') {
@@ -80,11 +80,22 @@ export class ShowCommand {
       isChange = changes.includes(itemName);
     } else if (params.typeOverride === 'spec') {
       specs = await getSpecIds();
-      isSpec = specs.includes(itemName);
+      specMatches = findSpecMatches(specs, itemName);
     } else {
       [changes, specs] = await Promise.all([getActiveChangeIds(), getSpecIds()]);
       isChange = changes.includes(itemName);
-      isSpec = specs.includes(itemName);
+      specMatches = findSpecMatches(specs, itemName);
+    }
+
+    const isSpec = specMatches.length === 1;
+    const resolvedSpecId = specMatches.length === 1 ? specMatches[0] : undefined;
+
+    if (specMatches.length > 1) {
+      console.error(`Ambiguous spec name '${itemName}' matches multiple specs:`);
+      for (const m of specMatches) console.error(`  - ${m}`);
+      console.error('Use the full path to specify which spec.');
+      process.exitCode = 1;
+      return;
     }
 
     const resolvedType = params.typeOverride ?? (isChange ? 'change' : isSpec ? 'spec' : undefined);
@@ -111,7 +122,7 @@ export class ShowCommand {
       return;
     }
     const cmd = new SpecCommand();
-    await cmd.show(itemName, params.options as any);
+    await cmd.show(resolvedSpecId ?? itemName, params.options as any);
   }
 
   private printNonInteractiveHint(): void {

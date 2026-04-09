@@ -4,6 +4,7 @@ import { getTaskProgressForChange, formatTaskStatus } from '../utils/task-progre
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { MarkdownParser } from './parsers/markdown-parser.js';
+import { getSpecIds } from '../utils/item-discovery.js';
 
 interface ChangeInfo {
   name: string;
@@ -151,7 +152,7 @@ export class ListCommand {
       return;
     }
 
-    // specs mode
+    // specs mode — recursive scan
     const specsDir = path.join(targetPath, 'openspec', 'specs');
     try {
       await fs.access(specsDir);
@@ -160,24 +161,22 @@ export class ListCommand {
       return;
     }
 
-    const entries = await fs.readdir(specsDir, { withFileTypes: true });
-    const specDirs = entries.filter(e => e.isDirectory()).map(e => e.name);
-    if (specDirs.length === 0) {
+    const specIds = await getSpecIds(targetPath);
+    if (specIds.length === 0) {
       console.log('No specs found.');
       return;
     }
 
     type SpecInfo = { id: string; requirementCount: number };
     const specs: SpecInfo[] = [];
-    for (const id of specDirs) {
+    for (const id of specIds) {
       const specPath = join(specsDir, id, 'spec.md');
       try {
         const content = readFileSync(specPath, 'utf-8');
         const parser = new MarkdownParser(content);
-        const spec = parser.parseSpec(id);
+        const spec = parser.parseSpec(id.split('/').pop()!);
         specs.push({ id, requirementCount: spec.requirements.length });
       } catch {
-        // If spec cannot be read or parsed, include with 0 count
         specs.push({ id, requirementCount: 0 });
       }
     }

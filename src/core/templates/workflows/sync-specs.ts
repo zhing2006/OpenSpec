@@ -28,7 +28,7 @@ This is an **agent-driven** operation - you will read delta specs and directly e
 
 2. **Find delta specs**
 
-   Look for delta spec files in \`openspec/changes/<name>/specs/*/spec.md\`.
+   Recursively scan \`openspec/changes/<name>/specs/\` for delta spec files at any nesting depth. Delta specs may be at flat paths like \`specs/<capability>/spec.md\` or nested paths like \`specs/Client/Combat/<capability>/spec.md\`.
 
    Each delta spec file contains sections like:
    - \`## ADDED Requirements\` - New requirements to add
@@ -40,11 +40,11 @@ This is an **agent-driven** operation - you will read delta specs and directly e
 
 3. **For each delta spec, apply changes to main specs**
 
-   For each capability with a delta spec at \`openspec/changes/<name>/specs/<capability>/spec.md\`:
+   For each delta spec found at \`openspec/changes/<name>/specs/<relative-path>/spec.md\`:
 
    a. **Read the delta spec** to understand the intended changes
 
-   b. **Read the main spec** at \`openspec/specs/<capability>/spec.md\` (may not exist yet)
+   b. **Read the main spec** at \`openspec/specs/<relative-path>/spec.md\` (may not exist yet). The relative path of the delta spec within the change's \`specs/\` directory directly mirrors the target path in main specs.
 
    c. **Apply changes intelligently**:
 
@@ -67,7 +67,7 @@ This is an **agent-driven** operation - you will read delta specs and directly e
       - Find the FROM requirement, rename to TO
 
    d. **Create new main spec** if capability doesn't exist yet:
-      - Create \`openspec/specs/<capability>/spec.md\`
+      - Create \`openspec/specs/<relative-path>/spec.md\`, creating intermediate directories as needed
       - Add Purpose section (can be brief, mark as TBD)
       - Add Requirements section with the ADDED requirements
 
@@ -167,7 +167,7 @@ This is an **agent-driven** operation - you will read delta specs and directly e
 
 2. **Find delta specs**
 
-   Look for delta spec files in \`openspec/changes/<name>/specs/*/spec.md\`.
+   Recursively scan \`openspec/changes/<name>/specs/\` for delta spec files at any nesting depth. Delta specs may be at flat paths like \`specs/<capability>/spec.md\` or nested paths like \`specs/Client/Combat/<capability>/spec.md\`.
 
    Each delta spec file contains sections like:
    - \`## ADDED Requirements\` - New requirements to add
@@ -179,11 +179,11 @@ This is an **agent-driven** operation - you will read delta specs and directly e
 
 3. **For each delta spec, apply changes to main specs**
 
-   For each capability with a delta spec at \`openspec/changes/<name>/specs/<capability>/spec.md\`:
+   For each delta spec found at \`openspec/changes/<name>/specs/<relative-path>/spec.md\`:
 
    a. **Read the delta spec** to understand the intended changes
 
-   b. **Read the main spec** at \`openspec/specs/<capability>/spec.md\` (may not exist yet)
+   b. **Read the main spec** at \`openspec/specs/<relative-path>/spec.md\` (may not exist yet). The relative path of the delta spec within the change's \`specs/\` directory directly mirrors the target path in main specs.
 
    c. **Apply changes intelligently**:
 
@@ -206,7 +206,7 @@ This is an **agent-driven** operation - you will read delta specs and directly e
       - Find the FROM requirement, rename to TO
 
    d. **Create new main spec** if capability doesn't exist yet:
-      - Create \`openspec/specs/<capability>/spec.md\`
+      - Create \`openspec/specs/<relative-path>/spec.md\`, creating intermediate directories as needed
       - Add Purpose section (can be brief, mark as TBD)
       - Add Requirements section with the ADDED requirements
 

@@ -273,6 +273,116 @@ This section has no actual requirements`;
     });
   });
 
+  describe('nested spec paths', () => {
+    beforeEach(async () => {
+      // Add nested specs alongside existing flat ones
+      const nestedSpec1Dir = path.join(specsDir, 'Client', 'Combat', 'combat-system');
+      const nestedSpec2Dir = path.join(specsDir, 'Client', 'UI', 'combat-system');
+      await fs.mkdir(nestedSpec1Dir, { recursive: true });
+      await fs.mkdir(nestedSpec2Dir, { recursive: true });
+
+      const specContent = `## Purpose
+This is a nested test specification.
+
+## Requirements
+
+### Requirement: Nested Feature
+The system SHALL provide nested feature support
+
+#### Scenario: Basic nested test
+- **GIVEN** a nested spec
+- **WHEN** it is accessed
+- **THEN** it resolves correctly`;
+
+      await fs.writeFile(path.join(nestedSpec1Dir, 'spec.md'), specContent);
+      await fs.writeFile(path.join(nestedSpec2Dir, 'spec.md'), specContent);
+    });
+
+    it('spec list should show full nested paths', () => {
+      const originalCwd = process.cwd();
+      try {
+        process.chdir(testDir);
+        const output = execSync(`node ${openspecBin} spec list`, { encoding: 'utf-8' });
+
+        expect(output).toContain('Client/Combat/combat-system');
+        expect(output).toContain('Client/UI/combat-system');
+        expect(output).toContain('auth');
+        expect(output).toContain('payment');
+      } finally {
+        process.chdir(originalCwd);
+      }
+    });
+
+    it('spec show should resolve full path', () => {
+      const originalCwd = process.cwd();
+      try {
+        process.chdir(testDir);
+        const output = execSync(`node ${openspecBin} spec show Client/Combat/combat-system --json`, {
+          encoding: 'utf-8'
+        });
+
+        const json = JSON.parse(output);
+        expect(json.id).toBe('Client/Combat/combat-system');
+        expect(Array.isArray(json.requirements)).toBe(true);
+      } finally {
+        process.chdir(originalCwd);
+      }
+    });
+
+    it('spec show should error on ambiguous leaf name', () => {
+      const originalCwd = process.cwd();
+      try {
+        process.chdir(testDir);
+        let error: any;
+        try {
+          execSync(`node ${openspecBin} spec show combat-system`, { encoding: 'utf-8' });
+        } catch (e) {
+          error = e;
+        }
+
+        expect(error).toBeDefined();
+        expect(error.status).not.toBe(0);
+        const stderr = error.stderr.toString();
+        expect(stderr).toContain('Ambiguous');
+        expect(stderr).toContain('Client/Combat/combat-system');
+        expect(stderr).toContain('Client/UI/combat-system');
+      } finally {
+        process.chdir(originalCwd);
+      }
+    });
+
+    it('spec validate should resolve full path', () => {
+      const originalCwd = process.cwd();
+      try {
+        process.chdir(testDir);
+        const output = execSync(`node ${openspecBin} spec validate Client/UI/combat-system`, {
+          encoding: 'utf-8'
+        });
+
+        expect(output).toContain('valid');
+      } finally {
+        process.chdir(originalCwd);
+      }
+    });
+
+    it('spec list --json should include full paths as IDs', () => {
+      const originalCwd = process.cwd();
+      try {
+        process.chdir(testDir);
+        const output = execSync(`node ${openspecBin} spec list --json`, { encoding: 'utf-8' });
+
+        const json = JSON.parse(output);
+        const ids = json.map((s: any) => s.id);
+        expect(ids).toContain('Client/Combat/combat-system');
+        expect(ids).toContain('Client/UI/combat-system');
+        expect(ids).toContain('auth');
+        expect(ids).toContain('payment');
+      } finally {
+        process.chdir(originalCwd);
+      }
+    });
+  });
+
   describe('error handling', () => {
     it('should handle non-existent spec gracefully', () => {
       const originalCwd = process.cwd();

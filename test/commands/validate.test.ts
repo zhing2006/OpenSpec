@@ -95,6 +95,79 @@ describe('top-level validate command', () => {
     expect(result.stderr).toContain('Ambiguous item');
   });
 
+  it('validates nested spec by full path', async () => {
+    // Create a nested spec
+    const nestedSpecDir = path.join(specsDir, 'Client', 'Combat', 'combat-system');
+    await fs.mkdir(nestedSpecDir, { recursive: true });
+    const specContent = [
+      '## Purpose',
+      'Combat system specification for automated tests.',
+      '',
+      '## Requirements',
+      '',
+      '### Requirement: Combat system SHALL handle damage calculation',
+      'The combat system SHALL calculate damage based on attack and defense stats.',
+      '',
+      '#### Scenario: Basic damage calculation',
+      '- **GIVEN** an attacker with known stats',
+      '- **WHEN** the attack lands on a target',
+      '- **THEN** damage is calculated correctly',
+    ].join('\n');
+    await fs.writeFile(path.join(nestedSpecDir, 'spec.md'), specContent, 'utf-8');
+
+    const result = await runCLI(['validate', 'Client/Combat/combat-system', '--type', 'spec'], { cwd: testDir });
+    expect(result.exitCode).toBe(0);
+  });
+
+  it('validates nested spec by unique leaf name', async () => {
+    // Create a nested spec with unique leaf name
+    const nestedSpecDir = path.join(specsDir, 'Server', 'Core', 'networking');
+    await fs.mkdir(nestedSpecDir, { recursive: true });
+    const specContent = [
+      '## Purpose',
+      'Networking specification for automated tests.',
+      '',
+      '## Requirements',
+      '',
+      '### Requirement: Network layer SHALL handle connections',
+      'The network layer SHALL manage client connections reliably.',
+      '',
+      '#### Scenario: Client connection',
+      '- **GIVEN** a running server',
+      '- **WHEN** a client connects',
+      '- **THEN** the connection is established',
+    ].join('\n');
+    await fs.writeFile(path.join(nestedSpecDir, 'spec.md'), specContent, 'utf-8');
+
+    const result = await runCLI(['validate', 'networking', '--type', 'spec'], { cwd: testDir });
+    expect(result.exitCode).toBe(0);
+  });
+
+  it('validates change with nested delta specs', async () => {
+    // Create a change with nested delta specs
+    const nestedChangeDir = path.join(changesDir, 'nested-change');
+    await fs.mkdir(nestedChangeDir, { recursive: true });
+    const changeContent = `# Nested Change\n\n## Why\nBecause we need nested delta spec validation testing.\n\n## What Changes\n- **combat:** Add combat feature`;
+    await fs.writeFile(path.join(nestedChangeDir, 'proposal.md'), changeContent, 'utf-8');
+
+    const nestedDeltaDir = path.join(nestedChangeDir, 'specs', 'Client', 'Combat', 'combat-system');
+    await fs.mkdir(nestedDeltaDir, { recursive: true });
+    const deltaContent = [
+      '## ADDED Requirements',
+      '### Requirement: Combat system SHALL track player health',
+      'The combat system SHALL maintain accurate health tracking.',
+      '',
+      '#### Scenario: Health tracking',
+      '- **GIVEN** a player enters combat',
+      '- **WHEN** they take damage',
+      '- **THEN** their health is reduced accordingly',
+    ].join('\n');
+    await fs.writeFile(path.join(nestedDeltaDir, 'spec.md'), deltaContent, 'utf-8');
+
+    const result = await runCLI(['validate', 'nested-change'], { cwd: testDir });
+    expect(result.exitCode).toBe(0);
+  });
+
   it('accepts change proposals saved with CRLF line endings', async () => {
     const changeId = 'crlf-change';
     const toCrlf = (segments: string[]) => segments.join('\n').replace(/\n/g, '\r\n');

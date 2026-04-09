@@ -161,5 +161,46 @@ Regular text that should be ignored
       expect(logOutput.some(line => line.includes('partial') && line.includes('1/3 tasks'))).toBe(true);
       expect(logOutput.some(line => line.includes('no-tasks') && line.includes('No tasks'))).toBe(true);
     });
+
+    it('should discover and display nested specs with full paths', async () => {
+      const specsDir = path.join(tempDir, 'openspec', 'specs');
+      await fs.mkdir(specsDir, { recursive: true });
+
+      // Create nested spec directories
+      const nestedSpec1 = path.join(specsDir, 'Client', 'Combat', 'combat-system');
+      const nestedSpec2 = path.join(specsDir, 'Client', 'UI', 'hud-system');
+      const flatSpec = path.join(specsDir, 'auth');
+      await fs.mkdir(nestedSpec1, { recursive: true });
+      await fs.mkdir(nestedSpec2, { recursive: true });
+      await fs.mkdir(flatSpec, { recursive: true });
+
+      const specContent = `## Purpose\nTest spec.\n\n## Requirements\n\n### Requirement: Test\nThe system SHALL test.\n\n#### Scenario: Basic\n- **GIVEN** X\n- **WHEN** Y\n- **THEN** Z`;
+      await fs.writeFile(path.join(nestedSpec1, 'spec.md'), specContent);
+      await fs.writeFile(path.join(nestedSpec2, 'spec.md'), specContent);
+      await fs.writeFile(path.join(flatSpec, 'spec.md'), specContent);
+
+      const listCommand = new ListCommand();
+      await listCommand.execute(tempDir, 'specs');
+
+      expect(logOutput).toContain('Specs:');
+      expect(logOutput.some(line => line.includes('Client/Combat/combat-system'))).toBe(true);
+      expect(logOutput.some(line => line.includes('Client/UI/hud-system'))).toBe(true);
+      expect(logOutput.some(line => line.includes('auth'))).toBe(true);
+    });
+
+    it('should discover deeply nested specs', async () => {
+      const specsDir = path.join(tempDir, 'openspec', 'specs');
+      const deepSpec = path.join(specsDir, 'Server', 'Core', 'Networking', 'protocol');
+      await fs.mkdir(deepSpec, { recursive: true });
+
+      const specContent = `## Purpose\nProtocol spec.\n\n## Requirements\n\n### Requirement: Protocol\nThe system SHALL implement protocol.\n\n#### Scenario: Connect\n- **GIVEN** client\n- **WHEN** connecting\n- **THEN** connected`;
+      await fs.writeFile(path.join(deepSpec, 'spec.md'), specContent);
+
+      const listCommand = new ListCommand();
+      await listCommand.execute(tempDir, 'specs');
+
+      expect(logOutput).toContain('Specs:');
+      expect(logOutput.some(line => line.includes('Server/Core/Networking/protocol'))).toBe(true);
+    });
   });
 });

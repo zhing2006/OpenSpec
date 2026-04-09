@@ -1,8 +1,5 @@
-# cli-show Specification
+## MODIFIED Requirements
 
-## Purpose
-Define top-level `openspec show` behavior for interactive and direct display of change and spec content.
-## Requirements
 ### Requirement: Top-level show command
 
 The CLI SHALL provide a top-level `show` command for displaying changes and specs with intelligent selection. Spec matching SHALL support both leaf names and full nested paths.
@@ -56,43 +53,3 @@ The CLI SHALL provide a top-level `show` command for displaying changes and spec
 
 - **WHEN** executing `openspec show --type spec <item>`
 - **THEN** treat `<item>` as a spec ID (full path or leaf name) and show it (skipping auto-detection)
-
-### Requirement: Output format options
-
-The show command SHALL support various output formats consistent with existing commands.
-
-#### Scenario: JSON output
-
-- **WHEN** executing `openspec show <item> --json`
-- **THEN** output the item in JSON format
-- **AND** include parsed metadata and structure
-- **AND** maintain format consistency with existing change/spec show commands
-
-#### Scenario: Flag scoping and delegation
-
-- **WHEN** showing a change or a spec via the top-level command
-- **THEN** accept common flags such as `--json`
-- **AND** pass through type-specific flags to the corresponding implementation
-  - Change-only flags: `--deltas-only` (alias `--requirements-only` deprecated)
-  - Spec-only flags: `--requirements`, `--no-scenarios`, `-r/--requirement`
-- **AND** ignore irrelevant flags for the detected type with a warning
-
-### Requirement: Interactivity controls
-
-- The CLI SHALL respect `--no-interactive` to disable prompts.
-- The CLI SHALL respect `OPEN_SPEC_INTERACTIVE=0` to disable prompts globally.
-- Interactive prompts SHALL only be shown when stdin is a TTY and interactivity is not disabled.
-
-#### Scenario: Change-specific options
-
-- **WHEN** showing a change with `openspec show <change-name> --deltas-only`
-- **THEN** display only the deltas in JSON format
-- **AND** maintain compatibility with existing change show options
-
-#### Scenario: Spec-specific options  
-
-- **WHEN** showing a spec with `openspec show <spec-id> --requirements`
-- **THEN** display only requirements in JSON format
-- **AND** support other spec options (--no-scenarios, -r)
-- **AND** maintain compatibility with existing spec show options
-

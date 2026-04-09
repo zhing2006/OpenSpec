@@ -89,6 +89,38 @@ describe('ChangeCommand.show/validate', () => {
     }
   });
 
+  it('show --json includes nested delta specs with full relative paths', async () => {
+    // Create a change with nested delta specs
+    const nestedChangeName = 'nested-change';
+    const nestedChangeDir = path.join(tempRoot, 'openspec', 'changes', nestedChangeName);
+    await fs.mkdir(nestedChangeDir, { recursive: true });
+
+    const proposal = `# Change: Nested Change\n\n## Why\nNested delta spec testing.\n\n## What Changes\n- **combat-system:** Add combat feature`;
+    await fs.writeFile(path.join(nestedChangeDir, 'proposal.md'), proposal, 'utf-8');
+
+    const nestedSpecDir = path.join(nestedChangeDir, 'specs', 'Client', 'Combat', 'combat-system');
+    await fs.mkdir(nestedSpecDir, { recursive: true });
+    const deltaSpec = `## ADDED Requirements\n\n### Requirement: Combat Feature\nThe system SHALL provide combat.\n\n#### Scenario: Attack\n- **GIVEN** a player\n- **WHEN** they attack\n- **THEN** damage is dealt`;
+    await fs.writeFile(path.join(nestedSpecDir, 'spec.md'), deltaSpec, 'utf-8');
+
+    const logs: string[] = [];
+    const origLog = console.log;
+    try {
+      console.log = (msg?: any, ...args: any[]) => {
+        logs.push([msg, ...args].filter(Boolean).join(' '));
+      };
+
+      await cmd.show(nestedChangeName, { json: true });
+
+      const output = logs.join('\n');
+      const parsed = JSON.parse(output);
+      expect(parsed.deltas.length).toBeGreaterThan(0);
+      expect(parsed.deltas[0].spec).toBe('Client/Combat/combat-system');
+    } finally {
+      console.log = origLog;
+    }
+  });
+
   it('validate --strict --json returns a report with valid boolean', async () => {
     const logs: string[] = [];
     const origLog = console.log;
