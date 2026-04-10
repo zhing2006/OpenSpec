@@ -13,8 +13,8 @@ artifacts:
       - **Why**: 1-2 sentences on the problem or opportunity. What problem does this solve? Why now?
       - **What Changes**: Bullet list of changes. Be specific about new capabilities, modifications, or removals. Mark breaking changes with **BREAKING**.
       - **Capabilities**: Identify which specs will be created or modified:
-        - **New Capabilities**: List capabilities being introduced. Each becomes a new `specs/<name>/spec.md`. Use kebab-case names (e.g., `user-auth`, `data-export`).
-        - **Modified Capabilities**: List existing capabilities whose REQUIREMENTS are changing. Only include if spec-level behavior changes (not just implementation details). Each needs a delta spec file. Check `openspec/specs/` for existing spec names. Leave empty if no requirement changes.
+        - **New Capabilities**: List capabilities being introduced. Each becomes a new delta spec file. Use kebab-case names (e.g., `user-auth`, `data-export`). Run `openspec spec list` to see the existing spec directory tree structure, and assign a category path for each new capability (e.g., `Backend/Auth/user-auth`), so the delta spec directory structure mirrors the target path.
+        - **Modified Capabilities**: List existing capabilities whose REQUIREMENTS are changing. Only include if spec-level behavior changes (not just implementation details). Each needs a delta spec file. Run `openspec spec list` to get the full path of existing specs (e.g., `Backend/Auth/user-auth`), and mirror that path in the delta spec directory. Leave empty if no requirement changes.
       - **Impact**: Affected code, APIs, dependencies, or systems.
 
       IMPORTANT: The Capabilities section is critical. It creates the contract between
@@ -35,8 +35,10 @@ artifacts:
       Create specification files that define WHAT the system should do.
 
       Create one spec file per capability listed in the proposal's Capabilities section.
-      - New capabilities: use the exact kebab-case name from the proposal (specs/<capability>/spec.md).
-      - Modified capabilities: use the existing spec folder name from openspec/specs/<capability>/ when creating the delta spec at specs/<capability>/spec.md.
+
+      **IMPORTANT**: The delta spec's directory structure must mirror the target path. The relative path of a spec file within the change determines where it ends up in `openspec/specs/` upon archiving.
+      - New capabilities: use the category path from the proposal to create the delta spec (e.g., `specs/Backend/Auth/user-auth/spec.md`).
+      - Modified capabilities: run `openspec spec list` to get the full path of existing specs, then use the same path for the delta spec (e.g., if existing spec is at `openspec/specs/Backend/Auth/user-auth/`, create delta spec at `specs/Backend/Auth/user-auth/spec.md`).
 
       Delta operations (use ## headers):
       - **ADDED Requirements**: New capabilities
@@ -52,7 +54,7 @@ artifacts:
       - Every requirement MUST have at least one scenario.
 
       MODIFIED requirements workflow:
-      1. Locate the existing requirement in openspec/specs/<capability>/spec.md
+      1. Locate the existing requirement in the corresponding spec under openspec/specs/ (use `openspec spec list` to find the full path)
       2. Copy the ENTIRE requirement block (from `### Requirement:` through all scenarios)
       3. Paste under `## MODIFIED Requirements` and edit to reflect new behavior
       4. Ensure header text matches exactly (whitespace-insensitive)
