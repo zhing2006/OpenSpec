@@ -13,7 +13,11 @@ artifacts:
       - **Why**: 1-2 sentences on the problem or opportunity. What problem does this solve? Why now?
       - **What Changes**: Bullet list of changes. Be specific about new capabilities, modifications, or removals. Mark breaking changes with **BREAKING**.
       - **Capabilities**: Identify which specs will be created or modified:
-        - **New Capabilities**: List capabilities being introduced. Each becomes a new delta spec file. Use kebab-case names (e.g., `user-auth`, `data-export`). Run `openspec spec list` to see the existing spec directory tree structure, and assign a category path for each new capability (e.g., `Backend/Auth/user-auth`), so the delta spec directory structure mirrors the target path.
+        - **New Capabilities**: List capabilities being introduced. Each becomes a new delta spec file.
+          **CRITICAL**: Each capability MUST use a hierarchical path with at least three levels: `Category/Subcategory/name` (kebab-case). This path determines the spec directory structure and MUST NOT be flat.
+          Run `openspec spec list` to see the existing spec directory tree structure, and assign a category path for each new capability that mirrors the project's domain structure.
+          Examples: `CLI/Config/env-config`, `Backend/Auth/user-auth`, `Client/HTTP/openai-client`, `Build/Deps/dependency-management`.
+          Wrong: `env-config`, `user-auth` (flat names without category hierarchy).
         - **Modified Capabilities**: List existing capabilities whose REQUIREMENTS are changing. Only include if spec-level behavior changes (not just implementation details). Each needs a delta spec file. Run `openspec spec list` to get the full path of existing specs (e.g., `Backend/Auth/user-auth`), and mirror that path in the delta spec directory. Leave empty if no requirement changes.
       - **Impact**: Affected code, APIs, dependencies, or systems.
 
@@ -36,8 +40,11 @@ artifacts:
 
       Create one spec file per capability listed in the proposal's Capabilities section.
 
-      **IMPORTANT**: The delta spec's directory structure must mirror the target path. The relative path of a spec file within the change determines where it ends up in `openspec/specs/` upon archiving.
-      - New capabilities: use the category path from the proposal to create the delta spec (e.g., `specs/Backend/Auth/user-auth/spec.md`).
+      **CRITICAL**: The delta spec's directory structure MUST mirror the hierarchical category path defined in the proposal. The relative path of a spec file within the change determines where it ends up in `openspec/specs/` upon archiving.
+      - Before creating any spec file, verify that each capability path in the proposal has at least three levels (e.g., `Category/Subcategory/name`). If any path is flat or only two levels, fix the proposal first.
+      - New capabilities: use the category path from the proposal to create the delta spec.
+        Correct: `specs/CLI/Config/env-config/spec.md`, `specs/Backend/Auth/user-auth/spec.md`
+        Wrong: `specs/env-config/spec.md`, `specs/user-auth/spec.md` (flat, missing hierarchy)
       - Modified capabilities: run `openspec spec list` to get the full path of existing specs, then use the same path for the delta spec (e.g., if existing spec is at `openspec/specs/Backend/Auth/user-auth/`, create delta spec at `specs/Backend/Auth/user-auth/spec.md`).
 
       Delta operations (use ## headers):

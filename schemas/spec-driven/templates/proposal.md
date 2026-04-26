@@ -9,8 +9,10 @@
 ## Capabilities
 
 ### New Capabilities
-<!-- Capabilities being introduced. Replace <name> with kebab-case identifier (e.g., user-auth, data-export, api-rate-limiting). Each creates specs/<name>/spec.md -->
-- `<name>`: <brief description of what this capability covers>
+<!-- Capabilities being introduced. Each capability MUST use a three-level path: Category/Subcategory/name (kebab-case).
+     This path determines the spec file location: specs/Category/Subcategory/name/spec.md
+     Examples: CLI/Config/env-config, Backend/Auth/user-auth, Client/HTTP/openai-client -->
+- `<Category/Subcategory/name>`: <brief description of what this capability covers>
 
 ### Modified Capabilities
 <!-- Existing capabilities whose REQUIREMENTS are changing (not just implementation).
